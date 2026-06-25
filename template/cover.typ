@@ -1,3 +1,5 @@
+#let version = sys.inputs.at("version", default: read("../VERSION").trim())
+
 #align(center)[
   #v(6cm)
   
@@ -33,7 +35,7 @@
   #text(
     size: 14pt,
     weight: "bold"
-  )[version：v3.2]
+  )[version：v#version]
 ]
 
 #pagebreak()

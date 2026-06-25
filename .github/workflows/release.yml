@@ -1,0 +1,60 @@
+name: Release PDF
+
+on:
+  push:
+    tags:
+      - "v*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: "0.13.1"
+
+      - name: Prepare metadata
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME -replace '^v', ''
+          $versionFile = (Get-Content -Raw -Encoding UTF8 VERSION).Trim()
+
+          if ($version -notmatch '^\d+\.\d+$') {
+            throw "Tag must look like vX.Y, got $env:GITHUB_REF_NAME."
+          }
+
+          if ($versionFile -ne $version) {
+            throw "VERSION ($versionFile) does not match tag ($version)."
+          }
+
+          Add-Content -Path $env:GITHUB_ENV -Encoding UTF8 -Value "VERSION=$version"
+          Add-Content -Path $env:GITHUB_ENV -Encoding UTF8 -Value "PDF_NAME=XCPC 算法模板 by thedyingkai_ v$version.pdf"
+
+      - name: Render PDF
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          $pdfPath = Join-Path "dist" $env:PDF_NAME
+          typst compile main.typ $pdfPath --input "version=$env:VERSION"
+
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $pdfPath = Join-Path "dist" $env:PDF_NAME
+
+          if (gh release view $tag 2>$null) {
+            gh release upload $tag $pdfPath --clobber
+          } else {
+            gh release create $tag $pdfPath --title $tag --notes "Rendered from $env:GITHUB_SHA"
+          }
