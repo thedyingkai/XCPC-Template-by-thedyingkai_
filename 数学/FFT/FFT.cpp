@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 const double PI = acos(-1);
 struct FFT {
@@ -33,6 +33,7 @@ struct FFT {
     static vector<int> multiply(const vector<int>& a, const vector<int>& b) {
         int l1 = (int) a.size() - 1;
         int l2 = (int) b.size() - 1;
+        if(l1 <= 0 || l2 <= 0) return vector<int>(1, 0);
         int n = 1;
         while(n < l1 + l2) n <<= 1;
         vector<CD> fa(n), fb(n);
@@ -42,8 +43,8 @@ struct FFT {
         fft(fb, false);
         for(int i = 0; i < n; ++i) fa[i] *= fb[i];
         fft(fa, true);
-        vector<int> res(l1 + l2 + 1, 0);
-        for(int i = 0; i < l1 + l2; ++i) res[i + 1] = int(round(fa[i].real()));
+        vector<int> res(l1 + l2, 0);
+        for(int i = 0; i < l1 + l2 - 1; ++i) res[i + 1] = int(round(fa[i].real()));
         return res;
     }
 };
@@ -58,7 +59,7 @@ string get(vector<int> ans, int base) {
     while(ans.size() > 1 && ans.back() == 0) { ans.pop_back(); }
     string s;
     for(int i = ans.size() - 1; i >= 1; i--) { s.push_back(char('0' + ans[i])); }
-    return s;
+    return s.empty() ? "0" : s;
 }
 int main() {
     ios::sync_with_stdio(false);

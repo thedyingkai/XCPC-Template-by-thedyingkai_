@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct AC {
     struct Node {
@@ -11,24 +11,29 @@ struct AC {
     vector<Node> tr;
     vector<int> ans; // 最终每个模式串出现次数
     int tot, pidx;   // 节点总数，模式串编号计数器
-    AC(int n) {
-        tr.resize(n + 1);
-        ans.resize(n + 1);
+    AC(int n = 0) {
+        tr.reserve(n + 1);
+        ans.push_back(0);
         tot = pidx = 0;
+        tr.emplace_back();
         tr[0].init();
     }
     // 插入模式串，返回该模式串编号
     void insert(const string& s, int& idx) {
         int u = 0;
-        for(int i = 0; i < s.size(); i++) {
-            int c = s[i] - 'a';
+        for(char ch : s) {
+            int c = ch - 'a';
             if(!tr[u].son[c]) {
                 tr[u].son[c] = ++tot;
-                tr[tot].init();
+                tr.emplace_back();
+                tr.back().init();
             }
             u = tr[u].son[c];
         }
-        if(!tr[u].idx) tr[u].idx = ++pidx;
+        if(!tr[u].idx) {
+            tr[u].idx = ++pidx;
+            ans.push_back(0);
+        }
         idx = tr[u].idx;
     }
     // 建立fail指针
@@ -52,12 +57,12 @@ struct AC {
     // 在文本串中查询所有模式串出现次数
     void query(const string& t) {
         int u = 0;
-        for(int i = 0; i < t.size(); i++) u = tr[u].son[t[i] - 'a'], tr[u].ans++;
+        for(char ch : t) u = tr[u].son[ch - 'a'], tr[u].ans++;
     }
     // 拓扑排序，累计模式串出现次数
     void topu() {
         queue<int> q;
-        for(int i = 0; i <= tot; i++)
+        for(int i = 1; i <= tot; i++)
             if(tr[i].du == 0) q.push(i);
         while(!q.empty()) {
             int u = q.front();
@@ -65,12 +70,12 @@ struct AC {
             ans[tr[u].idx] = tr[u].ans;
             int v = tr[u].fail;
             tr[v].ans += tr[u].ans;
-            if(--tr[v].du == 0) q.push(v);
+            if(v != 0 && --tr[v].du == 0) q.push(v);
         }
     }
 };
 
-void main() {
+int main() {
     int n;
     cin >> n;
     AC ac(2e5);
@@ -86,4 +91,5 @@ void main() {
     ac.query(text);
     ac.topu();
     for(int i = 1; i <= n; i++) cout << ac.ans[idx[i]] << "\n";
+    return 0;
 }

@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 template <class T> struct Node {
     Node *ls, *rs;
@@ -57,6 +57,6 @@ int main() {
             cin >> k;
             st->update(l, r, k);
         } else
-            cout << st->query(l, r) + (r - l + 1) * (r + l) / 2 << endl;
+            cout << st->query(l, r) << endl;
     }
 }

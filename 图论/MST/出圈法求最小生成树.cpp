@@ -1,11 +1,13 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct Prim {
-    int n, ans, cnt, f;
+    int n, cnt, f;
+    i64 ans;
     vector<vector<pair<int, int>>>& g;
-    vector<int> d, vis;
+    vector<i64> d;
+    vector<int> vis;
     Prim(int n_, vector<vector<pair<int, int>>>& g_) : n(n_), g(g_) {
-        d.resize(n + 1, INT_MAX);
+        d.resize(n + 1, LLONG_MAX);
         vis.resize(n + 1);
         f = prim(1);
     }

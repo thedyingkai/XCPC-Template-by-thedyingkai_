@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 template <class Ele> struct BitTree {
     int n;
@@ -34,7 +34,8 @@ template <class Ele> i64 countInv(int n, vector<Ele> a) {
     }
     return ans;
 }
-void main() {
+int main() {
     vector<i64> x = {0, 1, 2, 3, 4, 5, 8, 6, 7}; // 1-index
     cout << countInv<i64>(8, x);
+    return 0;
 }

@@ -1,17 +1,13 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
-int main() {
-    double eps = 1e-7, l, r;
-    auto f = [&](double x) -> double {
-        // TODO
-    };
+template <class F> double ternarySearch(double l, double r, F f, double eps = 1e-7) {
     while(r - l > eps) {
-        double mid = (r + l) / 2;
-        double lm = mid - eps, rm = mid + eps;
-        if(f(lm) > f(rm))
-            r = mid;
+        double lm = (2 * l + r) / 3;
+        double rm = (l + 2 * r) / 3;
+        if(f(lm) < f(rm))
+            l = lm;
         else
-            l = mid;
+            r = rm;
     }
-    cout << fixed << setprecision(5) << l;
+    return (l + r) / 2;
 }

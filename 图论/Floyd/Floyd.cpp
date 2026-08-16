@@ -1,7 +1,7 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct Floyd {
-    static constexpr i64 INF = 1e15;
+    static constexpr i64 INF = LLONG_MAX / 4;
     int n;
     vector<vector<i64>> dist;
     Floyd(int nodes) : n(nodes), dist(nodes + 1, vector<i64>(nodes + 1, INF)) {
@@ -26,17 +26,5 @@ struct Floyd {
             if(dist[i][i] < 0) return true;
         return false;
     }
-    long long query(int i, int j) { return dist[i][j]; }
+    i64 query(int i, int j) { return dist[i][j]; }
 };
-int main() {
-    for(int i = 1; i <= n; i++) { // 输出距离矩阵
-        for(int j = 1; j <= n; j++) {
-            i64 d = floyd.query(i, j);
-            if(d == Floyd::INF)
-                cout << "INF ";
-            else
-                cout << d << " ";
-        }
-        cout << "\n";
-    }
-}

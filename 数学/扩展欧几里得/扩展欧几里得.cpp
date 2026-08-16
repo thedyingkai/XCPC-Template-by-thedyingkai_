@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 i64 exgcd(i64 a, i64 b, i64& x, i64& y) {
     if(b == 0) {

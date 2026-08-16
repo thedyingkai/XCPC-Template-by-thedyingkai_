@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 template <class T, class Ele> struct SegTree {
     T n;
@@ -44,7 +44,7 @@ template <class T, class Ele> struct SegTree {
         tree[root].r = r;
         initLazy(root);
         if(l != r) {
-            T mid = l + r >> 1;
+            T mid = (l + r) >> 1;
             T ch = root << 1;
             build(ch, l, mid, a);
             build(ch + 1, mid + 1, r, a);
@@ -59,7 +59,7 @@ template <class T, class Ele> struct SegTree {
             tree[root].lazy += val;
             return;
         }
-        T mid = tree[root].l + tree[root].r >> 1;
+        T mid = (tree[root].l + tree[root].r) >> 1;
         T ch = root << 1;
         if(r <= mid)
             update(ch, l, r, val);
@@ -74,7 +74,7 @@ template <class T, class Ele> struct SegTree {
     TreeNode query(T root, T l, T r) {
         pushDown(root);
         if(l == tree[root].l && r == tree[root].r) return tree[root];
-        T mid = tree[root].l + tree[root].r >> 1;
+        T mid = (tree[root].l + tree[root].r) >> 1;
         T ch = root << 1;
         if(r <= mid)
             return query(ch, l, r);
@@ -85,7 +85,7 @@ template <class T, class Ele> struct SegTree {
     }
     Ele query(T l, T r) { return query(1, l, r).sum; }
 };
-void main() {
+int main() {
     int n, m;
     cin >> n >> m;
     vector<i64> a(n + 1);
@@ -101,4 +101,5 @@ void main() {
         } else
             cout << st.query(x, y) << endl;
     }
+    return 0;
 }

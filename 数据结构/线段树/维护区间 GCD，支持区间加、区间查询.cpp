@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 i64 gcd(i64 a, i64 b) { return b == 0 ? abs(a) : gcd(b, a % b); }
 struct Fenwick {
@@ -47,13 +47,13 @@ struct GcdSegmentTree {
     i64 query_range(int l, int r) { return query(1, 1, n, l, r); }
 };
 
-void main() {
+int main() {
     int n, m;
     cin >> n >> m;
     vector<i64> a(n + 1);
     for(int i = 1; i <= n; i++) cin >> a[i];
     Fenwick fenw(n);               // 树状数组：维护对 a 的增量（支持区间加）
-    GcdSegmentTree segTree(n + 1); // 线段树：维护差分数组 d 的 GCD（d[i] = a[i] - a[i-1]）
+    GcdSegmentTree segTree(n); // 线段树：维护差分数组 d 的 GCD（d[i] = a[i] - a[i-1]）
     for(int i = 2; i <= n; i++) {  // 初始化差分数组
         segTree.update_point(i, a[i] - a[i - 1]);
     }
@@ -85,4 +85,5 @@ void main() {
             }
         }
     }
+    return 0;
 }

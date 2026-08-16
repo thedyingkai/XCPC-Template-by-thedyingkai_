@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct RMQ {
     static constexpr int M = 8;
@@ -11,7 +11,8 @@ struct RMQ {
         if(n <= 0) n = 1; // 防止n为0
         blocklen = max(1, min(M - 1, (int) (log2(n + 1) / 2)));
         block = (n + blocklen - 1) / blocklen;
-        Minv.assign(block + 2, 0) T.assign(n + 10, 0);
+        Minv.assign(block + 2, 0);
+        T.assign(n + 10, 0);
         S.assign(block + 2, 0);
         F.assign(block + 2, vector<int>(25, 0));
         int total = 1 << (blocklen - 1);
@@ -39,8 +40,7 @@ struct RMQ {
             if((i & (i - 1)) == 0) T[i]++;
         }
     }
-    void initmin(const vector<int>& a) {
-        int n = (int) a.size();
+    void initmin(const vector<int>& a, int n) {
         if(n == 0) return;
         for(int i = 0; i < n; i++) {
             int block_id = i / blocklen;
@@ -131,8 +131,7 @@ struct LCA_RMQ {
         dfs_clock = 0;
         dfs(root, 0, 0);
         rmq.init(dfs_clock);
-        if(dfs_clock > (int) dep.size()) dep.resize(dfs_clock + 10);
-        rmq.initmin(dep);
+        rmq.initmin(dep, dfs_clock);
     }
     int lca(int u, int v) {
         int L = st[u], R = st[v];

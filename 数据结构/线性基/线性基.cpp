@@ -1,10 +1,9 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct LinearBasis {
     static const int MAXB = 60;
     vector<i64> a;
-    bool zero_flag;
-    LinearBasis() : a(MAXB + 1, 0), zero_flag(0) {}
+    LinearBasis() : a(MAXB + 1, 0) {}
     void insert(i64 x) {
         for(int i = MAXB; i >= 0; --i) {
             if((x >> i) & 1) {
@@ -15,7 +14,6 @@ struct LinearBasis {
                 x ^= a[i];
             }
         }
-        zero_flag = 1;
     }
     bool can(i64 x) const {
         i64 cur = x;
@@ -33,17 +31,10 @@ struct LinearBasis {
             if((res ^ a[i]) > res) res ^= a[i];
         return res;
     }
-    i64 min_xor() const {
-        if(zero_flag) return 0;
-        for(int i = 0; i <= MAXB; ++i)
-            if(a[i]) return a[i];
-        return 0;
-    }
+    i64 min_xor() const { return 0; }
     i64 kth(i64 k) const {
-        if(zero_flag) {
-            if(k == 1) return 0;
-            --k;
-        }
+        if(k <= 0) return -1;
+        --k;
         vector<i64> base = a;
         vector<i64> simple;
         for(int i = 0; i <= MAXB; ++i) {

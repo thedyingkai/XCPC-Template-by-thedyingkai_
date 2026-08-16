@@ -1,4 +1,7 @@
-#include <template/start.cpp>
+#ifndef XCPC_TARJAN_SCC
+#define XCPC_TARJAN_SCC
+
+#include "../../template/start.cpp"
 
 struct SCC {
     int n, tot, cnt;
@@ -36,4 +39,22 @@ struct SCC {
             } while(v != u);
         }
     }
+    void work() {
+        for(int i = 1; i <= n; i++)
+            if(!dfn[i]) tarjan(i);
+    }
+    vector<vector<int>> shrink() {
+        work();
+        vector<vector<int>> ng(cnt + 1);
+        for(int u = 1; u <= n; u++)
+            for(int v : g[u])
+                if(scc[u] != scc[v]) ng[scc[u]].push_back(scc[v]);
+        for(int i = 1; i <= cnt; i++) {
+            sort(ng[i].begin(), ng[i].end());
+            ng[i].erase(unique(ng[i].begin(), ng[i].end()), ng[i].end());
+        }
+        return ng;
+    }
 };
+
+#endif

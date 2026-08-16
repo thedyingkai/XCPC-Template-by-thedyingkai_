@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct Trie {
     static const int SZ = 26;
@@ -21,7 +21,7 @@ struct Trie {
             cur = cur->next[id], cur->count++;
         }
     }
-    int find(const string& s) const {
+    int prefix_count(const string& s) const {
         Node* cur = root;
         for(char c : s) {
             int id = c - 'a';

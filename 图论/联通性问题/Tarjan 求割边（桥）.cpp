@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct CutEdge {
     int n, m, tot, cnt;
@@ -23,8 +23,8 @@ struct CutEdge {
 
     void tarjan(int u, int in = -1) {
         dfn[u] = low[u] = ++tot;
-        for(int i = 0; i < g[u].size(); i++) {
-            int j = g[u][i], v = e[j].v;
+        for(int j : g[u]) {
+            int v = e[j].v;
             if(!dfn[v]) {
                 tarjan(v, j);
                 low[u] = min(low[u], low[v]);

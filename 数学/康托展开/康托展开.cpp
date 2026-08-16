@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 template <class Ele> struct BitTree {
     int n;
@@ -22,16 +22,18 @@ template <class Ele> struct BitTree {
     void clear() { fill(tree.begin(), tree.end(), 0); }
 };
 struct CantorExpansion {
-    static const i64 MOD = 998244353;
     int maxn;
     vector<i64> fact;
     BitTree<i64> bt;
     void init_factorial(int n) {
         fact.resize(n + 1);
         fact[0] = 1;
-        for(int i = 1; i <= n; i++) fact[i] = (fact[i - 1] * i) % MOD;
+        for(int i = 1; i <= n; i++) fact[i] = fact[i - 1] * i;
     }
-    CantorExpansion(int max_n) : maxn(max_n), bt(max_n) { init_factorial(max_n); }
+    CantorExpansion(int max_n) : maxn(max_n), bt(max_n) {
+        assert(max_n <= 20);
+        init_factorial(max_n);
+    }
     i64 encode(const vector<int>& perm) {
         int n = perm.size();
         bt.clear();
@@ -39,13 +41,13 @@ struct CantorExpansion {
         i64 result = 0;
         for(int i = 0; i < n; i++) {
             i64 smaller = bt.query(perm[i] - 1);
-            result = (result + (smaller * fact[n - 1 - i]) % MOD) % MOD;
+            result += smaller * fact[n - 1 - i];
             bt.update(perm[i], -1);
         }
-        return (result + 1) % MOD;
+        return result + 1;
     }
     vector<int> decode(i64 rank, int n) {
-        rank = (rank - 1 + MOD) % MOD;
+        rank--;
         vector<int> result;
         vector<bool> used(n + 1, false);
         for(int i = 0; i < n; i++) {
@@ -65,5 +67,4 @@ struct CantorExpansion {
         return result;
     }
     i64 factorial(int n) { return fact[n]; }
-    static i64 get_mod() { return MOD; }
 };

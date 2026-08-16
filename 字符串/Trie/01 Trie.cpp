@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct Trie {
     struct Node {
@@ -19,6 +19,7 @@ struct Trie {
         }
     }
     int query(int val) const {
+        if(nodes.size() == 1) return 0;
         int cur = 0;
         int res = 0;
         for(int i = 30; i >= 0; --i) {
@@ -37,6 +38,10 @@ struct Trie {
 int main() {
     int n;
     cin >> n;
+    if(n <= 0) {
+        cout << 0 << "\n";
+        return 0;
+    }
     vector<vector<pair<int, int>>> g(n + 1);
     for(int i = 1; i < n; ++i) {
         int u, v, w;
@@ -58,4 +63,5 @@ int main() {
     int ans = 0;
     for(int i = 1; i <= n; ++i) ans = max(ans, trie.query(sum[i]));
     cout << ans << "\n";
+    return 0;
 }

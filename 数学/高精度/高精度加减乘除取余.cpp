@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct Big {
     static const int base = 1000000000;
@@ -9,14 +9,15 @@ struct Big {
     Big(long long v) { *this = v; }
     Big& operator=(long long v) {
         sign = 1;
+        u64 value = (u64) v;
         if(v < 0) {
             sign = -1;
-            v = -v;
+            value = 0 - value;
         }
         a.clear();
-        while(v) {
-            a.push_back(int(v % base));
-            v /= base;
+        while(value) {
+            a.push_back(int(value % base));
+            value /= base;
         }
         return *this;
     }
@@ -24,6 +25,7 @@ struct Big {
     Big& read(const string& s) {
         sign = 1;
         a.clear();
+        if(s.empty()) return *this;
         int pos = 0;
         if(s[pos] == '+' || s[pos] == '-') {
             if(s[pos] == '-') sign = -1;
@@ -128,14 +130,15 @@ struct Big {
     friend Big operator+(Big a, const Big& b) { return a += b; }
     friend Big operator-(Big a, const Big& b) { return a -= b; }
     Big& operator*=(int m) {
-        if(m < 0) {
+        i64 multiplier = m;
+        if(multiplier < 0) {
             sign = -sign;
-            m = -m;
+            multiplier = -multiplier;
         }
         long long carry = 0;
         for(size_t i = 0; i < a.size() || carry; ++i) {
             if(i == a.size()) a.push_back(0);
-            long long cur = carry + 1LL * a[i] * m;
+            long long cur = carry + a[i] * multiplier;
             a[i] = int(cur % base);
             carry = cur / base;
         }
@@ -160,15 +163,17 @@ struct Big {
     }
     friend Big operator*(Big a, const Big& b) { return a *= b; }
     Big& operator/=(int v) {
-        if(v < 0) {
+        if(v == 0) throw invalid_argument("Big division by zero");
+        i64 divisor = v;
+        if(divisor < 0) {
             sign = -sign;
-            v = -v;
+            divisor = -divisor;
         }
         long long rem = 0;
         for(int i = int(a.size()) - 1; i >= 0; --i) {
             long long cur = a[i] + rem * base;
-            a[i] = int(cur / v);
-            rem = cur % v;
+            a[i] = int(cur / divisor);
+            rem = cur % divisor;
         }
         trim();
         return *this;
@@ -185,6 +190,7 @@ struct Big {
     friend Big operator/(Big a, const Big& b) { return a /= b; }
     friend Big operator%(Big a, const Big& b) { return a %= b; }
     friend pair<Big, Big> divmod(const Big& a1, const Big& b1) {
+        if(b1.isZero()) throw invalid_argument("Big division by zero");
         int norm = base / (b1.a.back() + 1);
         Big A = a1.abs() * norm;
         Big B = b1.abs() * norm;

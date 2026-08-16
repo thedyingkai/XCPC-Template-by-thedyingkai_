@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct EDCC {
     int n, m, tot, cnt, idx;

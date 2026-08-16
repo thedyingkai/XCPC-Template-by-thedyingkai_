@@ -1,9 +1,9 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct Manacher {
-    string t;
+    string source, t;
     vector<int> p;
-    Manacher(const string& s) {
+    Manacher(const string& s) : source(s) {
         int n = s.size();
         t.reserve(2 * n + 1);
         for(int i = 0; i < n; i++) t.push_back('#'), t.push_back(s[i]);
@@ -18,7 +18,7 @@ struct Manacher {
             if(i + p[i] > r) c = i, r = i + p[i];
         }
     }
-    string longest(const string& s) const {
+    string longest() const {
         int best_len = 0, best_st = 0;
         for(int i = 0; i < (int) p.size(); i++) {
             int len = p[i];
@@ -26,8 +26,8 @@ struct Manacher {
             int st = (i - len) / 2;
             if(len > best_len || (len == best_len && st < best_st)) best_len = len, best_st = st;
         }
-        if(best_len == 0) return s.empty() ? string() : string(1, s[0]);
-        return s.substr(best_st, best_len);
+        if(best_len == 0) return source.empty() ? string() : string(1, source[0]);
+        return source.substr(best_st, best_len);
     }
     bool is_pal(int l, int r) const {
         int len = r - l;
@@ -40,5 +40,6 @@ int main() {
     string s;
     getline(cin, s);
     Manacher M(s);
-    cout << M.longest(s).length() << "\n";
+    cout << M.longest().length() << "\n";
+    return 0;
 }

@@ -1,12 +1,10 @@
-#include <template/start.cpp>
+#include "Dinic 最大流最小割.cpp"
 
-dinic1.dinic();
-dinic1.mincut(S);
-for(int i = 2; i < dinic1.e.size(); i += 2) {
-    int u = dinic1.e[i ^ 1].v, v = dinic1.e[i].v;
-    if(dinic1.e[i].c == 0)
-        dinic2.add(u, v, 1);
-    else
-        dinic2.add(u, v, LLONG_MAX);
+i64 mincutEdgeCount(int n, int S, int T, const vector<tuple<int, int, i64>>& edges) {
+    i64 base = (i64) edges.size() + 1;
+    Dinic dinic(n, S, T);
+    for(auto [u, v, c] : edges) {
+        dinic.add(u, v, (i128) c * base + 1);
+    }
+    return dinic.dinic() % base;
 }
-cout << dinic2.dinic() << endl;

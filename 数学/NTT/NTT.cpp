@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct NTT {
     static constexpr i64 MOD = 998244353, G = 3;
@@ -46,14 +46,14 @@ struct NTT {
         int n = 1;
         while(n < n1 + n2) n <<= 1;
         vector<i64> fa(n), fb(n);
-        for(int i = 1; i <= n1; i++) fa[i - 1] = A[i] % MOD;
-        for(int i = 1; i <= n2; i++) fb[i - 1] = B[i] % MOD;
+        for(int i = 1; i <= n1; i++) fa[i - 1] = (A[i] % MOD + MOD) % MOD;
+        for(int i = 1; i <= n2; i++) fb[i - 1] = (B[i] % MOD + MOD) % MOD;
         ntt(fa, false);
         ntt(fb, false);
         for(int i = 0; i < n; i++) fa[i] = fa[i] * fb[i] % MOD;
         ntt(fa, true);
-        vector<i64> C(n1 + n2 + 1, 0);
-        for(int i = 0; i < n1 + n2; i++) C[i + 1] = fa[i];
+        vector<i64> C(n1 + n2, 0);
+        for(int i = 0; i < n1 + n2 - 1; i++) C[i + 1] = fa[i];
         return C;
     }
 };

@@ -1,12 +1,14 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct EK {
     struct edge {
         i64 v, c, w, ne;
     };
-    int n, S, T, flow, cost;
+    int n, S, T;
+    i64 flow, cost;
     vector<edge> e;
-    vector<int> h, d, mf, pre, vis;
+    vector<int> h, pre, vis;
+    vector<i64> d, mf;
     EK(int _n, int s, int t) : n(_n), S(s), T(t) {
         e.push_back({}), e.push_back({});
         h.resize(n + 1);
@@ -23,17 +25,19 @@ struct EK {
         h[b] = e.size() - 1;
     }
     bool spfa() {
-        d.assign(n + 1, INT_MAX / 2);
+        d.assign(n + 1, LLONG_MAX / 4);
         mf.assign(n + 1, 0);
+        vis.assign(n + 1, 0);
         queue<int> q;
         q.push(S);
-        d[S] = 0, mf[S] = INT_MAX, vis[S] = 1;
+        d[S] = 0, mf[S] = LLONG_MAX, vis[S] = 1;
         while(q.size()) {
             int u = q.front();
             q.pop();
             vis[u] = 0;
             for(int i = h[u]; i; i = e[i].ne) {
-                int v = e[i].v, c = e[i].c, w = e[i].w;
+                int v = e[i].v;
+                i64 c = e[i].c, w = e[i].w;
                 if(d[v] > d[u] + w && c) {
                     d[v] = d[u] + w;
                     mf[v] = min(mf[u], c);

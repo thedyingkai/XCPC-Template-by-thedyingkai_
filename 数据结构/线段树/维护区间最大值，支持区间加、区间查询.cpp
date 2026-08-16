@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 template <class T, class Ele> struct SegTree {
     const int Min = 0;
@@ -45,7 +45,7 @@ template <class T, class Ele> struct SegTree {
         tree[root].r = r;
         initLazy(root);
         if(l != r) {
-            T mid = l + r >> 1;
+            T mid = (l + r) >> 1;
             T ch = root << 1;
             build(ch, l, mid);
             build(ch + 1, mid + 1, r);
@@ -60,7 +60,7 @@ template <class T, class Ele> struct SegTree {
             tree[root].lazy += val;
             return;
         }
-        T mid = tree[root].l + tree[root].r >> 1;
+        T mid = (tree[root].l + tree[root].r) >> 1;
         T ch = root << 1;
         if(r <= mid)
             update(ch, l, r, val);
@@ -75,7 +75,7 @@ template <class T, class Ele> struct SegTree {
     TreeNode query(T root, T l, T r) {
         pushDown(root);
         if(l == tree[root].l && r == tree[root].r) return tree[root];
-        T mid = tree[root].l + tree[root].r >> 1;
+        T mid = (tree[root].l + tree[root].r) >> 1;
         T ch = root << 1;
         if(r <= mid)
             return query(ch, l, r);
@@ -110,13 +110,10 @@ void solve() {
 }
 
 int main() {
-    auto begin = chrono::high_resolution_clock::now();
     ios::sync_with_stdio(0);
     cin.tie(0);
     int T;
     cin >> T;
     while(T--) { solve(); }
-    auto end = chrono::high_resolution_clock::now();
-    auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
-    cerr << "Time measured: " << elapsed.count() * 1e-9 << " seconds.\n";
+    return 0;
 }

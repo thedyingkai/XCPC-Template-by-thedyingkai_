@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct DSU {
     vector<int> p;
@@ -23,7 +23,7 @@ struct DSU {
             w = -w; // 反向
         }
         p[rb] = ra;
-        weight[rb] = w - weight[a] + weight[b];
+        weight[rb] = weight[a] - weight[b] - w;
         sz[ra] += sz[rb];
         return 1;
     }

@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct SAM {
     struct state {
@@ -8,7 +8,8 @@ struct SAM {
     int sz, last;     // sz：状态总数，last：当前最后加入的状态
     vector<state> st; // 状态数组
     SAM(int n) {
-        st.resize(2 * n + 2); // 最多2n-1个状态，留足空间
+        st.reserve(2 * n + 2); // 最多2n-1个状态，留足空间
+        st.emplace_back();
         st[0].len = 0;        // 初始状态长度为0
         st[0].link = -1;      // 初始状态无后缀链接
         sz = 1;               // 当前状态个数为1（初始状态）
@@ -17,6 +18,7 @@ struct SAM {
     // 插入字符c，返回新加入的状态编号
     int extend(char c) {
         int cur = sz++;                 // 新状态编号
+        st.emplace_back();
         st[cur].len = st[last].len + 1; // 新状态最长子串长度为上一个状态+1
         int p = last;
         // 从last开始沿后缀链接寻找没c转移的状态，建立转移到cur
@@ -29,9 +31,9 @@ struct SAM {
                 st[cur].link = q; // 情况1：直接连接q
             else {                // 情况2：需要克隆状态q
                 int clone = sz++;
+                state copied = st[q];
+                st.push_back(move(copied));
                 st[clone].len = st[p].len + 1;
-                st[clone].next = st[q].next;
-                st[clone].link = st[q].link;
                 // 调整p及其后缀链接中指向q的转移改为clone
                 while(p != -1 && st[p].next[c] == q) st[p].next[c] = clone, p = st[p].link;
                 st[q].link = st[cur].link = clone; // q和cur的后缀链接指向clone
@@ -52,20 +54,18 @@ int main() {
     vector<int> nodes;       // 保存每次插入字符对应的状态编号
     for(auto c : s) nodes.push_back(sam.extend(c));
     int sz = sam.sz;
-    vector<vector<int>> g(sz); // 建树，link作为父指针，子指针存储在这里
-    for(int i = 1; i < sz; i++) g[sam.st[i].link].push_back(i);
     vector<int> cnt(sz);          // 计数每个状态对应子串出现次数
     for(auto x : nodes) cnt[x]++; // 每个插入状态出现一次
-    i64 ans = 0;                  // 结果变量，最长重复子串出现次数*长度的最大值
-    // 后序遍历，累加子树中出现次数，更新答案
-    function<void(int)> dfs = [&](int u) {
-        for(auto v : g[u]) {
-            dfs(v);
-            cnt[u] += cnt[v];
-        }
+    vector<int> bucket(s.size() + 1), order(sz);
+    for(int i = 0; i < sz; i++) bucket[sam.st[i].len]++;
+    for(int i = 1; i <= (int) s.size(); i++) bucket[i] += bucket[i - 1];
+    for(int i = sz - 1; i >= 0; i--) order[--bucket[sam.st[i].len]] = i;
+    i64 ans = 0;
+    for(int i = sz - 1; i > 0; i--) {
+        int u = order[i];
         if(cnt[u] >= 2) ans = max(ans, (i64) cnt[u] * sam.st[u].len);
-    };
-    dfs(0);              // 从根状态0开始dfs
+        cnt[sam.st[u].link] += cnt[u];
+    }
     cout << ans << '\n'; // 输出答案
     return 0;
 }

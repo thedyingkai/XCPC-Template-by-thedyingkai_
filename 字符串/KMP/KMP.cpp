@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct KMP {
     vector<int> nxt;
@@ -18,6 +18,7 @@ struct KMP {
         string s = " " + txt;
         int n = txt.size(), m = pat.size() - 1;
         vector<int> pos;
+        if(m == 0) return pos;
         for(int i = 1, j = 0; i <= n; i++) {
             while(j && s[i] != pat[j + 1]) j = nxt[j];
             if(s[i] == pat[j + 1]) j++;
@@ -33,4 +34,5 @@ int main() {
     auto positions = kmp.match(s1);
     for(auto p : positions) cout << p << "\n";
     for(int i = 1; i < (int) kmp.nxt.size(); i++) cout << kmp.nxt[i] << " ";
+    return 0;
 }

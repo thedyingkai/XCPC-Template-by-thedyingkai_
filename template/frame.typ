@@ -99,7 +99,7 @@
   ignore-include: true,
   ignore-main: true,
 ) = {
-  let raw-code = read("..\\"+path)
+  let raw-code = read("..//"+path)
   let code = extract-code(
     raw-code,
     mode: mode,

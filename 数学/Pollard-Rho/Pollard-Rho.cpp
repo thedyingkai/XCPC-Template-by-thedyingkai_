@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 namespace PollardRho {
 static mt19937_64 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
@@ -35,7 +35,7 @@ i64 pollard(i64 n) {
     if(n % 2 == 0) return 2;
     uniform_int_distribution<i64> distC(1, n - 1), distX(0, n - 1);
     i64 c = distC(rng), x = distX(rng), y = x, d = 1;
-    auto f = [&](i64 v) { return (mul_mod(v, v, n) + c) % n; };
+    auto f = [&](i64 v) { return (i64) (((i128) mul_mod(v, v, n) + c) % n); };
     while(d == 1) {
         x = f(x), y = f(f(y));
         i64 diff = x > y ? x - y : y - x;
@@ -55,7 +55,7 @@ void factorRec(i64 n, map<i64, int>& mp) {
 }
 map<i64, int> factor(i64 n) {
     map<i64, int> mp;
-    factorRec(n, mp);
+    if(n > 1) factorRec(n, mp);
     return mp;
 }
 } // namespace PollardRho

@@ -1,4 +1,4 @@
-#include <template/start.cpp>
+#include "../../template/start.cpp"
 
 struct Dij {
     const i64 INF = LLONG_MAX / 3;
@@ -41,22 +41,9 @@ struct Dij {
     }
     vector<int> get_path(int target) {
         vector<int> path;
+        if(dist[target] == INF) return path;
         for(int cur = target; cur != -1; cur = parent[cur]) path.push_back(cur);
         reverse(path.begin(), path.end());
         return path;
     }
 };
-int main() {
-    vector<i64> dist = graph.dij(s);
-    for(int i = 1; i <= n; i++) {
-        if(graph.dist[i] == graph.INF)
-            cout << "INF" << ' ';
-        else
-            cout << graph.dist[i] << ' ';
-        vector<int> path = graph.get_path(i);
-        cout << "Path: ";
-        for(int node : path) cout << node << " ";
-        cout << "\n";
-    }
-    return 0;
-}
