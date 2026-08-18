@@ -1,5 +1,4 @@
-#ifndef XCPC_DINIC_MAX_FLOW_MIN_CUT
-#define XCPC_DINIC_MAX_FLOW_MIN_CUT
+#pragma once
 
 #include "../../template/start.cpp"
 
@@ -72,5 +71,3 @@ struct Dinic {
         }
     }
 };
-
-#endif

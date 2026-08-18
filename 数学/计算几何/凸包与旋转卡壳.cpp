@@ -1,5 +1,6 @@
 #include "点与直线基础.cpp"
 
+// start: convex-hull
 template <class T> vector<Point<T>> convexHull(vector<Point<T>> p, bool keepCollinear = false) {
     sort(p.begin(), p.end(), [](const Point<T>& a, const Point<T>& b) { return a.x != b.x ? a.x < b.x : a.y < b.y; });
     p.erase(unique(p.begin(), p.end()), p.end());
@@ -30,7 +31,9 @@ template <class T> vector<Point<T>> convexHull(vector<Point<T>> p, bool keepColl
     q.resize(k - 1);
     return q;
 }
+// end: convex-hull
 
+// start: diameter
 template <class T> auto diameter2(const vector<Point<T>>& p) {
     using R = decltype(square(Point<T>()));
     int n = p.size();
@@ -48,3 +51,4 @@ template <class T> auto diameter2(const vector<Point<T>>& p) {
     }
     return ans;
 }
+// end: diameter

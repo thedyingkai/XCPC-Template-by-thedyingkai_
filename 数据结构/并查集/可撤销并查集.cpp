@@ -1,5 +1,4 @@
-#ifndef XCPC_ROLLBACK_DSU
-#define XCPC_ROLLBACK_DSU
+#pragma once
 
 #include "../../template/start.cpp"
 
@@ -39,5 +38,3 @@ struct RollbackDSU {
     bool same(int a, int b) const { return find(a) == find(b); }
     int size(int x) const { return sz[find(x)]; }
 };
-
-#endif

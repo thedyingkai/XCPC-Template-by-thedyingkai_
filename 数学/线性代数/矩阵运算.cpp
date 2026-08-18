@@ -1,5 +1,4 @@
-#ifndef XCPC_MATRIX
-#define XCPC_MATRIX
+#pragma once
 
 #include "../../template/start.cpp"
 
@@ -82,14 +81,16 @@ template <class T> struct Matrix {
     // ---- 矩阵乘法 ----
     friend Matrix operator*(const Matrix& a, const Matrix& b) {
         Matrix res(a.n, b.m);
-        _rep(k, 0, a.m) _rep(i, 0, res.n) if(!isZero(a[i][k])) _rep(j, 0, res.m) res[i][j] =
-            add(res[i][j], mul(a[i][k], b[k][j]));
+        for(int k = 0; k < a.m; k++)
+            for(int i = 0; i < res.n; i++) if(!isZero(a[i][k]))
+                for(int j = 0; j < res.m; j++)
+                    res[i][j] = add(res[i][j], mul(a[i][k], b[k][j]));
         return res;
     }
     // ---- 快速幂 ----
     Matrix qp(Matrix base, i64 k) {
         Matrix res(base.n, base.m);
-        _rep(i, 0, res.n) res[i][i] = 1;
+        for(int i = 0; i < res.n; i++) res[i][i] = 1;
         while(k) {
             if(k & 1) res = res * base;
             base = base * base;
@@ -103,16 +104,15 @@ template <class T> struct Matrix {
     static pair<bool, vector<T>> solveLinear(Matrix A, vector<T> b);
     // ---- I/O ----
     friend ostream& operator<<(ostream& os, const Matrix& mat) {
-        _rep(i, 0, mat.n) {
-            _rep(j, 0, mat.m) os << mat[i][j] << " ";
+        for(int i = 0; i < mat.n; i++) {
+            for(int j = 0; j < mat.m; j++) os << mat[i][j] << " ";
             os << endl;
         }
         return os;
     }
     friend istream& operator>>(istream& is, Matrix& mat) {
-        _rep(i, 0, mat.n) _rep(j, 0, mat.m) is >> mat[i][j];
+        for(int i = 0; i < mat.n; i++)
+            for(int j = 0; j < mat.m; j++) is >> mat[i][j];
         return is;
     }
 };
-
-#endif

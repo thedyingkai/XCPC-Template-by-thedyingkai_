@@ -28,7 +28,7 @@ struct LiChao {
             if(lines[id].b > lines[cur].b) tree[u].line = id;
             return u;
         }
-        i64 mid = l + (i64) (((i128) r - l) / 2);
+        i64 mid = midpoint(l, r);
         bool lef = lines[id].get(l) > lines[cur].get(l);
         bool cen = lines[id].get(mid) > lines[cur].get(mid);
         if(cen) swap(tree[u].line, id);
@@ -50,7 +50,7 @@ struct LiChao {
         if(!u) return -((i128) 1 << 126);
         i128 ans = lines[tree[u].line].get(x);
         if(l == r) return ans;
-        i64 mid = l + (i64) (((i128) r - l) / 2);
+        i64 mid = midpoint(l, r);
         if(x <= mid)
             return max(ans, query(tree[u].ls, l, mid, x));
         else

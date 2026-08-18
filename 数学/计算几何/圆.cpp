@@ -1,5 +1,6 @@
 #include "点与直线基础.cpp"
 
+// start: circle-base
 template <class T> struct Circle {
     Point<T> o;
     T r;
@@ -16,7 +17,9 @@ template <class T> int circleRelation(const Circle<T>& c1, const Circle<T>& c2) 
     if(cmp(d - dif) == 0) return 3;
     return 4;
 }
+// end: circle-base
 
+// start: intersections
 template <class T> vector<Point<d128>> lineCircleIntersection(const Line<T>& l, const Circle<T>& c) {
     Point<d128> a = l.a, d = Point<d128>(l.b) - a, o = c.o;
     d128 d2 = dot(d, d), r = c.r;
@@ -42,7 +45,9 @@ template <class T> vector<Point<d128>> circleIntersection(const Circle<T>& c1, c
     Point<d128> v = rotate(d) * (sqrtl(h2) / dis);
     return {q - v, q + v};
 }
+// end: intersections
 
+// start: tangents
 template <class T> vector<Point<d128>> tangentPoints(const Point<T>& p, const Circle<T>& c) {
     Point<d128> o = c.o, v = Point<d128>(p) - o;
     d128 d2 = square(v), r = c.r;
@@ -70,15 +75,18 @@ template <class T> vector<pair<Point<d128>, Point<d128>>> commonTangents(const C
     }
     return ans;
 }
+// end: tangents
 
+// start: intersection-area
 template <class T> d128 circleIntersectionArea(const Circle<T>& c1, const Circle<T>& c2) {
     d128 d = distance(c1.o, c2.o), r1 = c1.r, r2 = c2.r;
     if(cmp(d - r1 - r2) >= 0) return 0;
     if(cmp(d - fabsl(r1 - r2)) <= 0) {
         d128 r = min(r1, r2);
-        return acosl(-1.0L) * r * r;
+        return numbers::pi_v<d128> * r * r;
     }
     d128 a1 = 2 * acosl(clamp((r1 * r1 + d * d - r2 * r2) / (2 * r1 * d), (d128) -1, (d128) 1));
     d128 a2 = 2 * acosl(clamp((r2 * r2 + d * d - r1 * r1) / (2 * r2 * d), (d128) -1, (d128) 1));
     return (r1 * r1 * (a1 - sinl(a1)) + r2 * r2 * (a2 - sinl(a2))) / 2;
 }
+// end: intersection-area

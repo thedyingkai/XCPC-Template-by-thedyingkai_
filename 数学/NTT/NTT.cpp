@@ -43,8 +43,7 @@ struct NTT {
     static vector<i64> multiply(const vector<i64>& A, const vector<i64>& B) {
         int n1 = (int) A.size() - 1, n2 = (int) B.size() - 1;
         if(n1 <= 0 || n2 <= 0) return vector<i64>(1, 0);
-        int n = 1;
-        while(n < n1 + n2) n <<= 1;
+        int n = (int) bit_ceil((unsigned) (n1 + n2));
         vector<i64> fa(n), fb(n);
         for(int i = 1; i <= n1; i++) fa[i - 1] = (A[i] % MOD + MOD) % MOD;
         for(int i = 1; i <= n2; i++) fb[i - 1] = (B[i] % MOD + MOD) % MOD;

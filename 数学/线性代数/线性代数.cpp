@@ -1,8 +1,8 @@
-#ifndef XCPC_LINEAR_ALGEBRA
-#define XCPC_LINEAR_ALGEBRA
+#pragma once
 
 #include "高斯消元.cpp"
 
+// start: determinant
 template <class T>
 T Matrix<T>::det() const {
     if(n != m) return 0;
@@ -11,7 +11,9 @@ T Matrix<T>::det() const {
     tmp.Gauss(0, 0, &ans);
     return ans;
 }
+// end: determinant
 
+// start: inverse
 template <class T>
 Matrix<T> Matrix<T>::inv() const {
     if(n != m) return Matrix();
@@ -24,7 +26,9 @@ Matrix<T> Matrix<T>::inv() const {
         for(int j = 0; j < n; j++) res[i][j] = aug[i][j];
     return res;
 }
+// end: inverse
 
+// start: solve-linear
 template <class T>
 pair<bool, vector<T>> Matrix<T>::solveLinear(Matrix<T> A, vector<T> b) {
     int n = A.n, m = A.m;
@@ -42,5 +46,4 @@ pair<bool, vector<T>> Matrix<T>::solveLinear(Matrix<T> A, vector<T> b) {
     if(rank < m) return {0, {}};
     return {1, x};
 }
-
-#endif
+// end: solve-linear

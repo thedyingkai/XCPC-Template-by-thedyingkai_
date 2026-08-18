@@ -1,5 +1,4 @@
-#ifndef XCPC_GEOMETRY_BASE
-#define XCPC_GEOMETRY_BASE
+#pragma once
 
 #include "../../template/start.cpp"
 
@@ -106,5 +105,3 @@ template <class T, class U> bool pointOnSegment(const Point<T>& p, const Line<U>
            cmp(q.x - max(a.x, b.x)) <= 0 && cmp(q.y - min(a.y, b.y)) >= 0 && cmp(q.y - max(a.y, b.y)) <= 0;
 }
 using P = Point<d128>;
-
-#endif

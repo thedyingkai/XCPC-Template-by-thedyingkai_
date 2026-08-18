@@ -28,7 +28,7 @@ struct CutEdge {
             if(!dfn[v]) {
                 tarjan(v, j);
                 low[u] = min(low[u], low[v]);
-                if(low[v] > dfn[u]) bri.emplace_back(u, v);
+                if(low[v] > dfn[u]) bri.push_back({u, v});
             } else if(j != (in ^ 1))
                 low[u] = min(low[u], dfn[v]);
         }

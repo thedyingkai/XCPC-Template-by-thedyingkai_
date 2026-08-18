@@ -1,5 +1,4 @@
-#ifndef XCPC_GAUSS
-#define XCPC_GAUSS
+#pragma once
 
 #include "矩阵运算.cpp"
 
@@ -44,5 +43,3 @@ int Matrix<T>::Gauss(vector<vector<T>>* aug, vector<int>* w, T* det) {
     if(det && rank < min(n, m)) *det = 0;
     return rank;
 }
-
-#endif

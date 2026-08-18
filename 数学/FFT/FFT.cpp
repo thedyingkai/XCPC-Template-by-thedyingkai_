@@ -1,6 +1,5 @@
 #include "../../template/start.cpp"
 
-const double PI = acos(-1);
 struct FFT {
     using CD = complex<double>;
     static void fft(vector<CD>& a, bool invert) {
@@ -12,7 +11,7 @@ struct FFT {
             if(i < j) swap(a[i], a[j]);
         }
         for(int len = 2; len <= n; len <<= 1) {
-            double ang = 2 * PI / len * (invert ? -1 : 1);
+            double ang = 2 * numbers::pi / len * (invert ? -1 : 1);
             CD wlen(cos(ang), sin(ang));
             for(int i = 0; i < n; i += len) {
                 CD w(1);
@@ -34,8 +33,7 @@ struct FFT {
         int l1 = (int) a.size() - 1;
         int l2 = (int) b.size() - 1;
         if(l1 <= 0 || l2 <= 0) return vector<int>(1, 0);
-        int n = 1;
-        while(n < l1 + l2) n <<= 1;
+        int n = (int) bit_ceil((unsigned) (l1 + l2));
         vector<CD> fa(n), fb(n);
         for(int i = 1; i <= l1; ++i) fa[i - 1] = CD(a[i], 0);
         for(int i = 1; i <= l2; ++i) fb[i - 1] = CD(b[i], 0);

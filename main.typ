@@ -34,7 +34,6 @@
   footer: footer
 )
 
-
 = 数据结构
 
 == 并查集
@@ -69,6 +68,12 @@
 
 #code("数据结构/树状数组/树状数组.cpp", mode: "full", ignore-main: false)
 
+== 稀疏表
+
+#include "数据结构/稀疏表/稀疏表.typ"
+
+#code("数据结构/稀疏表/稀疏表.cpp", parts: ("sparse-table", "disjoint-sparse-table"))
+
 == 线段树
 
 #include "数据结构/线段树/线段树.typ"
@@ -93,17 +98,17 @@
 
 #code("数据结构/线段树/维护区间 GCD，支持区间加、区间查询.cpp", mode: "full", ignore-main: false)
 
-== 李超树
-
-#include "数据结构/李超树/李超树.typ"
-
-#code("数据结构/李超树/李超树.cpp")
-
 == 主席树
 
 #include "数据结构/主席树/主席树.typ"
 
 #code("数据结构/主席树/主席树.cpp")
+
+== 李超树
+
+#include "数据结构/李超树/李超树.typ"
+
+#code("数据结构/李超树/李超树.cpp")
 
 == 平衡树
 
@@ -113,6 +118,68 @@
 
 #code("数据结构/平衡树/FHQ Treap.cpp")
 
+== 动态树
+
+=== Link-Cut Tree
+
+#include "数据结构/动态树/Link-Cut Tree.typ"
+
+#code("数据结构/动态树/Link-Cut Tree.cpp")
+
+=== Euler Tour Tree
+
+#include "数据结构/动态树/Euler Tour Tree.typ"
+
+#code("数据结构/动态树/Euler Tour Tree.cpp")
+
+=== 静态拓扑 Top Tree
+
+#include "数据结构/动态树/Top Tree/静态拓扑 Top Tree.typ"
+
+#code("数据结构/动态树/Top Tree/静态拓扑 Top Tree.cpp")
+
+== 莫队
+
+#include "数据结构/莫队/莫队.typ"
+
+#code("数据结构/莫队/莫队.cpp")
+
+=== Hilbert 序莫队
+
+#include "数据结构/莫队/Hilbert 序莫队.typ"
+
+#code("数据结构/莫队/Hilbert 序莫队.cpp")
+
+== 离线扫描
+
+#include "数据结构/离线扫描/离线扫描.typ"
+
+#code("数据结构/离线扫描/区间不同数.cpp")
+
+== CDQ 分治
+
+#include "数据结构/CDQ 分治/CDQ 三维偏序.typ"
+
+#code("数据结构/CDQ 分治/CDQ 三维偏序.cpp")
+
+== 整体二分
+
+#include "数据结构/整体二分/动态区间第 k 小.typ"
+
+#code("数据结构/整体二分/动态区间第 k 小.cpp")
+
+== 根号分治
+
+#include "数据结构/根号分治/图上邻居加.typ"
+
+#code("数据结构/根号分治/图上邻居加.cpp")
+
+== 动态位集
+
+#include "数据结构/动态位集/动态位集.typ"
+
+#code("数据结构/动态位集/动态位集.cpp")
+
 == 线性基
 
 #include "数据结构/线性基/线性基.typ"
@@ -121,6 +188,7 @@
 
 
 #pagebreak()
+
 
 = 数学
 
@@ -148,6 +216,32 @@
 
 #code("数学/快速幂/矩阵快速幂.cpp")
 
+== 扩展欧几里得
+
+==== 求 $a x + b y = c$ 的解
+
+#include "数学/扩展欧几里得/扩展欧几里得.typ"
+
+#code("数学/扩展欧几里得/扩展欧几里得.cpp", mode: "full", ignore-main: false)
+
+== EXCRT
+
+#include "数学/EXCRT/EXCRT.typ"
+
+#code("数学/EXCRT/EXCRT.cpp", mode: "full")
+
+== 扩展欧拉定理
+
+#include "数学/扩展欧拉定理/扩展欧拉定理.typ"
+
+#code("数学/扩展欧拉定理/扩展欧拉定理.cpp", mode: "full")
+
+== EXBSGS
+
+#include "数学/EXBSGS/EXBSGS.typ"
+
+#code("数学/EXBSGS/EXBSGS.cpp", mode: "full")
+
 == 欧拉筛
 
 #include "数学/欧拉筛/欧拉筛.typ"
@@ -160,31 +254,56 @@
 
 #code("数学/欧拉筛/线性筛积性函数.cpp")
 
+== Pollard-Rho
+
+#include "数学/Pollard-Rho/Pollard-Rho.typ"
+
+#code("数学/Pollard-Rho/Pollard-Rho.cpp", mode: "full", ignore-main: false)
+
+
+#pagebreak()
+
 == 整除分块
 
 #include "数学/整除分块/整除分块.typ"
 
 #code("数学/整除分块/整除分块.cpp", mode: "full")
 
-== 扩展欧几里得
+== 莫比乌斯反演
 
-==== 求 $a x + b y = c$ 的解
+#include "数学/莫比乌斯反演/莫比乌斯反演.typ"
 
-#include "数学/扩展欧几里得/扩展欧几里得.typ"
+== 杜教筛
 
-#code("数学/扩展欧几里得/扩展欧几里得.cpp", mode: "full", ignore-main: false)
+#include "数学/杜教筛/杜教筛.typ"
 
-== 扩展欧拉定理
+#code("数学/杜教筛/杜教筛.cpp")
 
-#include "数学/扩展欧拉定理/扩展欧拉定理.typ"
+== Min_25 筛
 
-#code("数学/扩展欧拉定理/扩展欧拉定理.cpp", mode: "full")
+#include "数学/Min_25 筛/Min_25 筛.typ"
 
-== EXCRT
+#code("数学/Min_25 筛/Min_25 筛.cpp")
 
-#include "数学/EXCRT/EXCRT.typ"
+== 类欧几里得
 
-#code("数学/EXCRT/EXCRT.cpp", mode: "full")
+=== floor_sum
+
+#include "数学/类欧几里得/floor_sum.typ"
+
+#code("数学/类欧几里得/floor_sum.cpp", mode: "full")
+
+=== 高阶类欧（精确值）
+
+#include "数学/类欧几里得/高阶类欧.typ"
+
+#code("数学/类欧几里得/高阶类欧.cpp", mode: "full")
+
+=== 高阶类欧（取模）
+
+#include "数学/类欧几里得/高阶类欧取模.typ"
+
+#code("数学/类欧几里得/高阶类欧取模.cpp", mode: "full")
 
 == 线性代数
 
@@ -204,7 +323,7 @@
 
 #include "数学/线性代数/线性代数.typ"
 
-#code("数学/线性代数/线性代数.cpp", mode: "full")
+#code("数学/线性代数/线性代数.cpp", parts: ("determinant", "inverse", "solve-linear"))
 
 == 高精度
 
@@ -218,11 +337,11 @@
 
 #code("数学/高精度/神秘题目.cpp", mode: "full")
 
-== 康托展开
+== 组合数
 
-#include "数学/康托展开/康托展开.typ"
+#include "数学/组合数/组合数.typ"
 
-#code("数学/康托展开/康托展开.cpp")
+#code("数学/组合数/组合数.cpp", parts: ("comb", "batch-inverse"))
 
 == Lucas
 
@@ -230,49 +349,41 @@
 
 #code("数学/Lucas/Lucas.cpp", mode: "full")
 
-== 计算几何
+== 任意模组合数
 
-=== 点与直线基础
+#include "数学/任意模组合数/任意模组合数.typ"
 
-#include "数学/计算几何/点与直线基础.typ"
+#code("数学/任意模组合数/任意模组合数.cpp")
 
-#code("数学/计算几何/点与直线基础.cpp", mode: "full")
+== 组合计数
 
-=== 线段与多边形
+#include "数学/组合计数/组合计数.typ"
 
-#include "数学/计算几何/线段与多边形.typ"
+#code("数学/组合计数/组合计数.cpp", parts: ("partition-numbers", "common-numbers"))
 
-#code("数学/计算几何/线段与多边形.cpp", mode: "full")
+== 康托展开
 
-=== 半平面交
+#include "数学/康托展开/康托展开.typ"
 
-#include "数学/计算几何/半平面交.typ"
+#code("数学/康托展开/康托展开.cpp")
 
-#code("数学/计算几何/半平面交.cpp", mode: "full")
+== Burnside 与 Pólya
 
-=== 凸包与旋转卡壳
+#include "数学/Burnside 与 Pólya/Burnside 与 Pólya.typ"
 
-#include "数学/计算几何/凸包与旋转卡壳.typ"
+== 概率与期望
 
-#code("数学/计算几何/凸包与旋转卡壳.cpp", mode: "full")
+#include "数学/概率与期望/概率与期望.typ"
 
-=== 圆
+== SG 与 Nim
 
-#include "数学/计算几何/圆.typ"
+#include "数学/SG 与 Nim/SG 与 Nim.typ"
 
-#code("数学/计算几何/圆.cpp", mode: "full")
+#code("数学/SG 与 Nim/SG 与 Nim.cpp", parts: ("nim", "subtraction-game", "dag-sg"))
 
-== 扫描线求矩形面积并
+== 生成函数
 
-#include "数学/扫描线求矩形面积并/扫描线求矩形面积并.typ"
-
-#code("数学/扫描线求矩形面积并/扫描线求矩形面积并.cpp", mode: "full", ignore-main: false)
-
-== EXBSGS
-
-#include "数学/EXBSGS/EXBSGS.typ"
-
-#code("数学/EXBSGS/EXBSGS.cpp", mode: "full")
+#include "数学/生成函数/生成函数.typ"
 
 == FFT
 
@@ -286,14 +397,125 @@
 
 #code("数学/NTT/NTT.cpp", mode: "full", ignore-main: false)
 
-== Pollard-Rho
+== 集合变换
 
-#include "数学/Pollard-Rho/Pollard-Rho.typ"
+=== Zeta、Möbius 与快速沃尔什变换
 
-#code("数学/Pollard-Rho/Pollard-Rho.cpp", mode: "full", ignore-main: false)
+#include "数学/集合变换/集合变换.typ"
 
+#code("数学/集合变换/集合变换.cpp")
 
-#pagebreak()
+=== 子集卷积
+
+#include "数学/集合变换/子集卷积.typ"
+
+#code("数学/集合变换/子集卷积.cpp")
+
+== 多项式
+
+=== 基础运算与 NTT
+
+#include "数学/多项式/多项式基础.typ"
+
+#code("数学/多项式/多项式基础.cpp", mode: "full")
+
+=== 多项式求逆
+
+#include "数学/多项式/多项式求逆.typ"
+
+#code("数学/多项式/多项式求逆.cpp", mode: "full")
+
+=== 多项式对数与指数
+
+#include "数学/多项式/多项式对数与指数.typ"
+
+#code("数学/多项式/多项式对数与指数.cpp", mode: "full")
+
+=== 多项式平方根
+
+#include "数学/多项式/多项式平方根.typ"
+
+#code("数学/多项式/多项式平方根.cpp", mode: "full")
+
+=== 多项式除法
+
+#include "数学/多项式/多项式除法.typ"
+
+#code("数学/多项式/多项式除法.cpp", mode: "full")
+
+=== 多项式幂
+
+#include "数学/多项式/多项式幂.typ"
+
+#code("数学/多项式/多项式幂.cpp", mode: "full")
+
+=== 多点求值与插值
+
+#include "数学/多项式/多点求值与插值.typ"
+
+#code("数学/多项式/多点求值与插值.cpp", mode: "full")
+
+== 拉格朗日插值
+
+#include "数学/拉格朗日插值/拉格朗日插值.typ"
+
+#code("数学/拉格朗日插值/拉格朗日插值.cpp", mode: "full")
+
+== 线性递推
+
+=== Berlekamp–Massey
+
+#include "数学/线性递推/Berlekamp-Massey.typ"
+
+#code("数学/线性递推/Berlekamp-Massey.cpp")
+
+=== Bostan–Mori
+
+#include "数学/线性递推/Bostan-Mori.typ"
+
+#code("数学/线性递推/Bostan-Mori.cpp", mode: "full")
+
+== 计算几何
+
+=== 点与直线基础
+
+#include "数学/计算几何/点与直线基础.typ"
+
+#code("数学/计算几何/点与直线基础.cpp", mode: "full")
+
+=== 线段与多边形
+
+#include "数学/计算几何/线段与多边形.typ"
+
+#code(
+  "数学/计算几何/线段与多边形.cpp",
+  parts: ("point-in-polygon", "segment-intersection", "segment-in-polygon"),
+)
+
+=== 半平面交
+
+#include "数学/计算几何/半平面交.typ"
+
+#code("数学/计算几何/半平面交.cpp", mode: "full")
+
+=== 凸包与旋转卡壳
+
+#include "数学/计算几何/凸包与旋转卡壳.typ"
+
+#code("数学/计算几何/凸包与旋转卡壳.cpp", parts: ("convex-hull", "diameter"))
+
+=== 圆
+
+#include "数学/计算几何/圆.typ"
+
+#code("数学/计算几何/圆.cpp", parts: ("circle-base", "intersections", "tangents", "intersection-area"))
+
+=== 扫描线求矩形面积并
+
+#include "数学/计算几何/扫描线求矩形面积并/扫描线求矩形面积并.typ"
+
+#code("数学/计算几何/扫描线求矩形面积并/扫描线求矩形面积并.cpp", mode: "full", ignore-main: false)
+
 
 = 图论
 
@@ -308,6 +530,16 @@
 #include "图论/Floyd/Floyd.typ"
 
 #code("图论/Floyd/Floyd.cpp")
+
+== 差分约束
+
+#include "图论/差分约束/差分约束.typ"
+
+#code("图论/差分约束/差分约束.cpp")
+
+== 树上常用公式
+
+#include "图论/树上常用公式/树上常用公式.typ"
 
 == LCA
 
@@ -343,6 +575,24 @@
 
 #code("图论/虚树/虚树.cpp")
 
+== Prüfer 序列
+
+#include "图论/Prüfer 序列/Prüfer 序列.typ"
+
+#code("图论/Prüfer 序列/Prüfer 序列.cpp", parts: ("heap", "linear"))
+
+== 功能图
+
+#include "图论/功能图/功能图.typ"
+
+#code("图论/功能图/功能图.cpp")
+
+== 无向基环树
+
+#include "图论/基环树/无向基环树.typ"
+
+#code("图论/基环树/无向基环树.cpp")
+
 == MST
 
 #include "图论/MST/MST.typ"
@@ -358,6 +608,18 @@
 === 加边法（Kruskal）
 
 #code("图论/MST/加边法（Kruskal）.cpp")
+
+== Kruskal 重构树
+
+#include "图论/Kruskal 重构树/Kruskal 重构树.typ"
+
+#code("图论/Kruskal 重构树/Kruskal 重构树.cpp")
+
+== 矩阵树定理
+
+#include "图论/矩阵树定理/矩阵树定理.typ"
+
+#code("图论/矩阵树定理/矩阵树定理.cpp")
 
 == 联通性问题
 
@@ -395,11 +657,11 @@
 
 #code("图论/2-SAT/2-SAT.cpp")
 
-== 二分图匹配
+== 支配树
 
-#include "图论/二分图匹配/二分图最大匹配.typ"
+#include "图论/支配树/支配树.typ"
 
-#code("图论/二分图匹配/二分图最大匹配.cpp")
+#code("图论/支配树/支配树.cpp")
 
 == 欧拉路
 
@@ -412,6 +674,30 @@
 #include "图论/线段树分治/线段树分治.typ"
 
 #code("图论/线段树分治/线段树分治.cpp")
+
+== 二分图匹配
+
+#include "图论/二分图匹配/二分图最大匹配.typ"
+
+#code("图论/二分图匹配/二分图最大匹配.cpp")
+
+== 一般图最大匹配
+
+#include "图论/一般图匹配/一般图最大匹配.typ"
+
+#code("图论/一般图匹配/一般图最大匹配.cpp")
+
+== 拟阵交
+
+#include "图论/拟阵交/拟阵交.typ"
+
+=== 增广框架
+
+#code("图论/拟阵交/拟阵交.cpp", mode: "full")
+
+=== 划分拟阵与图拟阵
+
+#code("图论/拟阵交/常用拟阵.cpp", parts: ("partition-matroid", "graphic-matroid"))
 
 == 网络流
 
@@ -457,7 +743,26 @@
 
 #pagebreak()
 
+
 = 字符串
+
+== 字符串哈希
+
+#include "字符串/字符串哈希/字符串哈希.typ"
+
+#code("字符串/字符串哈希/字符串哈希.cpp")
+
+== KMP
+
+#include "字符串/KMP/KMP.typ"
+
+#code("字符串/KMP/KMP.cpp", mode: "full", ignore-main: false)
+
+== Z 函数
+
+#include "字符串/Z 函数/Z 函数.typ"
+
+#code("字符串/Z 函数/Z 函数.cpp", mode: "full")
 
 == Trie
 
@@ -473,24 +778,6 @@
 
 #code("字符串/Trie/01 Trie.cpp", mode: "full", ignore-main: false)
 
-== KMP
-
-#include "字符串/KMP/KMP.typ"
-
-#code("字符串/KMP/KMP.cpp", mode: "full", ignore-main: false)
-
-== 字符串哈希
-
-#include "字符串/字符串哈希/字符串哈希.typ"
-
-#code("字符串/字符串哈希/字符串哈希.cpp")
-
-== Z 函数
-
-#include "字符串/Z 函数/Z 函数.typ"
-
-#code("字符串/Z 函数/Z 函数.cpp", mode: "full")
-
 == ACAM
 
 #include "字符串/ACAM/ACAM.typ"
@@ -503,19 +790,32 @@
 
 #code("字符串/Manacher/Manacher.cpp", mode: "full")
 
-== SAM
-
-#include "字符串/SAM/SAM.typ"
-
-#code("字符串/SAM/SAM.cpp", mode: "full", ignore-main: false)
-
 == 后缀数组与 LCP
 
 #include "字符串/后缀数组/后缀数组.typ"
 
 #code("字符串/后缀数组/后缀数组.cpp")
 
+== SAM
+
+#include "字符串/SAM/SAM.typ"
+
+#code("字符串/SAM/SAM.cpp", mode: "full", ignore-main: false)
+
+== Lyndon 分解
+
+#include "字符串/Lyndon 分解/Lyndon 分解.typ"
+
+#code("字符串/Lyndon 分解/Lyndon 分解.cpp")
+
+== 极大周期串（runs）
+
+#include "字符串/runs/runs.typ"
+
+#code("字符串/runs/runs.cpp")
+
 #pagebreak()
+
 
 = 杂项
 
@@ -531,11 +831,17 @@
 
 #code("杂项/三分/三分.cpp", mode: "full", ignore-main: false)
 
-== 莫队
+== 折半搜索
 
-#include "杂项/莫队/莫队.typ"
+#include "杂项/折半搜索/折半搜索.typ"
 
-#code("杂项/莫队/莫队.cpp")
+#code("杂项/折半搜索/折半搜索.cpp")
+
+== 随机指纹
+
+#include "杂项/随机指纹/随机指纹.typ"
+
+#code("杂项/随机指纹/随机指纹.cpp")
 
 == i128 输入输出重载
 

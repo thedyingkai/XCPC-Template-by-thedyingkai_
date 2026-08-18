@@ -1,5 +1,4 @@
-#ifndef XCPC_TARJAN_SCC
-#define XCPC_TARJAN_SCC
+#pragma once
 
 #include "../../template/start.cpp"
 
@@ -56,5 +55,3 @@ struct SCC {
         return ng;
     }
 };
-
-#endif

@@ -1,19 +1,23 @@
-#ifndef XCPC_GEOMETRY_SEGMENT_POLYGON
-#define XCPC_GEOMETRY_SEGMENT_POLYGON
+#pragma once
 
 #include "点与直线基础.cpp"
 
+// start: point-in-polygon
 // 点在多边形内（射线法）
 template <class T> bool pointInPolygon(const Point<T>& a, const vector<Point<T>>& p) {
     int n = p.size(), t = 0;
-    _rep(i, 0, n) if(pointOnSegment(a, Line(p[i], p[(i + 1) % n]))) return 1;
-    _rep(i, 0, n) {
+    for(int i = 0; i < n; i++)
+        if(pointOnSegment(a, Line(p[i], p[(i + 1) % n]))) return 1;
+    for(int i = 0; i < n; i++) {
         auto u = p[i], v = p[(i + 1) % n];
         if(cmp(u.x - a.x) < 0 && cmp(v.x - a.x) >= 0 && pointOnLineLeft(a, Line(v, u))) t ^= 1;
         if(cmp(u.x - a.x) >= 0 && cmp(v.x - a.x) < 0 && pointOnLineLeft(a, Line(u, v))) t ^= 1;
     }
     return t == 1;
 }
+// end: point-in-polygon
+
+// start: segment-intersection
 // 线段相交判定（返回类型和交点）
 /*0-不相交，1-严格相交，2-重叠，3-在端点处相交*/
 template <class T> tuple<int, Point<d128>, Point<d128>> segmentIntersection(const Line<T>& l1, const Line<T>& l2) {
@@ -53,12 +57,15 @@ template <class T> d128 distanceSS(const Line<T>& l1, const Line<T>& l2) {
     if(get<0>(segmentIntersection(l1, l2)) != 0) return 0.0;
     return min({distancePS(l1.a, l2), distancePS(l1.b, l2), distancePS(l2.a, l1), distancePS(l2.b, l1)});
 }
+// end: segment-intersection
+
+// start: segment-in-polygon
 // 线段是否在多边形内部
 template <class T> bool segmentInPolygon(const Line<T>& l, const std::vector<Point<T>>& p) {
     int n = p.size();
     if(!pointInPolygon(l.a, p)) return 0;
     if(!pointInPolygon(l.b, p)) return 0;
-    _rep(i, 0, n) {
+    for(int i = 0; i < n; i++) {
         auto u = p[i], v = p[(i + 1) % n], w = p[(i + 2) % n];
         auto [t, p1, p2] = segmentIntersection(l, Line(u, v));
         if(t == 1) return 0;
@@ -91,5 +98,4 @@ template <class T> bool segmentInPolygon(const Line<T>& l, const std::vector<Poi
     }
     return 1;
 }
-
-#endif
+// end: segment-in-polygon

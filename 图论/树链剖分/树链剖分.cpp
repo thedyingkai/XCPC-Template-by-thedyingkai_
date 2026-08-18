@@ -1,5 +1,4 @@
-#ifndef XCPC_HLD
-#define XCPC_HLD
+#pragma once
 
 #include "../../template/start.cpp"
 
@@ -42,7 +41,7 @@ struct HLD {
         }
         return dep[u] < dep[v] ? u : v;
     }
-    template <class F> void path(int u, int v, F&& f, bool edge = false) const {
+    void path(int u, int v, auto&& f, bool edge = false) const {
         while(top[u] != top[v]) {
             if(dep[top[u]] < dep[top[v]]) swap(u, v);
             f(dfn[top[u]], dfn[u]);
@@ -54,5 +53,3 @@ struct HLD {
     }
     pair<int, int> subtree(int u, bool edge = false) const { return {dfn[u] + edge, dfn[u] + sz[u] - 1}; }
 };
-
-#endif

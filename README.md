@@ -2,6 +2,14 @@
 
 这是一个使用 Typst 编写和渲染的 XCPC 算法模板项目。
 
+## 代码标准与切割
+
+- C++ 板子按 GNU++20 编写。
+- 一个文件需要暴露多个可复制部分时，用 `// start: name` 与 `// end: name` 标记完整区段。
+- Typst 用 `#code("路径.cpp", parts: ("base", "query"))` 按数组顺序选择并拼接区段。
+- 区段名必须唯一且不能嵌套；名称错误、重复引用或标记未闭合会在构建时直接报出文件路径和行号。
+- 未使用 `parts` 的旧 `mode` 调用继续兼容；`#include`、`#pragma once` 和标准外层 include guard 默认不进入代码框。
+
 ## 本地渲染
 
 渲染当前 `VERSION` 对应的 PDF：

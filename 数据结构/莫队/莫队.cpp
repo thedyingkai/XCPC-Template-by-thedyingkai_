@@ -11,7 +11,7 @@ struct Mo {
         q.push_back({l, r, tot});
         return tot++;
     }
-    template <class Add, class Del, class Answer> void work(Add&& add, Del&& del, Answer&& answer) {
+    void work(auto&& add, auto&& del, auto&& answer) {
         sort(q.begin(), q.end(), [&](const Query& a, const Query& b) {
             int x = (a.l - 1) / block, y = (b.l - 1) / block;
             if(x != y) return x < y;

@@ -1,5 +1,4 @@
-#ifndef XCPC_GEOMETRY_HALF_PLANE
-#define XCPC_GEOMETRY_HALF_PLANE
+#pragma once
 
 #include "点与直线基础.cpp"
 
@@ -42,5 +41,3 @@ template <class T> vector<Point<d128>> hp(const vector<Line<T>>& input) {
     ps.push_back(lineIntersection(ls.back(), ls.front()));
     return vector(ps.begin(), ps.end());
 }
-
-#endif
