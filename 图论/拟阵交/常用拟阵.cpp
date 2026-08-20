@@ -3,7 +3,7 @@
 #include "拟阵交.cpp"
 
 // start: partition-matroid
-struct PartitionMatroidOracle : MatroidOracle {
+struct PartitionMatroidOracle final : MatroidOracle {
     int n;
     vector<int> group, capacity, count;
     vector<char> chosen;
@@ -121,7 +121,7 @@ vector<int> unitPartitionMatroidIntersection(const PartitionMatroidOracle& first
 // end: unit-partition-matroid-intersection
 
 // start: graphic-matroid
-struct GraphicMatroidOracle : MatroidOracle {
+struct GraphicMatroidOracle final : MatroidOracle {
     struct Edge {
         int u, v;
     };
@@ -129,9 +129,13 @@ struct GraphicMatroidOracle : MatroidOracle {
     vector<Edge> edges;
     vector<char> chosen;
     vector<vector<pair<int, int>>> g;
-    vector<int> component, tin, tout, edgeChild;
+    vector<int> component, tin, tout, edgeChild, seen;
+    vector<array<int, 3>> dfsStack;
     GraphicMatroidOracle(int vertices_, vector<Edge> edges_)
-        : vertices(vertices_), m((int) edges_.size()), clk(0), edges(move(edges_)), g(vertices + 1) {}
+        : vertices(vertices_), m((int) edges_.size()), clk(0), edges(move(edges_)),
+          g(vertices + 1) {
+        dfsStack.reserve(2 * vertices + 1);
+    }
     void reset(const vector<char>& in) override {
         chosen = in, clk = 0;
         for(auto& adj : g) adj.clear();
@@ -141,12 +145,13 @@ struct GraphicMatroidOracle : MatroidOracle {
         }
         component.assign(vertices + 1, 0), tin.assign(vertices + 1, 0), tout.assign(vertices + 1, 0);
         edgeChild.assign(m, 0);
-        vector<int> seen(vertices + 1);
+        seen.assign(vertices + 1, 0);
         for(int s = 1; s <= vertices; s++) if(!seen[s]) {
-            vector<array<int, 4>> stk{{s, 0, -1, 0}};
-            while(!stk.empty()) {
-                auto [u, p, pe, exit] = stk.back();
-                stk.pop_back();
+            dfsStack.clear();
+            dfsStack.push_back({s, -1, 0});
+            while(!dfsStack.empty()) {
+                auto [u, pe, exit] = dfsStack.back();
+                dfsStack.pop_back();
                 if(exit) {
                     tout[u] = clk;
                     continue;
@@ -154,8 +159,8 @@ struct GraphicMatroidOracle : MatroidOracle {
                 if(seen[u]) continue;
                 seen[u] = 1, component[u] = s, tin[u] = ++clk;
                 if(pe != -1) edgeChild[pe] = u;
-                stk.push_back({u, p, pe, 1});
-                for(auto [v, id] : g[u]) if(v != p) stk.push_back({v, u, id, 0});
+                dfsStack.push_back({u, pe, 1});
+                for(auto [v, id] : g[u]) if(id != pe) dfsStack.push_back({v, id, 0});
             }
         }
     }

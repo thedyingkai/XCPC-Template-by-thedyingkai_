@@ -10,36 +10,53 @@ struct MatroidOracle {
     virtual ~MatroidOracle() = default;
 };
 
-vector<int> matroidIntersection(int n, MatroidOracle& first, MatroidOracle& second) {
+template<class FirstOracle, class SecondOracle>
+vector<int> matroidIntersection(int n, FirstOracle& first, SecondOracle& second) {
     vector<char> chosen(n, 0);
+
+    // 任意公共独立集都能作为增广起点；先取一个极大集可减少增广轮数。
+    first.reset(chosen), second.reset(chosen);
+    for(int id = 0; id < n; id++) {
+        if(first.canAdd(id) && second.canAdd(id)) {
+            chosen[id] = 1;
+            first.reset(chosen), second.reset(chosen);
+        }
+    }
+
     while(true) {
         first.reset(chosen), second.reset(chosen);
+        vector<int> inside, outside;
+        inside.reserve(n), outside.reserve(n);
+        for(int id = 0; id < n; id++) {
+            (chosen[id] ? inside : outside).push_back(id);
+        }
+
         vector<int> pre(n, -2);
-        queue<int> q;
-        for(int y = 0; y < n; y++) if(!chosen[y] && first.canAdd(y)) {
+        vector<int> q;
+        q.reserve(n);
+        for(int y : outside) if(first.canAdd(y)) {
             pre[y] = -1;
-            q.push(y);
+            q.push_back(y);
         }
         int target = -1;
-        while(!q.empty() && target == -1) {
-            int v = q.front();
-            q.pop();
+        for(int head = 0; head < (int) q.size() && target == -1; head++) {
+            int v = q[head];
             if(!chosen[v]) {
                 if(second.canAdd(v)) {
                     target = v;
                     break;
                 }
-                for(int x = 0; x < n; x++) {
-                    if(chosen[x] && pre[x] == -2 && second.canExchange(x, v)) {
+                for(int x : inside) {
+                    if(pre[x] == -2 && second.canExchange(x, v)) {
                         pre[x] = v;
-                        q.push(x);
+                        q.push_back(x);
                     }
                 }
             } else {
-                for(int y = 0; y < n; y++) {
-                    if(!chosen[y] && pre[y] == -2 && first.canExchange(v, y)) {
+                for(int y : outside) {
+                    if(pre[y] == -2 && first.canExchange(v, y)) {
                         pre[y] = v;
-                        q.push(y);
+                        q.push_back(y);
                     }
                 }
             }
