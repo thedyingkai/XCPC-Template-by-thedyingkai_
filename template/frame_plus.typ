@@ -270,7 +270,7 @@
 
 #let render-code(
   code,
-  font-size: 8pt,
+  font-size: 6pt,
   line-number: true,
 ) = {
   if code == none or code.trim() == "" {
@@ -290,14 +290,13 @@
     )
     #for (i, line) in lines.enumerate() {
       if line-number {
-        grid(
-          columns: (auto, 1fr),
-          column-gutter: 1em,
-          align(right)[#text(fill: rgb("#888"))[#lineno(i + 1)]],
-          align(left)[#raw(line)],
-        )
-      } else {
-        raw(line)
+        text(fill: rgb("#888"))[#lineno(i + 1)]
+        h(1em)
+      }
+      raw(line)
+      linebreak()
+      if i + 1 < lines.len() {
+        v(-2em)
       }
     }
   ]
