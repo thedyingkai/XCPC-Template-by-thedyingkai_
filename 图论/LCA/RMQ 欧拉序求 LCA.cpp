@@ -62,7 +62,7 @@ struct RMQ {
             }
         }
     }
-    int querymin(const vector<int>& a, int L, int R) {
+    int querymin(const vector<int>& a, int L, int R) const {
         if(L > R) swap(L, R);
         int idl = L / blocklen, idr = R / blocklen;
         if(idl == idr) {
@@ -115,25 +115,32 @@ struct LCA_RMQ {
         e[++tot] = {u, head[v]};
         head[v] = tot;
     }
-    void dfs(int u, int fa, int depth) {
-        st[u] = dfs_clock;
-        dfn[dfs_clock] = u;
-        dep[dfs_clock++] = depth;
-        for(int i = head[u]; i; i = e[i].nxt) {
-            int v = e[i].v;
-            if(v == fa) continue;
-            dfs(v, u, depth + 1);
-            dfn[dfs_clock] = u;
-            dep[dfs_clock++] = depth;
-        }
-    }
     void build(int root = 1) {
         dfs_clock = 0;
-        dfs(root, 0, 0);
+        vector<int> parent(n + 1), depth(n + 1), nextEdge = head, stk = {root};
+        st[root] = dfs_clock, dfn[dfs_clock] = root, dep[dfs_clock++] = 0;
+        while(!stk.empty()) {
+            int u = stk.back();
+            int& i = nextEdge[u];
+            while(i && e[i].v == parent[u]) i = e[i].nxt;
+            if(i) {
+                int v = e[i].v;
+                i = e[i].nxt;
+                parent[v] = u, depth[v] = depth[u] + 1;
+                st[v] = dfs_clock, dfn[dfs_clock] = v, dep[dfs_clock++] = depth[v];
+                stk.push_back(v);
+            } else {
+                stk.pop_back();
+                if(!stk.empty()) {
+                    int p = stk.back();
+                    dfn[dfs_clock] = p, dep[dfs_clock++] = depth[p];
+                }
+            }
+        }
         rmq.init(dfs_clock);
         rmq.initmin(dep, dfs_clock);
     }
-    int lca(int u, int v) {
+    int lca(int u, int v) const {
         int L = st[u], R = st[v];
         if(L > R) swap(L, R);
         int idx = rmq.querymin(dep, L, R);

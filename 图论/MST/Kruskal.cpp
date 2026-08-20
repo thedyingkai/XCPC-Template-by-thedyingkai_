@@ -8,20 +8,32 @@ struct Kruskal {
     int n, cnt, f;
     i64 ans;
     vector<Edge>& g;
-    vector<int> p;
+    vector<int> p, sz;
     Kruskal(int n_, vector<Edge>& g_) : n(n_), g(g_) {
         p.resize(n + 1);
+        sz.resize(n + 1);
         f = kruskal();
     }
-    int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }
+    int find(int x) {
+        int root = x;
+        while(p[root] != root) root = p[root];
+        while(p[x] != x) {
+            int next = p[x];
+            p[x] = root;
+            x = next;
+        }
+        return root;
+    }
     bool kruskal() {
         sort(g.begin(), g.end());
         iota(p.begin(), p.end(), 0);
+        fill(sz.begin(), sz.end(), 1);
         ans = cnt = 0;
         for(auto& e : g) {
             int x = find(e.u), y = find(e.v);
             if(x != y) {
-                p[x] = y, ans += e.w, cnt++;
+                if(sz[x] < sz[y]) swap(x, y);
+                p[y] = x, sz[x] += sz[y], ans += e.w, cnt++;
                 if(cnt == n - 1) break;
             }
         }

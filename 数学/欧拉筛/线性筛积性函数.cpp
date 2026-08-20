@@ -9,6 +9,7 @@ struct Sieve {
     vector<int> cnt;
     vector<i64> p_power, p_sum;
     void init(int n) {
+        assert(n >= 0);
         primes.clear();
         is_prime.assign(n + 1, 1);
         phi.assign(n + 1, 0);

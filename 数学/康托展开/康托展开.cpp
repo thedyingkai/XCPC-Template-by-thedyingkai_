@@ -31,11 +31,17 @@ struct CantorExpansion {
         for(int i = 1; i <= n; i++) fact[i] = fact[i - 1] * i;
     }
     CantorExpansion(int max_n) : maxn(max_n), bt(max_n) {
-        assert(max_n <= 20);
+        assert(0 <= max_n && max_n <= 20);
         init_factorial(max_n);
     }
     i64 encode(const vector<int>& perm) {
         int n = perm.size();
+        assert(n <= maxn);
+        vector<char> used(n + 1);
+        for(int value : perm) {
+            assert(1 <= value && value <= n && !used[value]);
+            used[value] = 1;
+        }
         bt.clear();
         for(int i = 1; i <= n; i++) bt.update(i, 1);
         i64 result = 0;
@@ -47,6 +53,7 @@ struct CantorExpansion {
         return result + 1;
     }
     vector<int> decode(i64 rank, int n) {
+        assert(0 <= n && n <= maxn && 1 <= rank && rank <= fact[n]);
         rank--;
         vector<int> result;
         vector<bool> used(n + 1, false);

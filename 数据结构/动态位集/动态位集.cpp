@@ -17,6 +17,11 @@ struct DynamicBitset {
         assert(0 <= position && position < size);
         return word[position >> 6] >> (position & 63) & 1ULL;
     }
+    DynamicBitset& operator|=(const DynamicBitset& other) {
+        assert(size == other.size);
+        for(int i = 0; i < (int) word.size(); i++) word[i] |= other.word[i];
+        return *this;
+    }
 
     void shiftOr(int shift) {
         assert(shift >= 0);

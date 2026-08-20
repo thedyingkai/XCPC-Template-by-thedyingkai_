@@ -8,6 +8,7 @@ struct Trie {
     vector<Node> nodes;
     Trie() { nodes.emplace_back(); }
     void insert(int val) {
+        assert(val >= 0);
         int cur = 0;
         for(int i = 30; i >= 0; --i) {
             int b = (val >> i) & 1;
@@ -19,6 +20,7 @@ struct Trie {
         }
     }
     int query(int val) const {
+        assert(val >= 0);
         if(nodes.size() == 1) return 0;
         int cur = 0;
         int res = 0;
@@ -49,15 +51,17 @@ int main() {
         g[u].emplace_back(v, w);
         g[v].emplace_back(u, w);
     }
-    vector<int> sum(n + 1, 0);
-    function<void(int, int)> dfs = [&](int u, int fa) {
+    vector<int> sum(n + 1, 0), parent(n + 1, 0), stack = {1};
+    while(!stack.empty()) {
+        int u = stack.back();
+        stack.pop_back();
         for(auto [v, w] : g[u]) {
-            if(v == fa) continue;
+            if(v == parent[u]) continue;
+            parent[v] = u;
             sum[v] = sum[u] ^ w;
-            dfs(v, u);
+            stack.push_back(v);
         }
-    };
-    dfs(1, 0);
+    }
     Trie trie;
     for(int i = 1; i <= n; ++i) trie.insert(sum[i]);
     int ans = 0;

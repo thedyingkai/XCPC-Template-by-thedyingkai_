@@ -15,8 +15,11 @@ struct Dij {
     vector<vector<edge>> G;
     vector<i64> dist;
     vector<int> vis, parent;
-    Dij(int N) : n(N), G(N + 1), dist(N + 1), vis(N + 1), parent(N + 1, -1) {}
-    void add(int u, int v, i64 w) { G[u].push_back({v, w}); }
+    Dij(int N) : n(N), G(N + 1), dist(N + 1, INF), vis(N + 1), parent(N + 1, -1) {}
+    void add(int u, int v, i64 w) {
+        assert(0 <= w && w < INF);
+        G[u].push_back({v, w});
+    }
     vector<i64> dij(int src) {
         fill(dist.begin(), dist.end(), INF);
         fill(vis.begin(), vis.end(), 0);
@@ -39,7 +42,7 @@ struct Dij {
         }
         return dist;
     }
-    vector<int> get_path(int target) {
+    vector<int> get_path(int target) const {
         vector<int> path;
         if(dist[target] == INF) return path;
         for(int cur = target; cur != -1; cur = parent[cur]) path.push_back(cur);

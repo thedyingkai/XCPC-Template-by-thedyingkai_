@@ -1,20 +1,9 @@
-==== 用途
+==== 连续点插值的用途
 
-- 输入低次多项式在连续整数点 $0..k$ 的取值，求任意大下标 $x$ 处的 $P(x)$；常用于把多项式项的巨大前缀和外推到目标位置。
+已知低次多项式在连续整数点的值时，`lagrangeConsecutive(y,x,p)` 由 `y[i]=P(i)` 在 $O(k)$ 内求 $P(x)$，常用于把一个多项式项的前缀和外推到巨大下标。要求 $p$ 为质数且次数上界 $k<p$；`x` 会先模 $p$ 规范化，落在已有采样点时直接返回样本。
 
-==== 接口与边界
+在节点 $0..k$ 上，第 $i$ 个 Lagrange 基函数的分母是 $(-1)^(k-i)i!(k-i)!$，分子用 `x-j` 的前缀积和后缀积一次算完。若被求和项为 $d$ 次多项式，其前缀和至多为 $d+1$ 次，因此先算 `0..d+1` 的前缀值就能外推。任意互异节点应使用多点插值，不要硬把横坐标平移成连续点。
 
-- `lagrangeConsecutive(y,x,p)` 已知 $P(0),P(1),...,P(k)$，在质数模数 $p$ 下用 $O(k)$ 时间求 $P(x)$，要求 $k<p$。
-- `x` 会先对 $p$ 规范化；若其剩余类在 `0..k` 中，函数直接返回对应样本。
-- 任意互异点使用 $P(x)=sum_i y_i product_(j != i) (x-x_j)/(x_i-x_j)$，朴素单点求值为 $O(k^2)$；本板只保留赛中更常用的连续点版本。
+`lagrangeConsecutiveShift(y,c,m,p,convolution)` 批量返回 $P(c),...,P(c+m-1)$；卷积函数必须接收并返回同一质数模数下的零下标数组，使用 NTT 时复杂度为 $O((n+m)log(n+m))$。要求 `m>=0` 且 `max(n,m)<p`，还要确认卷积长度受到所选 NTT 模数支持。
 
-==== 推式与改板
-
-- 对 $x_i=i$，分母为 $product_(j != i)(i-j)=(-1)^(k-i)i!(k-i)!$；前缀积与后缀积给出其余分子。
-- 若被求和项是 $d$ 次多项式，其前缀和至多为 $d+1$ 次多项式。计算 `0..d+1` 的前缀值后，可求巨大下标处的和。
-- Newton 前向差分形式为 $P(x)=sum_(j=0)^k Delta^j P(0) C(x,j)$；已有差分表时可直接使用这一式。
-- 多次询问同一组 `y` 时，把阶乘与逆阶乘移到外部只预处理一次；大量任意点询问才考虑多点求值，不要扩写本板。
-
-==== 板子题
-
-- Codeforces 622F「The Sum of the k-th Powers」。
+#link("https://judge.yosupo.jp/problem/shift_of_sampling_points_of_polynomial")[Library Checker · shift_of_sampling_points_of_polynomial]

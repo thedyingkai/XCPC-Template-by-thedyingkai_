@@ -2,12 +2,14 @@
 
 #include "../../template/start.cpp"
 
-template <class T> struct Matrix {
-    static const int MOD = 1000000007;
+template <class T, i64 Mod = 1000000007> struct Matrix {
+    static_assert(Mod > 0);
+    static constexpr i64 MOD = Mod;
     static constexpr bool _m_ = is_integral<T>::value; // 整数取模，浮点直接算
     int n, m;
     vector<vector<T>> rec;
     Matrix(int _n = 0, int _m = 0, T _x = 0) {
+        assert(_n >= 0 && _m >= 0);
         n = _n, m = _m;
         rec.resize(_n, vector<T>(_m, _x));
     }
@@ -45,6 +47,7 @@ template <class T> struct Matrix {
             return a * b;
     }
     static T modPow(T a, i64 e) {
+        assert(e >= 0);
         if constexpr(_m_) {
             T r = 1;
             T x = norm(a);
@@ -65,6 +68,7 @@ template <class T> struct Matrix {
         }
     }
     static T Inv(T a) {
+        assert(!isZero(a));
         if constexpr(_m_)
             return modPow(a, MOD - 2);
         else
@@ -80,15 +84,37 @@ template <class T> struct Matrix {
     }
     // ---- 矩阵乘法 ----
     friend Matrix operator*(const Matrix& a, const Matrix& b) {
+        assert(a.m == b.n);
         Matrix res(a.n, b.m);
-        for(int k = 0; k < a.m; k++)
-            for(int i = 0; i < res.n; i++) if(!isZero(a[i][k]))
-                for(int j = 0; j < res.m; j++)
-                    res[i][j] = add(res[i][j], mul(a[i][k], b[k][j]));
+        if constexpr(_m_) {
+            Matrix left = a, right = b;
+            for(auto& row : left.rec)
+                for(T& value : row) value = norm(value);
+            for(auto& row : right.rec)
+                for(T& value : row) value = norm(value);
+            if constexpr(Mod <= 3000000000LL) {
+                for(int i = 0; i < res.n; i++) {
+                    vector<i128> sum(res.m);
+                    for(int k = 0; k < a.m; k++) if(left[i][k] != 0)
+                        for(int j = 0; j < res.m; j++) sum[j] += (i128) left[i][k] * right[k][j];
+                    for(int j = 0; j < res.m; j++) res[i][j] = (T) (sum[j] % MOD);
+                }
+            } else {
+                for(int k = 0; k < a.m; k++)
+                    for(int i = 0; i < res.n; i++) if(left[i][k] != 0)
+                        for(int j = 0; j < res.m; j++)
+                            res[i][j] = (T) (((i128) res[i][j] + (i128) left[i][k] * right[k][j]) % MOD);
+            }
+        } else {
+            for(int k = 0; k < a.m; k++)
+                for(int i = 0; i < res.n; i++) if(!isZero(a[i][k]))
+                    for(int j = 0; j < res.m; j++) res[i][j] = add(res[i][j], mul(a[i][k], b[k][j]));
+        }
         return res;
     }
     // ---- 快速幂 ----
-    Matrix qp(Matrix base, i64 k) {
+    static Matrix qp(Matrix base, i64 k) {
+        assert(base.n == base.m && k >= 0);
         Matrix res(base.n, base.m);
         for(int i = 0; i < res.n; i++) res[i][i] = 1;
         while(k) {

@@ -14,7 +14,7 @@ template <class T> struct Node {
     }
     inline void pushdown() {
         if(!ls) {
-            int mid = (l + r) >> 1;
+            int mid = midpoint(l, r);
             ls = new Node(l, mid);
             rs = new Node(mid + 1, r);
         }

@@ -1,19 +1,5 @@
-==== 用途
+`berlekampMassey(sequence)` 在质数模数下，从一段序列前缀求与它相容的最短线性递推，返回的 `c` 满足 $a_n=sum_(i=1)^k c_(i-1)a_(n-i)$。处理到每个新位置时，若当前递推预测的差值非零，就用上一次使线性复杂度增长的递推乘一个适当系数和位移来消掉该差值；算法始终保持已经扫描的前缀全部满足当前关系。
 
-- 输入模意义下的一段序列前缀，求与它相容的最短线性递推；再输入下标 $n$，由递推和初值求第 $n$ 项。
+`nth(initial,c,n)` 再用多项式取模于 $O(k^2 log n)$ 求第 $n$ 项，`n` 从零开始，初值至少提供前 $k$ 项。模数必须是质数，因为修正系数需要非零差值的逆元；全零序列返回空递推。有限前缀只能保证“与样本相容”，通常至少提供真实阶数两倍以上的连续项，并拿额外项复核。已知递推时直接调用 `nth`；阶数很大时改用 Bostan--Mori。
 
-==== 接口与边界
-
-- `berlekampMassey(sequence)` 在质数模数下求能解释已知序列的最短线性递推，返回 `c`，满足 $a_n = sum_(i=1)^k c_(i-1) a_(n-i)$。
-- `nth(initial,c,n)` 用多项式取模在 $O(k^2 log n)$ 内求第 $n$ 项，`n` 从 $0$ 开始；`initial` 至少提供前 $k$ 项。
-- 默认模数为 $998244353$；序列不足以唯一确定真实递推时，算法只能返回与已知前缀相容的递推。
-
-==== 使用与 trick
-
-- 通常至少提供真实阶数两倍以上的连续项，并用更多已知项复核返回递推。
-- 全零序列返回空递推，之后各项按 $0$ 处理；换合数模数会破坏求逆步骤。
-- 已知递推时直接调用 `nth`，不要先跑 Berlekamp--Massey；阶数很大时再改用 NTT/Bostan--Mori。
-
-==== 板子题
-
-- Library Checker「Find Linear Recurrence」「K-th Term of Linear Recurrence」。
+#link("https://judge.yosupo.jp/problem/find_linear_recurrence")[Library Checker · find_linear_recurrence]

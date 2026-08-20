@@ -8,7 +8,10 @@ template <class T> vector<Point<d128>> hp(const vector<Line<T>>& input) {
     using L = Line<d128>;
     vector<L> lines;
     lines.reserve(input.size());
-    for(const auto& l : input) lines.emplace_back((P) l.a, (P) l.b);
+    for(const auto& l : input) {
+        assert(l.a != l.b);
+        lines.emplace_back((P) l.a, (P) l.b);
+    }
     sort(lines.begin(), lines.end(), [&](const L& l1, const L& l2) {
         auto d1 = l1.b - l1.a, d2 = l2.b - l2.a;
         if(sgn(d1) != sgn(d2)) return sgn(d1) == 1;

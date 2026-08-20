@@ -14,6 +14,7 @@ struct KruskalReconstructionTree {
     vector<vector<int>> child, up;
     KruskalReconstructionTree(int n_, vector<Edge> edges, bool ascending_ = true)
         : n(n_), tot(n_), ascending(ascending_) {
+        assert(n >= 1);
         build(move(edges));
     }
     int find(int x) {
@@ -67,7 +68,7 @@ struct KruskalReconstructionTree {
             else for(int v : child[u]) leaves[u] += leaves[v];
         }
         lg = 1;
-        while((1 << lg) <= max(tot, 1)) lg++;
+        while((1LL << lg) <= max(tot, 1)) lg++;
         up.assign(lg, vector<int>(tot + 1));
         for(int u = 1; u <= tot; u++) up[0][u] = parent[u];
         for(int j = 1; j < lg; j++)

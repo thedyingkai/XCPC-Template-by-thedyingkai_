@@ -20,6 +20,7 @@ struct StringHash {
         }
     }
     pair<int, int> get(int l, int r) const {
+        assert(0 <= l && l <= r && r <= n);
         int x = (h1[r] - (i64) h1[l] * p1[r - l]) % MOD1;
         int y = (h2[r] - (i64) h2[l] * p2[r - l]) % MOD2;
         if(x < 0) x += MOD1;

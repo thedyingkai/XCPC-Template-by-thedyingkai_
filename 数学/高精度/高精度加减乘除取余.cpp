@@ -146,19 +146,127 @@ struct Big {
         return *this;
     }
     friend Big operator*(Big a, int m) { return a *= m; }
-    Big& operator*=(const Big& v) {
-        vector<__int128> prod(a.size() + v.a.size());
-        for(size_t i = 0; i < a.size(); ++i)
-            for(size_t j = 0; j < v.a.size(); ++j) prod[i + j] += (__int128) a[i] * v.a[j];
-        sign *= v.sign;
-        a.assign(prod.size(), 0);
-        __int128 carry = 0;
-        for(size_t i = 0; i < prod.size(); ++i) {
-            __int128 cur = prod[i] + carry;
-            a[i] = int(cur % base);
-            carry = cur / base;
+    static int powerMod(int value, int exponent, int mod) {
+        i64 result = 1, baseValue = value;
+        while(exponent) {
+            if(exponent & 1) result = result * baseValue % mod;
+            baseValue = baseValue * baseValue % mod;
+            exponent >>= 1;
         }
-        trim();
+        return (int) result;
+    }
+    static void numberTheoreticTransform(vector<int>& value, bool inverse, int mod) {
+        int n = (int) value.size();
+        for(int i = 1, j = 0; i < n; i++) {
+            int bit = n >> 1;
+            for(; j & bit; bit >>= 1) j ^= bit;
+            j ^= bit;
+            if(i < j) swap(value[i], value[j]);
+        }
+        for(int length = 2; length <= n; length <<= 1) {
+            int root = powerMod(3, (mod - 1) / length, mod);
+            if(inverse) root = powerMod(root, mod - 2, mod);
+            for(int start = 0; start < n; start += length) {
+                i64 factor = 1;
+                int half = length >> 1;
+                for(int offset = 0; offset < half; offset++) {
+                    int left = value[start + offset];
+                    int right = (int) (factor * value[start + offset + half] % mod);
+                    int add = left + right;
+                    if(add >= mod) add -= mod;
+                    int subtract = left - right;
+                    if(subtract < 0) subtract += mod;
+                    value[start + offset] = add;
+                    value[start + offset + half] = subtract;
+                    factor = factor * root % mod;
+                }
+            }
+        }
+        if(inverse) {
+            int inverseSize = powerMod(n, mod - 2, mod);
+            for(int& x : value) x = (i64) x * inverseSize % mod;
+        }
+    }
+    static vector<int> convolutionMod(const vector<int>& left, const vector<int>& right,
+                                      int size, int mod) {
+        vector<int> a(size), b(size);
+        ranges::copy(left, a.begin());
+        ranges::copy(right, b.begin());
+        numberTheoreticTransform(a, false, mod);
+        numberTheoreticTransform(b, false, mod);
+        for(int i = 0; i < size; i++) a[i] = (i64) a[i] * b[i] % mod;
+        numberTheoreticTransform(a, true, mod);
+        return a;
+    }
+    static vector<int> decimalChunks(const Big& value) {
+        string text = value.toString();
+        int first = !text.empty() && text[0] == '-';
+        vector<int> result;
+        result.reserve((text.size() - first + 3) / 4);
+        for(int right = (int) text.size(); right > first; right -= 4) {
+            int left = max(first, right - 4), chunk = 0;
+            for(int i = left; i < right; i++) chunk = chunk * 10 + text[i] - '0';
+            result.push_back(chunk);
+        }
+        return result;
+    }
+    Big& operator*=(const Big& v) {
+        if(isZero() || v.isZero()) return *this = 0;
+        int resultSign = sign * v.sign;
+        if(a.size() * v.a.size() <= 4096) {
+            vector<i128> product(a.size() + v.a.size());
+            for(size_t i = 0; i < a.size(); ++i)
+                for(size_t j = 0; j < v.a.size(); ++j) product[i + j] += (i128) a[i] * v.a[j];
+            a.clear();
+            a.reserve(product.size() + 2);
+            i128 carry = 0;
+            for(size_t i = 0; i < product.size(); ++i) {
+                i128 current = product[i] + carry;
+                a.push_back((int) (current % base));
+                carry = current / base;
+            }
+            while(carry) {
+                a.push_back((int) (carry % base));
+                carry /= base;
+            }
+            sign = resultSign;
+            trim();
+            return *this;
+        }
+
+        constexpr int MOD1 = 998244353;
+        constexpr int MOD2 = 1004535809;
+        vector<int> left = decimalChunks(*this), right = decimalChunks(v);
+        int required = (int) left.size() + (int) right.size() - 1;
+        int transformSize = (int) bit_ceil((unsigned) required);
+        assert((MOD1 - 1) % transformSize == 0 && (MOD2 - 1) % transformSize == 0);
+        vector<int> first = convolutionMod(left, right, transformSize, MOD1);
+        vector<int> second = convolutionMod(left, right, transformSize, MOD2);
+        int inverseMod1 = powerMod(MOD1 % MOD2, MOD2 - 2, MOD2);
+        vector<u64> coefficient(required);
+        for(int i = 0; i < required; i++) {
+            int difference = second[i] - first[i];
+            if(difference < 0) difference += MOD2;
+            i64 multiplier = (i64) difference * inverseMod1 % MOD2;
+            coefficient[i] = first[i] + (u64) MOD1 * multiplier;
+        }
+        vector<int> digit;
+        digit.reserve(required + 4);
+        u64 carry = 0;
+        for(int i = 0; i < required || carry; i++) {
+            u64 current = carry + (i < required ? coefficient[i] : 0);
+            digit.push_back((int) (current % 10000));
+            carry = current / 10000;
+        }
+        while(digit.size() > 1 && digit.back() == 0) digit.pop_back();
+        string text = to_string(digit.back());
+        char buffer[8];
+        for(int i = (int) digit.size() - 2; i >= 0; i--) {
+            snprintf(buffer, sizeof(buffer), "%04d", digit[i]);
+            text += buffer;
+        }
+        read(text);
+        sign = resultSign;
         return *this;
     }
     friend Big operator*(Big a, const Big& b) { return a *= b; }

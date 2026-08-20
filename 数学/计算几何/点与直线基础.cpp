@@ -68,6 +68,7 @@ template <class T> d128 length(const Line<T>& l) { return length(l.a - l.b); }
 // 单位向量
 template <class T> Point<d128> normalize(const Point<T>& p) {
     d128 len = length(p);
+    assert(cmp(len) != 0);
     return Point<d128>(p.x / len, p.y / len);
 }
 // 判断平行
@@ -77,10 +78,12 @@ template <class T> bool parallel(const Line<T>& l1, const Line<T>& l2) {
 template <class T> d128 distance(const Point<T>& a, const Point<T>& b) { return length(a - b); }
 // 点到直线距离
 template <class T> d128 distancePL(const Point<T>& p, const Line<T>& l) {
+    assert(l.a != l.b);
     return fabsl((d128) cross(l.a - l.b, l.a - p)) / length(l);
 }
 // 点到线段距离
 template <class T> d128 distancePS(const Point<T>& p, const Line<T>& l) {
+    if(l.a == l.b) return distance(p, l.a);
     if(cmp(dot(p - l.a, l.b - l.a)) < 0) return distance(p, l.a);
     if(cmp(dot(p - l.b, l.a - l.b)) < 0) return distance(p, l.b);
     return distancePL(p, l);
@@ -95,13 +98,22 @@ template <class T> bool pointOnLineLeft(const Point<T>& p, const Line<T>& l) {
 }
 // 两直线交点
 template <class T> Point<d128> lineIntersection(const Line<T>& l1, const Line<T>& l2) {
+    assert(!parallel(l1, l2));
     Point<d128> a = l1.a, b = l1.b, c = l2.a, d = l2.b;
     return a + (b - a) * (cross(d - c, a - c) / cross(d - c, a - b));
 }
 // 点是否在线段上
 template <class T, class U> bool pointOnSegment(const Point<T>& p, const Line<U>& l) {
-    Point<d128> q = p, a = l.a, b = l.b;
-    return cmp(cross(q - a, b - a)) == 0 && cmp(q.x - min(a.x, b.x)) >= 0 &&
-           cmp(q.x - max(a.x, b.x)) <= 0 && cmp(q.y - min(a.y, b.y)) >= 0 && cmp(q.y - max(a.y, b.y)) <= 0;
+    if constexpr(is_integral_v<T> && is_integral_v<U>) {
+        i128 qx = p.x, qy = p.y, ax = l.a.x, ay = l.a.y, bx = l.b.x, by = l.b.y;
+        i128 area = (qx - ax) * (by - ay) - (qy - ay) * (bx - ax);
+        return area == 0 && min(ax, bx) <= qx && qx <= max(ax, bx) &&
+               min(ay, by) <= qy && qy <= max(ay, by);
+    } else {
+        Point<d128> q = p, a = l.a, b = l.b;
+        return cmp(cross(q - a, b - a)) == 0 && cmp(q.x - min(a.x, b.x)) >= 0 &&
+               cmp(q.x - max(a.x, b.x)) <= 0 && cmp(q.y - min(a.y, b.y)) >= 0 &&
+               cmp(q.y - max(a.y, b.y)) <= 0;
+    }
 }
 using P = Point<d128>;

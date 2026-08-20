@@ -1,4 +1,4 @@
-#include "../联通性问题/Tarjan SCC 缩点.cpp"
+#include "../连通性问题/Tarjan SCC 缩点.cpp"
 
 struct TwoSAT {
     int n;

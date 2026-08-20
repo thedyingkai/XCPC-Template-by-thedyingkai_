@@ -1,25 +1,18 @@
-==== 用途
+`Comb::init(N,p)` 在质数模数 $p$ 下预处理 `0..N` 的阶乘和逆阶乘，要求 $0<=N<p$。随后 `C(n,k)`、`A(n,k)` 分别以 $O(1)$ 求组合数和排列数，越界或 `k` 非法时返回零；`starsBars(sum,boxes)` 求 $x_1+...+x_k=s$ 的非负整数解数，其中 $k$、$s$ 分别对应 `boxes`、`sum`，并且 `sum+boxes-1` 不能超过预处理上界。`batchInverse(a,p)` 只用一次快速幂求一组逆元，但每个元素模 $p$ 都必须非零。
 
-- 输入质数模数下的 $n,k$，常数时间查询组合数 $C(n,k)$、排列数 $A(n,k)$ 和隔板法方案数；也可批量求一组非零数的逆元。
+阶乘法正确是因为 $C(n,k)=n!/(k!(n-k)!)$，而 `N<p` 保证这些阶乘在质数模数下可逆。若 $n>=p$，阶乘已经含零因子，应改用 Lucas；合数模数下分母也未必可逆，应使用质数幂分解和 CRT 的任意模组合数板。
 
-==== 接口与边界
+化组合式时常用四条等式：$k C(n,k)=n C(n-1,k-1)$；Vandermonde 恒等式 $sum_k C(r,k)C(s,n-k)=C(r+s,n)$；曲棍球杆恒等式 $sum_(i=k)^n C(i,k)=C(n+1,k+1)$；以及 $sum_k C(n,k)=2^n$。二项式反演的两边是
 
-- `Comb::init(n,p)` 在质数模数 $p$ 下预处理 `0..n` 的阶乘与逆阶乘，要求 $0<=n<p$；`C(n,k)` 和 `A(n,k)` 单次 $O(1)$。
-- $n>=p$ 时阶乘含有零因子，不能调用本板；$p$ 较小时使用 Lucas，任意合数模数使用任意模组合数板。
-- `batchInverse` 用一次快速幂求一组数的逆元，要求每个数模 $p$ 非零。
+$F(n)=sum_(k=0)^n C(n,k)G(k)$，
 
-==== 常用恒等式
+$G(n)=sum_(k=0)^n (-1)^(n-k) C(n,k)F(k)$。
 
-- $k C(n,k)=n C(n-1,k-1)$，$sum_k C(r,k)C(s,n-k)=C(r+s,n)$。
-- $sum_(i=k)^n C(i,k)=C(n+1,k+1)$，$sum_k C(n,k)=2^n$。
-- 二项式反演：$F(n)=sum_(k=0)^n C(n,k)G(k)$ 当且仅当 $G(n)=sum_(k=0)^n (-1)^(n-k) C(n,k)F(k)$。
+容斥时，若 $A_S$ 表示下标集合 $S$ 中所有集合的交，则
+$|A_1 union ... union A_m|=sum_(t=1)^m (-1)^(t+1) sum_(|S|=t)|A_S|$。
+再记 $G_i=sum_(|S|=i)|A_S|$，恰好属于 $k$ 个集合的元素数为
+$sum_(i=k)^m (-1)^(i-k) C(i,k)G_i$。
 
-==== 容斥与隔板
+隔板法先明确变量是否允许为零：正整数解数是 $C(n-1,k-1)$，非负整数解数是 $C(n+k-1,k-1)$；有上下界时先平移下界，再对超过上界的变量容斥。写代码前先核对组合对象和所有下标的有效范围。
 
-- 记 $A_S$ 为下标属于 $S$ 的所有集合的交集，则 $|A_1 union ... union A_m|=sum_(t=1)^m (-1)^(t+1) sum_(|S|=t)|A_S|$。若 $G_i=sum_(|S|=i)|A_S|$，则恰好属于 $k$ 个集合的元素数为 $sum_(i=k)^m (-1)^(i-k) C(i,k)G_i$。
-- $x_1+...+x_k=n$ 的正整数解数为 $C(n-1,k-1)$，非负整数解数为 $C(n+k-1,k-1)$；有上界时先平移下界，再对超过上界的变量容斥。
-- `starsBars(sum,boxes)` 计算非负解数；必须保证 `sum+boxes-1` 没有超过预处理范围。
-
-==== 板子题
-
-- AtCoder ABC145 D「Knight」。
+#link("https://judge.yosupo.jp/problem/binomial_coefficient_prime_mod")[Library Checker · binomial_coefficient_prime_mod]

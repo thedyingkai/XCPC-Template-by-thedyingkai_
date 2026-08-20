@@ -10,9 +10,14 @@ i64 exgcd(i64 a, i64 b, i64& x, i64& y) {
     return d;
 }
 i64 excrt(vector<i64>& m, vector<i64>& r, int n) {
+    assert(n >= 1 && (int) m.size() > n && (int) r.size() > n);
+    assert(m[1] > 0);
     i64 m1 = m[1], m2, r1 = r[1], r2, p, q;
+    r1 %= m1;
+    if(r1 < 0) r1 += m1;
     for(int i = 2; i <= n; i++) {
         m2 = m[i], r2 = r[i];
+        assert(m2 > 0);
         i64 d = exgcd(m1, m2, p, q);
         i128 delta = (i128) r2 - r1;
         if(delta % d) return -1;
@@ -21,6 +26,7 @@ i64 excrt(vector<i64>& m, vector<i64>& r, int n) {
         if(step < 0) step += mod;
         p = step;
         i128 next_mod = (i128) m1 / d * m2;
+        if(next_mod > numeric_limits<i64>::max()) throw overflow_error("EXCRT modulus overflow");
         i128 next_r = ((i128) m1 * p + r1) % next_mod;
         if(next_r < 0) next_r += next_mod;
         r1 = next_r;

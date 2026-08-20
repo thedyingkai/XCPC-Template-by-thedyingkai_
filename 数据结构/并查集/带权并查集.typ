@@ -1,10 +1,10 @@
-==== 维护与产物
+带权并查集处理形如 `val[a]-val[b]=w` 的相对关系。它不保存每个点的绝对值，只维护点到父亲的差；沿父链相加即可得到点到根的差，因此同一连通块内任意两点之差都能由根势能相减得到。差值约束、奇偶关系、食物链和前缀和关系都属于这一模型。
 
-- 输入形如 `val[a] - val[b] = w` 的点对约束，维护差值、距离、奇偶或模 $M$ 关系。
-- `unite(a,b,w)` 加入关系；`query(a,b)` 在连通时返回 `val[a] - val[b]`。
-- 适合食物链、带势约束和前缀和差分建模；关系运算必须可合成、可逆。
+`weight[x]=val[x]-val[p[x]]`。路径压缩前先递归求旧父亲的根，再执行 `weight[x]+=weight[oldParent]`，此时 `weight[x]` 就是 `val[x]-val[root]`。设压缩后 `da=weight[a]`、`db=weight[b]`，两棵树的根分别为 `ra,rb`。约束 `val[a]-val[b]=w` 下，若把 `rb` 接到 `ra`，必须令
 
-==== 接口与改法
+`weight[rb] = da - db - w`，这正是 `val[rb]-val[ra]`。
+
+若按大小合并时交换了两棵树，就同时交换 `a,b` 并令 `w=-w`，仍可套同一公式。查询同一连通块内的差直接返回 `weight[a]-weight[b]`。
 
 - 当前代码维护加法差：`weight[x] = val[x] - val[p[x]]`，下标为 `0..n-1`。
 - `query(a,b)` 在不连通时返回 `nullopt`。
@@ -12,6 +12,5 @@
 - 改模 $M$ 关系时，每次运算规范到 $[0,M)$；改异或关系时把加减全部换成异或。
 - 区间和约束可把前缀和当节点，区间和就是两个前缀节点的差。
 
-==== 板子题
-
 - 洛谷 P2024「食物链」：改成模 $3$ 关系。
+- #link("https://judge.yosupo.jp/problem/unionfind_with_potential")[Library Checker · Unionfind with Potential]

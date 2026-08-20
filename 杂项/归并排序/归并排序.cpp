@@ -7,21 +7,23 @@ struct MergeSorter {
         a.resize(n + 1);
         temp.resize(n + 1);
     }
-    void sort(int n) {
+    void sort(int n) { sort(n, less<int>{}); }
+    void sort(int n, auto compare) {
+        assert(0 <= n && n < (int) a.size());
         inv_count = 0;
-        mergeSort(1, n);
+        mergeSort(1, n, compare);
     }
-    void mergeSort(int start, int end) {
+    void mergeSort(int start, int end, auto& compare) {
         if(start >= end) return;
         int mid = start + (end - start) / 2;
-        mergeSort(start, mid);
-        mergeSort(mid + 1, end);
-        mergeArray(start, mid, end);
+        mergeSort(start, mid, compare);
+        mergeSort(mid + 1, end, compare);
+        mergeArray(start, mid, end, compare);
     }
-    void mergeArray(int start, int mid, int end) {
+    void mergeArray(int start, int mid, int end, auto& compare) {
         int i = start, j = mid + 1, k = start;
         while(i <= mid && j <= end) {
-            if(a[i] <= a[j])
+            if(!compare(a[j], a[i]))
                 temp[k++] = a[i++];
             else
                 temp[k++] = a[j++], inv_count += mid - i + 1;

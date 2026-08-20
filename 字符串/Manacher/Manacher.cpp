@@ -30,6 +30,7 @@ struct Manacher {
         return source.substr(best_st, best_len);
     }
     bool is_pal(int l, int r) const {
+        assert(0 <= l && l <= r && r <= (int) source.size());
         int len = r - l;
         if(len <= 0) return 0;
         int center_in_t = (len % 2 == 1) ? 2 * (l + len / 2) + 1 : 2 * l + len;

@@ -1,6 +1,7 @@
 #include "../../template/start.cpp"
 
 i64 exbsgs(i64 a, i64 b, i64 p) {
+    assert(p > 0);
     auto mul_mod = [](i64 x, i64 y, i64 mod) { return (i64) ((i128) x * y % mod); };
     a %= p, b %= p;
     if(a < 0) a += p;

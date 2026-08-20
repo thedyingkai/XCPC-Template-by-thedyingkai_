@@ -1,10 +1,5 @@
-==== 用途
+`SubsetConvolution::multiply(a,b)` 计算 $c[S]=sum_(A union B=S,A inter B=emptyset)a[A]b[B]$，即把每个集合拆成两个不交部分的加权和。算法按集合大小分层做子集 zeta，逐层卷积后再 Möbius 反演；集合大小保证交叠产生的项不会落入目标层，复杂度 $O(k^2 2^k)$、空间 $O(k 2^k)$。
 
-- 输入两个按子集编号的数组，求把每个 $S$ 拆成两个不交部分 $A,B$ 的加权和；输出 `c[S]` 对所有拆分同时统计。
+输入长度必须相同且为二的幂。若允许 $A,B$ 相交，问题变成 OR 卷积，不能继续使用这一定义；$k$ 较小时直接枚举 `A` 的 $O(3^k)$ 写法通常更省代码。
 
-`SubsetConvolution::multiply(a,b)` 计算
-$c[S] = sum_(A union B = S, A inter B = emptyset) a[A] b[B]$，复杂度 $O(k^2 2^k)$、空间 $O(k 2^k)$。
-
-- 输入长度必须相同且为二的幂，模数沿用集合变换的 $998244353$。
-- 它按不交子集拆分，不能用 OR 卷积代替；若允许 $A,B$ 相交，条件已经变成普通 OR 卷积。
-- $k$ 较小时直接枚举子集的 $O(3^k)$ 写法通常更短；只有复杂度不够时再用本板。
+#link("https://judge.yosupo.jp/problem/subset_convolution")[Library Checker · subset_convolution]

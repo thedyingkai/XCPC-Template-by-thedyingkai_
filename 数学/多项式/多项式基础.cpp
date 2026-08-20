@@ -14,6 +14,7 @@ i64 norm(i64 x) {
 }
 
 i64 power(i64 a, i64 e) {
+    assert(e >= 0);
     i64 r = 1;
     for(a = norm(a); e; e >>= 1, a = a * a % MOD)
         if(e & 1) r = r * a % MOD;

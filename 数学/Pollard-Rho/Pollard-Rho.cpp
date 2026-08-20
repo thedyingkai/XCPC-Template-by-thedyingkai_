@@ -2,10 +2,18 @@
 
 namespace PollardRho {
 static mt19937_64 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
-i64 mul_mod(i64 a, i64 b, i64 m) { return (i64) ((i128) a * b % m); }
+i64 mul_mod(i64 a, i64 b, i64 m) {
+    assert(m > 0);
+    a %= m, b %= m;
+    if(a < 0) a += m;
+    if(b < 0) b += m;
+    return (i64) ((i128) a * b % m);
+}
 i64 pow_mod(i64 a, i64 e, i64 m) {
+    assert(m > 0 && e >= 0);
     i64 r = 1;
     a %= m;
+    if(a < 0) a += m;
     while(e) {
         if(e & 1) r = mul_mod(r, a, m);
         a = mul_mod(a, a, m), e >>= 1;
@@ -33,15 +41,17 @@ bool isPrime(i64 n) {
 }
 i64 pollard(i64 n) {
     if(n % 2 == 0) return 2;
-    uniform_int_distribution<i64> distC(1, n - 1), distX(0, n - 1);
-    i64 c = distC(rng), x = distX(rng), y = x, d = 1;
-    auto f = [&](i64 v) { return (i64) (((i128) mul_mod(v, v, n) + c) % n); };
-    while(d == 1) {
-        x = f(x), y = f(f(y));
-        i64 diff = x > y ? x - y : y - x;
-        d = gcd(diff, n);
+    while(true) {
+        uniform_int_distribution<i64> distC(1, n - 1), distX(0, n - 1);
+        i64 c = distC(rng), x = distX(rng), y = x, d = 1;
+        auto f = [&](i64 v) { return (i64) (((i128) mul_mod(v, v, n) + c) % n); };
+        while(d == 1) {
+            x = f(x), y = f(f(y));
+            i64 diff = x > y ? x - y : y - x;
+            d = gcd(diff, n);
+        }
+        if(d != n) return d;
     }
-    return (d == n ? pollard(n) : d);
 }
 void factorRec(i64 n, map<i64, int>& mp) {
     if(n == 1) return;
@@ -74,4 +84,5 @@ int main() {
     for(auto& [x, y] : fac) Max = max(Max, x);
 
     cout << Max << endl;
+    return 0;
 }

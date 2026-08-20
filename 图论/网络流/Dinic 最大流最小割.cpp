@@ -15,6 +15,7 @@ struct Dinic {
         e.push_back({});
     }
     void add(int u, int v, i64 c) {
+        assert(c >= 0);
         e.push_back({v, h[u], c});
         h[u] = (int) e.size() - 1;
         e.push_back({u, h[v], 0});
@@ -64,10 +65,15 @@ struct Dinic {
         return flow;
     }
     void mincut(int u) {
+        vector<int> stk = {u};
         vis[u] = 1;
-        for(int i = h[u]; i; i = e[i].ne) {
-            int v = e[i].v;
-            if(!vis[v] && e[i].c > 0) mincut(v);
+        while(!stk.empty()) {
+            int x = stk.back();
+            stk.pop_back();
+            for(int i = h[x]; i; i = e[i].ne) {
+                int v = e[i].v;
+                if(!vis[v] && e[i].c > 0) vis[v] = 1, stk.push_back(v);
+            }
         }
     }
 };

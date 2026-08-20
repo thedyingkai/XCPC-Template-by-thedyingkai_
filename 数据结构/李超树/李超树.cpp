@@ -12,7 +12,7 @@ struct LiChao {
     int root;
     vector<Line> lines;
     vector<Node> tree;
-    LiChao(i64 l, i64 r) : L(l), R(r), root(0), tree(1) {}
+    LiChao(i64 l, i64 r) : L(l), R(r), root(0), tree(1) { assert(L <= R); }
     int newNode() {
         tree.push_back({0, 0, -1});
         return (int) tree.size() - 1;

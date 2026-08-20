@@ -1,10 +1,4 @@
-==== 维护与产物
-
-- 输入一棵树形固定、边权可修改的非负权树，维护整棵树的 cluster DP。
-- `setEdge(id,w)` 修改一条边，`diameter()` 直接取当前全树直径。
-- 适合固定树上单点或单边修改、全局树 DP 询问；不支持 `link/cut`、链修改或子树修改。
-
-==== 接口与边界
+静态拓扑 Top Tree 先把固定树形分解成高度为 $O(log n)$ 的 cluster 合并树，再把全树 DP 写成 `rake` 与 `compress`。当前状态维护非负边权树的直径：`setEdge(id,w)` 只重算对应叶子到根的一条链，`diameter()` 直接读取全局答案；它不负责 `link/cut`、链修改或子树修改。
 
 - 边编号是构造时 `treeEdges` 的下标；树形变化用 Link-Cut Tree、Euler Tour Tree 或完整动态 Top Tree。
 - 输入必须是 $n >= 1$ 的连通树，边权必须非负；`root` 只改变分解，不改变直径。
@@ -21,8 +15,7 @@
 - 根的虚边会调用 `makeEdge(0)`；新状态必须让它成为合法单位元。有方向的信息要分开左到右和右到左，不能把 `compress` 当成可交换操作。
 - 单边修改映射到定根后的子端点叶子，只重算该叶子到 Top Tree 根的祖先；增加可修改数据时也要保留这个定位映射。
 
-==== 板子题
-
 - 固定树形、单边改权、全树直径。
 - AtCoder ABC351 G「Hash on Tree」：保留 Top Tree 结构，重写 cluster DP。
-- Library Checker「Point Set Tree Path Composite Sum (Fixed Root)」：非交换 `compress` 的典型。
+- Library Checker 的 Tree Diameter 还要求输出直径路径；当前 Top Tree 只维护长度。提交该题时可先用 `diameter()` 核对长度，再从任一直径端点做一次树遍历恢复另一端及父亲链，路径恢复不属于本板接口。
+- #link("https://judge.yosupo.jp/problem/tree_diameter")[Library Checker · Tree Diameter]

@@ -38,11 +38,11 @@
 
 == 并查集
 
-=== 按秩合并
+=== 按大小合并
 
-#include "数据结构/并查集/按秩合并.typ"
+#include "数据结构/并查集/按大小合并.typ"
 
-#code("数据结构/并查集/按秩合并.cpp")
+#code("数据结构/并查集/按大小合并.cpp")
 
 === 带权并查集
 
@@ -110,29 +110,25 @@
 
 #code("数据结构/李超树/李超树.cpp")
 
-== 平衡树
-
-=== FHQ Treap
+== FHQ Treap
 
 #include "数据结构/平衡树/FHQ Treap.typ"
 
 #code("数据结构/平衡树/FHQ Treap.cpp")
 
-== 动态树
-
-=== Link-Cut Tree
+== Link-Cut Tree
 
 #include "数据结构/动态树/Link-Cut Tree.typ"
 
 #code("数据结构/动态树/Link-Cut Tree.cpp")
 
-=== Euler Tour Tree
+== Euler Tour Tree
 
 #include "数据结构/动态树/Euler Tour Tree.typ"
 
 #code("数据结构/动态树/Euler Tour Tree.cpp")
 
-=== 静态拓扑 Top Tree
+== 静态拓扑 Top Tree
 
 #include "数据结构/动态树/Top Tree/静态拓扑 Top Tree.typ"
 
@@ -200,6 +196,12 @@
 
 #code("数学/快速幂/普通快速幂.cpp", mode: "full")
 
+=== 矩阵快速幂
+
+#code("数学/快速幂/矩阵快速幂.cpp")
+
+== 模乘
+
 === 快速乘
 
 #include "数学/快速幂/快速乘.typ"
@@ -212,19 +214,15 @@
 
 #code("数学/快速幂/龟速乘.cpp", mode: "full")
 
-=== 矩阵快速幂
-
-#code("数学/快速幂/矩阵快速幂.cpp")
-
 == 扩展欧几里得
 
-==== 求 $a x + b y = c$ 的解
+=== 求 $a x + b y = c$ 的解
 
 #include "数学/扩展欧几里得/扩展欧几里得.typ"
 
 #code("数学/扩展欧几里得/扩展欧几里得.cpp", mode: "full", ignore-main: false)
 
-== EXCRT
+== 扩展中国剩余定理（EXCRT）
 
 #include "数学/EXCRT/EXCRT.typ"
 
@@ -236,25 +234,25 @@
 
 #code("数学/扩展欧拉定理/扩展欧拉定理.cpp", mode: "full")
 
-== EXBSGS
+== 扩展 BSGS
 
 #include "数学/EXBSGS/EXBSGS.typ"
 
 #code("数学/EXBSGS/EXBSGS.cpp", mode: "full")
 
-== 欧拉筛
+== 线性筛
 
 #include "数学/欧拉筛/欧拉筛.typ"
 
-=== 线性筛素数
+=== 筛质数
 
 #code("数学/欧拉筛/线性筛素数.cpp")
 
-=== 线性筛积性函数
+=== 筛积性函数
 
 #code("数学/欧拉筛/线性筛积性函数.cpp")
 
-== Pollard-Rho
+== Pollard–Rho 整数分解
 
 #include "数学/Pollard-Rho/Pollard-Rho.typ"
 
@@ -325,37 +323,39 @@
 
 #code("数学/线性代数/线性代数.cpp", parts: ("determinant", "inverse", "solve-linear"))
 
-== 高精度
+== 带符号大整数
 
 #include "数学/高精度/高精度.typ"
 
-=== 高精度加减乘除取余
-
 #code("数学/高精度/高精度加减乘除取余.cpp")
 
-=== 神秘题目
+== 正整数有序拆分
 
-#code("数学/高精度/神秘题目.cpp", mode: "full")
+#include "数学/高精度/正整数有序拆分.typ"
+
+#code("数学/高精度/正整数有序拆分.cpp", mode: "full")
 
 == 组合数
+
+=== 阶乘预处理与批量逆元
 
 #include "数学/组合数/组合数.typ"
 
 #code("数学/组合数/组合数.cpp", parts: ("comb", "batch-inverse"))
 
-== Lucas
+=== Lucas 定理
 
 #include "数学/Lucas/Lucas.typ"
 
 #code("数学/Lucas/Lucas.cpp", mode: "full")
 
-== 任意模组合数
+=== 任意模数下的组合数
 
 #include "数学/任意模组合数/任意模组合数.typ"
 
 #code("数学/任意模组合数/任意模组合数.cpp")
 
-== 组合计数
+== 常见组合计数
 
 #include "数学/组合计数/组合计数.typ"
 
@@ -367,7 +367,7 @@
 
 #code("数学/康托展开/康托展开.cpp")
 
-== Burnside 与 Pólya
+== Burnside 引理与 Pólya 计数
 
 #include "数学/Burnside 与 Pólya/Burnside 与 Pólya.typ"
 
@@ -375,7 +375,7 @@
 
 #include "数学/概率与期望/概率与期望.typ"
 
-== SG 与 Nim
+== SG 函数与 Nim 游戏
 
 #include "数学/SG 与 Nim/SG 与 Nim.typ"
 
@@ -399,7 +399,7 @@
 
 == 集合变换
 
-=== Zeta、Möbius 与快速沃尔什变换
+=== 子集 Zeta、Möbius 变换与 FWT
 
 #include "数学/集合变换/集合变换.typ"
 
@@ -463,7 +463,7 @@
 
 == 线性递推
 
-=== Berlekamp–Massey
+=== Berlekamp–Massey（BM）
 
 #include "数学/线性递推/Berlekamp-Massey.typ"
 
@@ -541,9 +541,7 @@
 
 #include "图论/树上常用公式/树上常用公式.typ"
 
-== LCA
-
-==== 四种 LCA 求法
+== 最近公共祖先（LCA）
 
 #include "图论/LCA/LCA.typ"
 
@@ -551,7 +549,7 @@
 
 #code("图论/LCA/倍增求 LCA.cpp")
 
-=== Tarjan 求 LCA
+=== Tarjan 离线求 LCA
 
 #code("图论/LCA/Tarjan 求 LCA.cpp")
 
@@ -559,7 +557,7 @@
 
 #code("图论/LCA/树链剖分求 LCA.cpp")
 
-=== RMQ 欧拉序求 LCA
+=== 欧拉序与 RMQ 求 LCA
 
 #code("图论/LCA/RMQ 欧拉序求 LCA.cpp")
 
@@ -593,21 +591,21 @@
 
 #code("图论/基环树/无向基环树.cpp")
 
-== MST
+== 最小生成树（MST）
 
 #include "图论/MST/MST.typ"
 
-=== 出圈法求最小生成树
+=== set 优化 Prim
 
-#code("图论/MST/出圈法求最小生成树.cpp")
+#code("图论/MST/set 优化 Prim.cpp")
 
-=== 出队法（Prim）
+=== 堆优化 Prim
 
-#code("图论/MST/出队法（Prim）.cpp")
+#code("图论/MST/堆优化 Prim.cpp")
 
-=== 加边法（Kruskal）
+=== Kruskal
 
-#code("图论/MST/加边法（Kruskal）.cpp")
+#code("图论/MST/Kruskal.cpp")
 
 == Kruskal 重构树
 
@@ -621,35 +619,33 @@
 
 #code("图论/矩阵树定理/矩阵树定理.cpp")
 
-== 联通性问题
+== Tarjan 算法中的 dfn 与 low
 
-==== 通用概念
+#include "图论/连通性问题/连通性问题.typ"
 
-#include "图论/联通性问题/联通性问题.typ"
+#include "图论/连通性问题/割点、桥与双连通分量.typ"
 
-#include "图论/联通性问题/割点、桥与双连通分量.typ"
+== 强连通分量与缩点
 
-=== Tarjan SCC 缩点
+#include "图论/连通性问题/Tarjan SCC 缩点.typ"
 
-#include "图论/联通性问题/Tarjan SCC 缩点.typ"
+#code("图论/连通性问题/Tarjan SCC 缩点.cpp")
 
-#code("图论/联通性问题/Tarjan SCC 缩点.cpp")
+== 割点
 
-=== Tarjan 求割点
+#code("图论/连通性问题/Tarjan 求割点.cpp")
 
-#code("图论/联通性问题/Tarjan 求割点.cpp")
+== 桥
 
-=== Tarjan 求割边（桥）
+#code("图论/连通性问题/Tarjan 求割边（桥）.cpp")
 
-#code("图论/联通性问题/Tarjan 求割边（桥）.cpp")
+== 边双连通分量
 
-=== eDCC 求边双
+#code("图论/连通性问题/eDCC 求边双.cpp")
 
-#code("图论/联通性问题/eDCC 求边双.cpp")
+== 点双连通分量
 
-=== vDCC 求点双
-
-#code("图论/联通性问题/vDCC 求点双.cpp")
+#code("图论/连通性问题/vDCC 求点双.cpp")
 
 == 2-SAT
 
@@ -675,7 +671,7 @@
 
 #code("图论/线段树分治/线段树分治.cpp")
 
-== 二分图匹配
+== 二分图最大匹配
 
 #include "图论/二分图匹配/二分图最大匹配.typ"
 
@@ -697,7 +693,7 @@
 
 === 划分拟阵与图拟阵
 
-#code("图论/拟阵交/常用拟阵.cpp", parts: ("partition-matroid", "graphic-matroid"))
+#code("图论/拟阵交/常用拟阵.cpp", parts: ("partition-matroid", "unit-partition-matroid-intersection", "graphic-matroid"))
 
 == 网络流
 
@@ -709,11 +705,11 @@
 
 #code("图论/网络流/EK 最大流.cpp")
 
-=== EK 最小费用最大流
+=== SPFA 最小费用最大流
 
-#include "图论/网络流/EK 最小费用最大流.typ"
+#include "图论/网络流/SPFA 最小费用最大流.typ"
 
-#code("图论/网络流/EK 最小费用最大流.cpp")
+#code("图论/网络流/SPFA 最小费用最大流.cpp")
 
 === Dinic 最大流最小割
 
@@ -729,11 +725,11 @@
 
 #code("图论/网络流/求最小割的最少边数_3.cpp", mode: "full")
 
-=== Dinic 最小费用最大流
+=== 势能 Dijkstra 最小费用最大流
 
-#include "图论/网络流/Dinic 最小费用最大流.typ"
+#include "图论/网络流/势能 Dijkstra 最小费用最大流.typ"
 
-#code("图论/网络流/Dinic 最小费用最大流.cpp")
+#code("图论/网络流/势能 Dijkstra 最小费用最大流.cpp")
 
 === 有上下界可行流
 
@@ -764,21 +760,21 @@
 
 #code("字符串/Z 函数/Z 函数.cpp", mode: "full")
 
-== Trie
+== 字典树
 
-=== 动态开点 Trie
+=== 指针字典树
 
 #include "字符串/Trie/动态开点 Trie.typ"
 
 #code("字符串/Trie/动态开点 Trie.cpp", mode: "full")
 
-=== 01 Trie
+=== 01 字典树
 
 #include "字符串/Trie/01 Trie.typ"
 
 #code("字符串/Trie/01 Trie.cpp", mode: "full", ignore-main: false)
 
-== ACAM
+== AC 自动机
 
 #include "字符串/ACAM/ACAM.typ"
 
@@ -796,7 +792,7 @@
 
 #code("字符串/后缀数组/后缀数组.cpp")
 
-== SAM
+== 后缀自动机（SAM）
 
 #include "字符串/SAM/SAM.typ"
 
@@ -843,8 +839,20 @@
 
 #code("杂项/随机指纹/随机指纹.cpp")
 
-== i128 输入输出重载
+== i128 输入输出
 
 #include "杂项/i128 输入输出重载/i128 输入输出重载.typ"
 
 #code("杂项/i128 输入输出重载/i128 输入输出重载.cpp", mode: "full")
+
+== 对拍
+
+#include "杂项/对拍/对拍.typ"
+
+=== 单进程函数对拍
+
+#code("杂项/对拍/单进程函数对拍.cpp", mode: "full")
+
+=== 进程对拍
+
+#code("杂项/对拍/进程对拍.cpp", mode: "full", ignore-main: false)

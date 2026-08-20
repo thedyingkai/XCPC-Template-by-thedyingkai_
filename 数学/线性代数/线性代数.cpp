@@ -3,8 +3,8 @@
 #include "高斯消元.cpp"
 
 // start: determinant
-template <class T>
-T Matrix<T>::det() const {
+template <class T, i64 Mod>
+T Matrix<T, Mod>::det() const {
     if(n != m) return 0;
     Matrix tmp = *this;
     T ans;
@@ -14,8 +14,8 @@ T Matrix<T>::det() const {
 // end: determinant
 
 // start: inverse
-template <class T>
-Matrix<T> Matrix<T>::inv() const {
+template <class T, i64 Mod>
+Matrix<T, Mod> Matrix<T, Mod>::inv() const {
     if(n != m) return Matrix();
     vector<vector<T>> aug(n, vector<T>(n, 0));
     for(int i = 0; i < n; i++) aug[i][i] = 1;
@@ -29,13 +29,10 @@ Matrix<T> Matrix<T>::inv() const {
 // end: inverse
 
 // start: solve-linear
-template <class T>
-pair<bool, vector<T>> Matrix<T>::solveLinear(Matrix<T> A, vector<T> b) {
+template <class T, i64 Mod>
+pair<bool, vector<T>> Matrix<T, Mod>::solveLinear(Matrix<T, Mod> A, vector<T> b) {
     int n = A.n, m = A.m;
-    if((int) b.size() != n) {
-        cout << "No Solution" << endl;
-        return {};
-    }
+    if((int) b.size() != n) return {0, {}};
     vector<vector<T>> col(n, vector<T>(1));
     for(int i = 0; i < n; i++) col[i][0] = b[i];
     vector<int> w;

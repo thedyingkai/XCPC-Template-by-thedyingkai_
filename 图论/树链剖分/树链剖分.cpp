@@ -6,7 +6,7 @@ struct HLD {
     int n, root, tot;
     const vector<vector<int>>& g;
     vector<int> p, dep, sz, son, top, dfn, rk;
-    HLD(int n_, int root_, vector<vector<int>>& g_) : n(n_), root(root_), tot(0), g(g_) {
+    HLD(int n_, int root_, const vector<vector<int>>& g_) : n(n_), root(root_), tot(0), g(g_) {
         p.resize(n + 1);
         dep.resize(n + 1);
         sz.resize(n + 1);
@@ -14,24 +14,44 @@ struct HLD {
         top.resize(n + 1);
         dfn.resize(n + 1);
         rk.resize(n + 1);
-        dfs1(root, 0);
-        dfs2(root, root);
+        build();
     }
-    void dfs1(int u, int fa) {
-        p[u] = fa, dep[u] = dep[fa] + 1, sz[u] = 1;
-        for(int v : g[u]) {
-            if(v == fa) continue;
-            dfs1(v, u);
-            sz[u] += sz[v];
-            if(sz[son[u]] < sz[v]) son[u] = v;
+    void build() {
+        tot = 0;
+        fill(p.begin(), p.end(), 0), fill(dep.begin(), dep.end(), 0);
+        fill(sz.begin(), sz.end(), 0), fill(son.begin(), son.end(), 0);
+        fill(top.begin(), top.end(), 0), fill(dfn.begin(), dfn.end(), 0), fill(rk.begin(), rk.end(), 0);
+        vector<int> order, stk = {root};
+        order.reserve(n);
+        dep[root] = 1;
+        while(!stk.empty()) {
+            int u = stk.back();
+            stk.pop_back();
+            order.push_back(u);
+            for(int v : g[u]) {
+                if(v == p[u]) continue;
+                p[v] = u, dep[v] = dep[u] + 1;
+                stk.push_back(v);
+            }
         }
-    }
-    void dfs2(int u, int t) {
-        top[u] = t, dfn[u] = ++tot, rk[tot] = u;
-        if(son[u]) dfs2(son[u], t);
-        for(int v : g[u]) {
-            if(v == p[u] || v == son[u]) continue;
-            dfs2(v, v);
+        for(auto it = order.rbegin(); it != order.rend(); ++it) {
+            int u = *it;
+            sz[u] = 1;
+            for(int v : g[u]) {
+                if(p[v] != u) continue;
+                sz[u] += sz[v];
+                if(!son[u] || sz[v] > sz[son[u]]) son[u] = v;
+            }
+        }
+        vector<pair<int, int>> chains = {{root, root}};
+        while(!chains.empty()) {
+            auto [u, t] = chains.back();
+            chains.pop_back();
+            for(; u; u = son[u]) {
+                top[u] = t, dfn[u] = ++tot, rk[tot] = u;
+                for(int v : g[u])
+                    if(p[v] == u && v != son[u]) chains.push_back({v, v});
+            }
         }
     }
     int lca(int u, int v) const {

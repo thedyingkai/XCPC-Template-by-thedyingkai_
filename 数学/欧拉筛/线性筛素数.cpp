@@ -4,6 +4,7 @@ struct Prime {
     vector<int> is_prime;
     vector<i64> primes;
     void sieve(int n) {
+        assert(n >= 0);
         primes.clear();
         is_prime.assign(n + 1, 1);
         if(n >= 0) is_prime[0] = 0;

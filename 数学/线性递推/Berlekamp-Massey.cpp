@@ -3,6 +3,7 @@
 #include "../../template/start.cpp"
 
 template <i64 MOD = 998244353> struct LinearRecurrence {
+    static_assert(MOD > 1);
     static i64 norm(i64 x) {
         x %= MOD;
         if(x < 0) x += MOD;
@@ -11,8 +12,8 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
 
     static i64 qpow(i64 a, i64 e) {
         i64 r = 1;
-        for(a = norm(a); e; e >>= 1, a = a * a % MOD)
-            if(e & 1) r = r * a % MOD;
+        for(a = norm(a); e; e >>= 1, a = (i128) a * a % MOD)
+            if(e & 1) r = (i128) r * a % MOD;
         return r;
     }
 
@@ -24,16 +25,16 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
         i64 last = 1;
         for(int n = 0; n < (int) s.size(); n++) {
             i64 delta = s[n];
-            for(int i = 1; i <= L; i++) delta = (delta + C[i] * s[n - i]) % MOD;
+            for(int i = 1; i <= L; i++) delta = (delta + (i128) C[i] * s[n - i]) % MOD;
             if(delta == 0) {
                 shift++;
                 continue;
             }
             vector<i64> old = C;
-            i64 coef = delta * qpow(last, MOD - 2) % MOD;
+            i64 coef = (i128) delta * qpow(last, MOD - 2) % MOD;
             if((int) C.size() < (int) B.size() + shift) C.resize(B.size() + shift);
             for(int i = 0; i < (int) B.size(); i++)
-                C[i + shift] = norm(C[i + shift] - coef * B[i]);
+                C[i + shift] = norm(C[i + shift] - (i128) coef * B[i] % MOD);
             if(2 * L <= n) {
                 L = n + 1 - L;
                 B = old;
@@ -52,13 +53,17 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
     static vector<i64> combine(const vector<i64>& a, const vector<i64>& b,
                                const vector<i64>& recurrence) {
         int k = (int) recurrence.size();
+        assert(k > 0 && (int) a.size() >= k && (int) b.size() >= k);
+        vector<i64> left(k), right(k), coefficient(k);
+        for(int i = 0; i < k; i++)
+            left[i] = norm(a[i]), right[i] = norm(b[i]), coefficient[i] = norm(recurrence[i]);
         vector<i64> product(2 * k - 1);
         for(int i = 0; i < k; i++)
             for(int j = 0; j < k; j++)
-                product[i + j] = (product[i + j] + a[i] * b[j]) % MOD;
+                product[i + j] = (product[i + j] + (i128) left[i] * right[j]) % MOD;
         for(int i = 2 * k - 2; i >= k; i--)
             for(int j = 1; j <= k; j++)
-                product[i - j] = (product[i - j] + product[i] * recurrence[j - 1]) % MOD;
+                product[i - j] = (product[i - j] + (i128) product[i] * coefficient[j - 1]) % MOD;
         product.resize(k);
         return product;
     }
@@ -81,7 +86,7 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
             n >>= 1;
         }
         i64 result = 0;
-        for(int i = 0; i < k; i++) result = (result + answer[i] * norm(initial[i])) % MOD;
+        for(int i = 0; i < k; i++) result = (result + (i128) answer[i] * norm(initial[i])) % MOD;
         return result;
     }
 };

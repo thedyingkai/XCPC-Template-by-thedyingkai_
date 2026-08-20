@@ -16,13 +16,14 @@ bool firstWinsMisereNim(const vector<u64>& heaps) {
         nonzero += x != 0;
         hasLarge |= x > 1;
     }
-    if(!hasLarge) return nonzero % 2 == 0;
+    if(!hasLarge) return nonzero > 0 && nonzero % 2 == 0;
     return value != 0;
 }
 // end: nim
 
 // start: subtraction-game
 vector<int> subtractionGameSG(int maxState, vector<int> moves) {
+    assert(maxState >= 0);
     erase_if(moves, [](int x) { return x <= 0; });
     sort(moves.begin(), moves.end());
     moves.erase(unique(moves.begin(), moves.end()), moves.end());

@@ -1,7 +1,7 @@
 #include "../../template/start.cpp"
 
 struct LinearBasis {
-    static const int MAXB = 60;
+    static const int MAXB = 62;
     vector<i64> a;
     int insertedCount = 0;
     bool dependent = false;
@@ -52,8 +52,8 @@ struct LinearBasis {
         for(i64 value : a) result += value != 0;
         return result;
     }
-    i64 kth(i64 k) const {
-        if(k <= 0) return -1;
+    i64 kth(u64 k) const {
+        if(k == 0) return -1;
         --k;
         vector<i64> base = a;
         vector<i64> simple;
@@ -63,7 +63,7 @@ struct LinearBasis {
             if(base[i]) simple.push_back(base[i]);
         }
         int sz = (int) simple.size();
-        if(k >= (1ll << sz)) return -1;
+        if(k >= (1ULL << sz)) return -1;
         i64 res = 0;
         for(int i = 0; i < sz; ++i)
             if((k >> i) & 1) res ^= simple[i];

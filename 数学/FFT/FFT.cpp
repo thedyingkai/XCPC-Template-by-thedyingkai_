@@ -33,7 +33,7 @@ struct FFT {
         int l1 = (int) a.size() - 1;
         int l2 = (int) b.size() - 1;
         if(l1 <= 0 || l2 <= 0) return vector<int>(1, 0);
-        int n = (int) bit_ceil((unsigned) (l1 + l2));
+        int n = (int) bit_ceil((unsigned) (l1 + l2 - 1));
         vector<CD> fa(n), fb(n);
         for(int i = 1; i <= l1; ++i) fa[i - 1] = CD(a[i], 0);
         for(int i = 1; i <= l2; ++i) fb[i - 1] = CD(b[i], 0);

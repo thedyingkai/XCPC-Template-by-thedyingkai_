@@ -54,6 +54,7 @@ vector<i64> batchInverse(const vector<i64>& a, i64 prime_mod) {
     for(int i = 0; i < n; i++) {
         i64 x = a[i] % prime_mod;
         if(x < 0) x += prime_mod;
+        assert(x != 0);
         pre[i + 1] = (i128) pre[i] * x % prime_mod;
     }
     i64 suf = Comb::power(pre[n], prime_mod - 2, prime_mod);

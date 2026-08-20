@@ -1,18 +1,5 @@
-==== 用途
+`divideWithRemainder(A,B)` 求唯一的 $Q,R$，使 $A=B Q+R$ 且 $deg R<deg B$；除式必须非零。把两个多项式反转后，商的高次部分转成形式幂级数除法，因此可以用求逆和 NTT 在 $O(n log n)$ 内得到商，再回代求余数。`divide`、`modulo` 分别只返回其中一项，结果会删去末尾零系数。
 
-- 输入多项式 $A,B$，求唯一的商 $Q$ 和余数 $R$，使 $A=B Q+R$ 且 $deg R<deg B$；常用于特征多项式取模和乘积树递归。
+这里反转后要求可逆的是原除式的最高次项，所以原常数项可以为零。形式幂级数的截断除法是另一件事：只求 $A/B mod x^n$ 时应计算 `multiply(A,inverse(B,n),n)`，并要求 `B[0] != 0`。线性递推的特征多项式取模和乘积树多点求值使用的是本文件的整式余数。
 
-==== 接口与边界
-
-- `divideWithRemainder(a,b)` 返回多项式商与余数，系数从低次到高次，要求除式非零；复杂度 $O(n log n)$。
-- `divide`、`modulo` 分别只取商或余数；输入系数会先规范到模 `998244353` 下，结果删除末尾零项。
-- 依赖多项式求逆；反转后求逆的是除式最高次项，因此不要求除式常数项非零。
-
-==== Trick
-
-- 线性递推的特征多项式取模、乘积树多点求值都直接调用 `modulo`。
-- 只求低次数项的形式幂级数除法应调用 `multiply(a,inverse(b,n),n)`，不要做整式除法。
-
-==== 板子题
-
-- 洛谷 P4512「多项式除法」。
+#link("https://judge.yosupo.jp/problem/division_of_polynomials")[Library Checker · division_of_polynomials]

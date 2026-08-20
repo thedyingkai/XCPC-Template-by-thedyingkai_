@@ -1,19 +1,7 @@
-==== 用途
+`subsetZeta(a)` 把 `a[S]` 变为所有子集的和，第二参数为 `true` 时做子集 Möbius 逆变换；`supersetZeta` 对所有超集做同样操作。逐位决定是否加入该位，每一对状态只在对应位处理一次，因此复杂度为 $O(k 2^k)$。数组长度必须是二的幂，模数固定为 $998244353$。
 
-- 输入按子集编号的数组，得到每个集合的全部子集和或超集和；输入两个数组还能得到下标按 OR、AND、XOR 合并的卷积。
+OR 卷积先对子集做 zeta，AND 卷积先对超集做 zeta，逐点相乘后逆变换；XOR 卷积使用 Walsh--Hadamard 变换，逆变换每层乘 $2^(-1)$。数论中的莫比乌斯反演和这里的子集 Möbius 反演属于不同偏序。只枚举一个集合的全部非空子集可写 `for(T=S;T;T=(T-1)&S)`，所有 `S` 合计为 $O(3^k)$，规模小时往往比完整子集卷积更短。
 
-==== 接口与边界
+#link("https://judge.yosupo.jp/problem/bitwise_and_convolution")[Library Checker · bitwise_and_convolution]
 
-- `subsetZeta(a)` 把 `a[S]` 变为所有子集之和；第二参数传 `true` 做子集 Möbius 逆变换。`supersetZeta` 对所有超集做同样操作。
-- `orConvolution`、`andConvolution`、`xorConvolution` 分别计算下标按位或、按位与、按位异或卷积，模数固定为 $998244353$。
-- 数组长度必须是二的幂，复杂度均为 $O(k 2^k)$；数论莫比乌斯反演和这里的子集 Möbius 反演属于不同偏序，不要混用。
-
-==== 改法与 trick
-
-- 枚举 `S` 的所有非空子集：`for (int T=S; T; T=(T-1)&S)`；把空集算入时在循环后单独处理，所有 `S` 的总复杂度为 $O(3^k)$。
-- OR 卷积使用子集 zeta，AND 卷积使用超集 zeta；XOR 的逆变换每层乘 $2^(-1)$。
-- 只求所有子集和时直接调用变换，不要再做逐点乘和逆变换。
-
-==== 板子题
-
-- 洛谷 P4717「快速沃尔什变换」。
+#link("https://judge.yosupo.jp/problem/bitwise_xor_convolution")[Library Checker · bitwise_xor_convolution]

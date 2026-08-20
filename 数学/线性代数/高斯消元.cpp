@@ -2,8 +2,8 @@
 
 #include "矩阵运算.cpp"
 
-template <class T>
-int Matrix<T>::Gauss(vector<vector<T>>* aug, vector<int>* w, T* det) {
+template <class T, i64 Mod>
+int Matrix<T, Mod>::Gauss(vector<vector<T>>* aug, vector<int>* w, T* det) {
     if(w) w->assign(m, -1);
     if(det) *det = 1;
     int rank = 0;

@@ -1,6 +1,7 @@
 #include "../../template/start.cpp"
 
 i64 qp(i64 a, i64 b, i64 p) {
+    assert(p > 0 && b >= 0);
     i64 res = 1 % p;
     a %= p;
     if(a < 0) a += p;

@@ -22,6 +22,12 @@ template <class T> bool pointInPolygon(const Point<T>& a, const vector<Point<T>>
 /*0-不相交，1-严格相交，2-重叠，3-在端点处相交*/
 template <class T> tuple<int, Point<d128>, Point<d128>> segmentIntersection(const Line<T>& l1, const Line<T>& l2) {
     using P = Point<d128>;
+    if(l1.a == l1.b && l2.a == l2.b)
+        return l1.a == l2.a ? tuple{3, P(l1.a), P(l1.a)} : tuple{0, P(), P()};
+    if(l1.a == l1.b)
+        return pointOnSegment(l1.a, l2) ? tuple{3, P(l1.a), P(l1.a)} : tuple{0, P(), P()};
+    if(l2.a == l2.b)
+        return pointOnSegment(l2.a, l1) ? tuple{3, P(l2.a), P(l2.a)} : tuple{0, P(), P()};
     if(cmp(max(l1.a.x, l1.b.x) - min(l2.a.x, l2.b.x)) < 0) return {0, P(), P()};
     if(cmp(min(l1.a.x, l1.b.x) - max(l2.a.x, l2.b.x)) > 0) return {0, P(), P()};
     if(cmp(max(l1.a.y, l1.b.y) - min(l2.a.y, l2.b.y)) < 0) return {0, P(), P()};
@@ -63,39 +69,26 @@ template <class T> d128 distanceSS(const Line<T>& l1, const Line<T>& l2) {
 // 线段是否在多边形内部
 template <class T> bool segmentInPolygon(const Line<T>& l, const std::vector<Point<T>>& p) {
     int n = p.size();
-    if(!pointInPolygon(l.a, p)) return 0;
-    if(!pointInPolygon(l.b, p)) return 0;
+    if(n == 0 || !pointInPolygon(l.a, p) || !pointInPolygon(l.b, p)) return false;
+    if(l.a == l.b) return true;
+    Point<d128> a = l.a, direction = Point<d128>(l.b) - a;
+    d128 lengthSquared = square(direction);
+    vector<d128> cut = {0, 1};
     for(int i = 0; i < n; i++) {
-        auto u = p[i], v = p[(i + 1) % n], w = p[(i + 2) % n];
-        auto [t, p1, p2] = segmentIntersection(l, Line(u, v));
-        if(t == 1) return 0;
-        if(t == 0) continue;
-        if(t == 2) {
-            if(pointOnSegment(v, l) && v != l.a && v != l.b)
-                if(cmp(cross(v - u, w - v)) > 0) return 0;
-        } else {
-            if(p1 != u && p1 != v) {
-                if(pointOnLineLeft(l.a, Line(v, u)) || pointOnLineLeft(l.b, Line(v, u))) return 0;
-            } else if(p1 == v) {
-                if(l.a == v) {
-                    if(pointOnLineLeft(u, l)) {
-                        if(pointOnLineLeft(w, l) && pointOnLineLeft(w, Line(u, v))) return 0;
-                    } else if(pointOnLineLeft(w, l) || pointOnLineLeft(w, Line(u, v)))
-                        return 0;
-                } else if(l.b == v) {
-                    if(pointOnLineLeft(u, Line(l.b, l.a))) {
-                        if(pointOnLineLeft(w, Line(l.b, l.a)) && pointOnLineLeft(w, Line(u, v))) return 0;
-                    } else if(pointOnLineLeft(w, Line(l.b, l.a)) || pointOnLineLeft(w, Line(u, v)))
-                        return 0;
-                } else {
-                    if(pointOnLineLeft(u, l)) {
-                        if(pointOnLineLeft(w, Line(l.b, l.a)) || pointOnLineLeft(w, Line(u, v))) return 0;
-                    } else if(pointOnLineLeft(w, l) || pointOnLineLeft(w, Line(u, v)))
-                        return 0;
-                }
-            }
-        }
+        auto [type, first, second] = segmentIntersection(l, Line<T>(p[i], p[(i + 1) % n]));
+        if(type == 0) continue;
+        cut.push_back(dot(first - a, direction) / lengthSquared);
+        if(type == 2) cut.push_back(dot(second - a, direction) / lengthSquared);
     }
-    return 1;
+    sort(cut.begin(), cut.end());
+    vector<Point<d128>> polygon(n);
+    for(int i = 0; i < n; i++) polygon[i] = p[i];
+    for(int i = 1; i < (int) cut.size(); i++) {
+        if(cmp(cut[i] - cut[i - 1]) == 0) continue;
+        d128 middle = (cut[i] + cut[i - 1]) / 2;
+        if(cmp(middle) < 0 || cmp(middle - 1) > 0) continue;
+        if(!pointInPolygon(a + direction * middle, polygon)) return false;
+    }
+    return true;
 }
 // end: segment-in-polygon

@@ -30,6 +30,12 @@ vector<int> pruferEncode(int n, const vector<pair<int, int>>& edges) {
         degree[leaf] = 0;
         if(--degree[parent] == 1) leaves.push(parent);
     }
+    vector<int> remaining;
+    for(int u = 1; u <= n; u++) if(degree[u] > 0) remaining.push_back(u);
+    if(remaining.size() != 2) return {};
+    bool adjacent = false;
+    for(int v : graph[remaining[0]]) if(v == remaining[1] && degree[v] > 0) adjacent = true;
+    if(!adjacent) return {};
     return code;
 }
 
@@ -47,12 +53,14 @@ vector<pair<int, int>> pruferDecode(const vector<int>& code) {
     vector<pair<int, int>> edges;
     edges.reserve(n - 1);
     for(int x : code) {
+        if(leaves.empty()) return {};
         int leaf = leaves.top();
         leaves.pop();
         edges.push_back({leaf, x});
         degree[leaf]--;
         if(--degree[x] == 1) leaves.push(x);
     }
+    if(leaves.size() != 2) return {};
     int u = leaves.top();
     leaves.pop();
     int v = leaves.top();

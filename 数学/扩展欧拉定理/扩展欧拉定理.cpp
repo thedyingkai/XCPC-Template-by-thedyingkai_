@@ -12,9 +12,11 @@ i64 phi(i64 n) {
     return ans;
 }
 i128 depow(const string& b, i64 phi) {
+    assert(phi > 0 && !b.empty());
     i64 ans = 0;
     bool large = false;
     for(char ch : b) {
+        assert('0' <= ch && ch <= '9');
         i128 next = (i128) ans * 10 + (ch - '0');
         if(next >= phi) large = true;
         ans = next % phi;
@@ -22,6 +24,7 @@ i128 depow(const string& b, i64 phi) {
     return (i128) ans + (large ? phi : 0);
 }
 i64 qp(i64 a, i128 k, i64 m) {
+    assert(m > 0 && k >= 0);
     i64 ans = 1 % m;
     a %= m;
     if(a < 0) a += m;
@@ -33,6 +36,7 @@ i64 qp(i64 a, i128 k, i64 m) {
     return ans;
 }
 i64 exEulerPow(i64 a, const string& b, i64 m) {
+    assert(m > 0 && !b.empty());
     if(m == 1) return 0;
     i64 ph = phi(m);
     return qp(a, depow(b, ph), m);

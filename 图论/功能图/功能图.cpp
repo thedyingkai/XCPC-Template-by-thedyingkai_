@@ -9,9 +9,18 @@ struct FunctionalGraph {
     FunctionalGraph(const vector<int>& nxt)
         : n((int) nxt.size() - 1), cc(0), to(nxt), onCycle(n + 1), dep(n + 1),
           entry(n + 1), cid(n + 1), pos(n + 1), rev(n + 1) {
+        assert(n >= 1);
         build();
     }
     void build() {
+        cc = 0;
+        fill(onCycle.begin(), onCycle.end(), 0);
+        fill(dep.begin(), dep.end(), 0);
+        fill(entry.begin(), entry.end(), 0);
+        fill(cid.begin(), cid.end(), 0);
+        fill(pos.begin(), pos.end(), 0);
+        for(auto& adj : rev) adj.clear();
+        cycleLen.clear();
         vector<int> deg(n + 1), alive(n + 1, 1);
         for(int u = 1; u <= n; u++) {
             assert(1 <= to[u] && to[u] <= n);

@@ -9,9 +9,11 @@ struct PartitionMatroidOracle : MatroidOracle {
     vector<char> chosen;
     PartitionMatroidOracle(vector<int> group_, vector<int> capacity_)
         : n((int) group_.size()), group(move(group_)), capacity(move(capacity_)) {
+        for(int value : capacity) assert(value >= 0);
         for(int x : group) assert(0 <= x && x < (int) capacity.size());
     }
     void reset(const vector<char>& in) override {
+        assert((int) in.size() == n);
         chosen = in;
         count.assign(capacity.size(), 0);
         for(int i = 0; i < n; i++) if(chosen[i]) count[group[i]]++;
@@ -26,6 +28,97 @@ struct PartitionMatroidOracle : MatroidOracle {
     }
 };
 // end: partition-matroid
+
+// start: unit-partition-matroid-intersection
+vector<int> unitPartitionMatroidIntersection(const PartitionMatroidOracle& first,
+                                             const PartitionMatroidOracle& second) {
+    assert(first.n == second.n);
+    for(int value : first.capacity) assert(0 <= value && value <= 1);
+    for(int value : second.capacity) assert(0 <= value && value <= 1);
+
+    int n = first.n;
+    vector<vector<int>> byFirst(first.capacity.size());
+    for(int id = 0; id < n; id++) {
+        int u = first.group[id], v = second.group[id];
+        if(first.capacity[u] && second.capacity[v]) byFirst[u].push_back(id);
+    }
+
+    vector<int> mateFirst(first.capacity.size(), -1), mateSecond(second.capacity.size(), -1);
+    vector<int> dis(first.capacity.size()), cur(first.capacity.size());
+    int shortest;
+
+    auto bfs = [&]() {
+        queue<int> q;
+        fill(dis.begin(), dis.end(), -1);
+        for(int u = 0; u < (int) first.capacity.size(); u++) {
+            if(first.capacity[u] && mateFirst[u] == -1) dis[u] = 0, q.push(u);
+        }
+        fill(cur.begin(), cur.end(), 0);
+        shortest = -1;
+        while(!q.empty()) {
+            int u = q.front();
+            q.pop();
+            if(shortest != -1 && dis[u] + 1 > shortest) continue;
+            for(int id : byFirst[u]) {
+                if(mateFirst[u] == id) continue;
+                int v = second.group[id];
+                if(mateSecond[v] == -1) {
+                    shortest = dis[u] + 1;
+                } else {
+                    int next = first.group[mateSecond[v]];
+                    if(dis[next] == -1) dis[next] = dis[u] + 1, q.push(next);
+                }
+            }
+        }
+        return shortest != -1;
+    };
+
+    auto augment = [&](int start) {
+        vector<int> firstPath = {start}, elementPath;
+        firstPath.reserve(shortest + 1), elementPath.reserve(shortest);
+        while(!firstPath.empty()) {
+            int u = firstPath.back();
+            bool advanced = false;
+            while(cur[u] < (int) byFirst[u].size()) {
+                int id = byFirst[u][cur[u]++];
+                if(mateFirst[u] == id) continue;
+                int v = second.group[id];
+                if(mateSecond[v] == -1) {
+                    if(dis[u] + 1 != shortest) continue;
+                    elementPath.push_back(id);
+                    for(int i = (int) firstPath.size() - 1; i >= 0; i--) {
+                        int add = elementPath[i];
+                        mateFirst[firstPath[i]] = add;
+                        mateSecond[second.group[add]] = add;
+                    }
+                    return true;
+                }
+                int next = first.group[mateSecond[v]];
+                if(dis[next] != dis[u] + 1) continue;
+                elementPath.push_back(id), firstPath.push_back(next);
+                advanced = true;
+                break;
+            }
+            if(advanced) continue;
+            dis[u] = -1;
+            bool hasParent = firstPath.size() > 1;
+            firstPath.pop_back();
+            if(hasParent) elementPath.pop_back();
+        }
+        return false;
+    };
+
+    while(bfs()) {
+        for(int u = 0; u < (int) first.capacity.size(); u++) {
+            if(first.capacity[u] && mateFirst[u] == -1) augment(u);
+        }
+    }
+
+    vector<int> answer;
+    for(int id : mateFirst) if(id != -1) answer.push_back(id);
+    return answer;
+}
+// end: unit-partition-matroid-intersection
 
 // start: graphic-matroid
 struct GraphicMatroidOracle : MatroidOracle {
