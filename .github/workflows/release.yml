@@ -37,13 +37,16 @@ jobs:
 
           Add-Content -Path $env:GITHUB_ENV -Encoding UTF8 -Value "VERSION=$version"
           Add-Content -Path $env:GITHUB_ENV -Encoding UTF8 -Value "PDF_NAME=XCPC 算法模板 by thedyingkai_ v$version.pdf"
+          Add-Content -Path $env:GITHUB_ENV -Encoding UTF8 -Value "PDF_PLUS_NAME=XCPC 算法模板 by thedyingkai_ v$version beta.pdf"
 
       - name: Render PDF
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist | Out-Null
           $pdfPath = Join-Path "dist" $env:PDF_NAME
+          $pdfPlusPath = Join-Path "dist" $env:PDF_PLUS_NAME
           typst compile main.typ $pdfPath --input "version=$env:VERSION"
+          typst compile main_plus.typ $pdfPlusPath --input "version=$env:VERSION beta"
 
       - name: Publish release
         shell: pwsh
@@ -52,9 +55,10 @@ jobs:
         run: |
           $tag = $env:GITHUB_REF_NAME
           $pdfPath = Join-Path "dist" $env:PDF_NAME
+          $pdfPlusPath = Join-Path "dist" $env:PDF_PLUS_NAME
 
           if (gh release view $tag 2>$null) {
-            gh release upload $tag $pdfPath --clobber
+            gh release upload $tag $pdfPath $pdfPlusPath --clobber
           } else {
-            gh release create $tag $pdfPath --title $tag --notes "Rendered from $env:GITHUB_SHA"
+            gh release create $tag $pdfPath $pdfPlusPath --title $tag --notes "Rendered from $env:GITHUB_SHA"
           }
