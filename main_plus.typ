@@ -30,28 +30,14 @@
 }
 #context counter(page).update(1);
 
-#let plus_version = sys.inputs.at("version", default: read("VERSION").trim() + " beta")
-
-#let header_plus = context align(left)[
-  #text(size: 6.5pt, fill: rgb("#777"))[
-    XCPC Algorithms · v#plus_version
-  ]
-]
-
-#let footer_plus = context align(center)[
-  #text(size: 6.5pt, fill: rgb("#777"))[
-    #counter(page).display()
-  ]
-]
-
 #set page(
   paper: "a4",
   flipped: true,
   margin: (x: 1cm, y: 1.3cm),
   columns: 2,
   numbering: "1",
-  header: header_plus,
-  footer: footer_plus
+  header: context(header(here().page())),
+  footer: footer
 )
 
 #set columns(gutter: 8mm)
