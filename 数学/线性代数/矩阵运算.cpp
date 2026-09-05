@@ -49,7 +49,7 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
     static T modPow(T a, i64 e) {
         assert(e >= 0);
         if constexpr(_m_) {
-            T r = 1;
+            T r = norm(T(1));
             T x = norm(a);
             while(e) {
                 if(e & 1) r = mul(r, x);
@@ -107,7 +107,7 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
             }
         } else {
             for(int k = 0; k < a.m; k++)
-                for(int i = 0; i < res.n; i++) if(!isZero(a[i][k]))
+                for(int i = 0; i < res.n; i++) if(a[i][k] != T(0))
                     for(int j = 0; j < res.m; j++) res[i][j] = add(res[i][j], mul(a[i][k], b[k][j]));
         }
         return res;
@@ -116,7 +116,7 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
     static Matrix qp(Matrix base, i64 k) {
         assert(base.n == base.m && k >= 0);
         Matrix res(base.n, base.m);
-        for(int i = 0; i < res.n; i++) res[i][i] = 1;
+        for(int i = 0; i < res.n; i++) res[i][i] = norm(T(1));
         while(k) {
             if(k & 1) res = res * base;
             base = base * base;

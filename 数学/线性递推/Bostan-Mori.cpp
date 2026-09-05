@@ -9,7 +9,6 @@ i64 bostanMori(Poly numerator, Poly denominator, u64 n) {
     trim(numerator);
     trim(denominator);
     assert(!denominator.empty() && denominator[0] != 0);
-    assert(numerator.size() < denominator.size());
     while(n) {
         Poly negative = denominator;
         for(int i = 1; i < (int) negative.size(); i += 2)

@@ -9,13 +9,13 @@
   align: center,
   table.header([算法], [复杂度], [选用]),
   [倍增], [$O((n + m) log n)$], [普通在线询问；容易补向上跳 $k$ 级祖先],
-  [Tarjan], [$O(n + m)$], [询问全部给出，只离线回答一次],
+  [Tarjan], [$O((n + m) alpha(n))$], [询问全部给出，只离线回答一次],
   [树链剖分], [$O(n + m log n)$], [还要做路径、子树操作],
   [RMQ + 欧拉序], [预处理 $O(n log n)$，查询 $O(1)$], [静态树、询问多],
 )
 
 四份实现都只预处理指定根所在的树。倍增、树链剖分和 Tarjan 已使用显式栈，链形树不会因 DFS 深度爆栈；RMQ 版先用 `addedge` 建树，再调用 `build(root)`。Tarjan 必须把 `(另一端, id)` 同时放进两端的查询表，编号使用 `1..m`，答案在 `ans[id]`；它只适合询问全部预先给出的离线场景。
 
-倍增版还提供 `jump(u,k)`。令 `w=lca(u,v)`、`a=dep[u]-dep[w]`、`b=dep[v]-dep[w]`，从 `u` 起第 `k` 个点在上半段时为 `jump(u,k)`，否则为 `jump(v,a+b-k)`。边带权距离把深度换成根距离。换根为 `r` 后的 LCA，是原根下 `lca(u,v)`、`lca(u,r)`、`lca(v,r)` 中深度最大的一个。
+倍增版还提供 `jump(u,k)`。令 `w=lca(u,v)`、`a=dep[u]-dep[w]`、`b=dep[v]-dep[w]`，从 `u` 沿路径走 `k` 条边后的点，要求 `0<=k<=a+b`：`k<=a` 时为 `jump(u,k)`，否则为 `jump(v,a+b-k)`。题目把起点算第 `1` 个点时，先令 `k--`。边带权距离使用根距离计算，上跳步数仍用深度差。换根为 `r` 后的 LCA，是原根下 `lca(u,v)`、`lca(u,r)`、`lca(v,r)` 中深度最大的一个。
 
 #link("https://judge.yosupo.jp/problem/lca")[Library Checker · Lowest Common Ancestor]

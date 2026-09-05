@@ -10,8 +10,10 @@ struct SPFAMinCostMaxFlow {
     i64 flow, cost;
     vector<edge> e;
     vector<int> h, pre, vis;
-    vector<i64> d, mf;
+    vector<i128> d;
+    vector<i64> mf;
     SPFAMinCostMaxFlow(int _n, int s, int t) : n(_n), S(s), T(t) {
+        assert(0 <= S && S <= n && 0 <= T && T <= n && S != T);
         e.push_back({}), e.push_back({});
         h.resize(n + 1);
         pre.resize(n + 1);
@@ -21,14 +23,15 @@ struct SPFAMinCostMaxFlow {
         flow = cost = 0;
     }
     void add(int a, int b, i64 c, i64 w) {
-        assert(c >= 0);
+        assert(c >= 0 && w != LLONG_MIN);
         e.push_back({b, c, w, h[a]});
         h[a] = e.size() - 1;
         e.push_back({a, 0, -w, h[b]});
         h[b] = e.size() - 1;
     }
     bool spfa() {
-        d.assign(n + 1, LLONG_MAX / 4);
+        constexpr i128 INF = i128(1) << 120;
+        d.assign(n + 1, INF);
         mf.assign(n + 1, 0);
         vis.assign(n + 1, 0);
         queue<int> q;
@@ -50,11 +53,17 @@ struct SPFAMinCostMaxFlow {
     }
     void run() {
         while(spfa()) {
+            i128 nextFlow = (i128) flow + mf[T];
+            // 先检查可表示范围，避免费用乘法溢出后才判断。
+            assert(nextFlow <= LLONG_MAX);
+            assert(d[T] >= ((i128) LLONG_MIN - cost) / mf[T] &&
+                   d[T] <= ((i128) LLONG_MAX - cost) / mf[T]);
+            i128 nextCost = (i128) cost + (i128) mf[T] * d[T];
             for(int v = T; v != S; v = e[pre[v] ^ 1].v) {
                 int i = pre[v];
                 e[i].c -= mf[T], e[i ^ 1].c += mf[T];
             }
-            flow += mf[T], cost += mf[T] * d[T];
+            flow = (i64) nextFlow, cost = (i64) nextCost;
         }
     }
 };

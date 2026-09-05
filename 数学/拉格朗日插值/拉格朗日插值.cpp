@@ -20,7 +20,10 @@ i64 lagrangeConsecutive(const vector<i64>& y, i64 x, i64 prime_mod) {
     assert(prime_mod > 1 && (i64) k < prime_mod);
     i64 xm = x % prime_mod;
     if(xm < 0) xm += prime_mod;
-    if(xm <= k) return (y[xm] % prime_mod + prime_mod) % prime_mod;
+    if(xm <= k) {
+        i64 value = y[xm] % prime_mod;
+        return value < 0 ? value + prime_mod : value;
+    }
 
     vector<i64> fac(k + 1, 1), ifac(k + 1, 1);
     for(int i = 1; i <= k; i++) fac[i] = (i128) fac[i - 1] * i % prime_mod;

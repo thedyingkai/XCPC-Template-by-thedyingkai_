@@ -34,11 +34,23 @@ template <class T> vector<Point<T>> convexHull(vector<Point<T>> p, bool keepColl
 // end: convex-hull
 
 // start: diameter
-template <class T> auto diameter2(const vector<Point<T>>& p) {
+template <class T> auto diameter2(const vector<Point<T>>& hull) {
     using R = decltype(square(Point<T>()));
-    int n = p.size();
+    int n = hull.size();
     if(n <= 1) return R(0);
-    if(n == 2) return R(square(p[0] - p[1]));
+    if(n == 2) return R(square(hull[0] - hull[1]));
+    vector<Point<T>> p;
+    p.reserve(n);
+    for(int i = 0; i < n; i++)
+        if(cmp(cross(hull[i] - hull[(i + n - 1) % n], hull[(i + 1) % n] - hull[i])) != 0)
+            p.push_back(hull[i]);
+    if(p.empty()) {
+        auto [lo, hi] = minmax_element(hull.begin(), hull.end(), [](const auto& a, const auto& b) {
+            return a.x != b.x ? a.x < b.x : a.y < b.y;
+        });
+        return R(square(*hi - *lo));
+    }
+    n = p.size();
     auto absv = [](R x) { return x < 0 ? -x : x; };
     R ans = 0;
     int j = 1;

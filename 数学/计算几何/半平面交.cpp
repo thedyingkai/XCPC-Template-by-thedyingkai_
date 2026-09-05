@@ -14,8 +14,9 @@ template <class T> vector<Point<d128>> hp(const vector<Line<T>>& input) {
     }
     sort(lines.begin(), lines.end(), [&](const L& l1, const L& l2) {
         auto d1 = l1.b - l1.a, d2 = l2.b - l2.a;
-        if(sgn(d1) != sgn(d2)) return sgn(d1) == 1;
-        return cmp(cross(d1, d2)) > 0;
+        auto upper = [](const P& d) { return d.y > 0 || (d.y == 0 && d.x > 0); };
+        if(upper(d1) != upper(d2)) return upper(d1);
+        return cross(d1, d2) > 0;
     });
     vector<L> filtered;
     for(const auto& l : lines) {
@@ -28,7 +29,8 @@ template <class T> vector<Point<d128>> hp(const vector<Line<T>>& input) {
         }
         filtered.push_back(l);
     }
-    auto outside = [](const P& p, const L& l) { return cmp(cross(l.b - l.a, p - l.a)) < 0; };
+    // 只返回二维有界交集，交点落在新边界上时也弹出旧边界。
+    auto outside = [](const P& p, const L& l) { return cmp(cross(l.b - l.a, p - l.a)) <= 0; };
     deque<L> ls;
     deque<P> ps;
     for(const auto& l : filtered) {
@@ -41,6 +43,10 @@ template <class T> vector<Point<d128>> hp(const vector<Line<T>>& input) {
     while(!ps.empty() && outside(ps.back(), ls.front())) ps.pop_back(), ls.pop_back();
     while(!ps.empty() && outside(ps.front(), ls.back())) ps.pop_front(), ls.pop_front();
     if(ls.size() <= 2) return {};
+    if(parallel(ls.back(), ls.front())) return {};
     ps.push_back(lineIntersection(ls.back(), ls.front()));
+    d128 area = 0;
+    for(int i = 1; i + 1 < (int) ps.size(); i++) area += cross(ps[i] - ps[0], ps[i + 1] - ps[0]);
+    if(cmp(area) <= 0) return {};
     return vector(ps.begin(), ps.end());
 }

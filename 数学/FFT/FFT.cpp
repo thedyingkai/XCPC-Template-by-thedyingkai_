@@ -28,7 +28,7 @@ struct FFT {
             for(CD& x : a) x /= n;
         }
     }
-    // 输入：1-index，系数在a[1..]，返回同样1-index的结果，长度为a.size()+b.size()-1
+    // 输入输出均为 1 下标；非空输入的结果数组长度为 a.size()+b.size()-2，含下标 0 占位。
     static vector<int> multiply(const vector<int>& a, const vector<int>& b) {
         int l1 = (int) a.size() - 1;
         int l2 = (int) b.size() - 1;
