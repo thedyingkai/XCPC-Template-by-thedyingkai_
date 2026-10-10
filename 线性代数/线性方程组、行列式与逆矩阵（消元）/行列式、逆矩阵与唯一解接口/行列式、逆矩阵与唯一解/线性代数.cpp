@@ -1,0 +1,46 @@
+#pragma once
+
+#include "../../高斯消元与解的分类/高斯消元.cpp"
+
+// start: determinant
+template <class T, i64 Mod>
+T Matrix<T, Mod>::det() const {
+    if(n != m) return 0;
+    Matrix tmp = *this;
+    T ans;
+    tmp.Gauss(0, 0, &ans);
+    return ans;
+}
+// end: determinant
+
+// start: inverse
+template <class T, i64 Mod>
+Matrix<T, Mod> Matrix<T, Mod>::inv() const {
+    if(n != m) return Matrix();
+    vector<vector<T>> aug(n, vector<T>(n, 0));
+    for(int i = 0; i < n; i++) aug[i][i] = 1;
+    Matrix A = *this;
+    if(A.Gauss(&aug) < n) return Matrix();
+    Matrix res(n, n);
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < n; j++) res[i][j] = aug[i][j];
+    return res;
+}
+// end: inverse
+
+// start: solve-linear
+template <class T, i64 Mod>
+pair<bool, vector<T>> Matrix<T, Mod>::solveLinear(Matrix<T, Mod> A, vector<T> b) {
+    int n = A.n, m = A.m;
+    if((int) b.size() != n) return {0, {}};
+    vector<vector<T>> col(n, vector<T>(1));
+    for(int i = 0; i < n; i++) col[i][0] = b[i];
+    vector<int> w;
+    int rank = A.Gauss(&col, &w);
+    for(int i = rank; i < n; i++) if(!isZero(col[i][0])) return {0, {}};
+    vector<T> x(m, 0);
+    for(int i = 0; i < m; i++) if(w[i] != -1) x[i] = col[w[i]][0];
+    if(rank < m) return {0, {}};
+    return {1, x};
+}
+// end: solve-linear
