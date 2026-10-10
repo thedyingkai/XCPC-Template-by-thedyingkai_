@@ -18,8 +18,8 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
     $Version = (Get-Content -Raw -Encoding UTF8 $versionPath).Trim()
 }
 
-if ($Version -notmatch '^\d+\.\d+$') {
-    throw "Version must look like x.y, got '$Version'."
+if ($Version -notmatch '^\d+\.\d+(?:\.\d+)?$') {
+    throw "Version must look like x.y or x.y.z, got '$Version'."
 }
 
 New-Item -ItemType Directory -Force -Path $distDir | Out-Null

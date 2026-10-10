@@ -1,6 +1,6 @@
 param (
     [Parameter(Mandatory = $true)]
-    [ValidateSet("small", "large")]
+    [ValidateSet("patch", "small", "large")]
     [string]$Scale,
 
     [switch]$NoCommit,
@@ -28,21 +28,26 @@ try {
     }
 
     $current = (Get-Content -Raw -Encoding UTF8 $versionPath).Trim()
-    if ($current -notmatch '^(\d+)\.(\d+)$') {
-        throw "VERSION must look like x.y, got '$current'."
+    if ($current -notmatch '^(\d+)\.(\d+)(?:\.(\d+))?$') {
+        throw "VERSION must look like x.y or x.y.z, got '$current'."
     }
 
     $major = [int]$matches[1]
     $minor = [int]$matches[2]
+    $patch = if ($matches.ContainsKey(3)) { [int]$matches[3] } else { 0 }
 
-    if ($Scale -eq "small") {
+    if ($Scale -eq "patch") {
+        $patch += 1
+        $newVersion = "$major.$minor.$patch"
+    } elseif ($Scale -eq "small") {
         $minor += 1
+        $newVersion = "$major.$minor"
     } else {
         $major += 1
         $minor = 0
+        $newVersion = "$major.$minor"
     }
 
-    $newVersion = "$major.$minor"
     $tag = "v$newVersion"
 
     if (git rev-parse --verify --quiet "refs/tags/$tag") {

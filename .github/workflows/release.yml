@@ -27,8 +27,8 @@ jobs:
           $version = $env:GITHUB_REF_NAME -replace '^v', ''
           $versionFile = (Get-Content -Raw -Encoding UTF8 VERSION).Trim()
 
-          if ($version -notmatch '^\d+\.\d+$') {
-            throw "Tag must look like vX.Y, got $env:GITHUB_REF_NAME."
+          if ($version -notmatch '^\d+\.\d+(?:\.\d+)?$') {
+            throw "Tag must look like vX.Y or vX.Y.Z, got $env:GITHUB_REF_NAME."
           }
 
           if ($versionFile -ne $version) {

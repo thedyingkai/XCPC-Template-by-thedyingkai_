@@ -58,13 +58,19 @@
 
 ## 发布版本
 
-小规模改动发布，版本号从 `x.y` 更新为 `x.(y+1)`：
+修订版本发布，版本号从 `x.y` 更新为 `x.y.1`，或从 `x.y.z` 更新为 `x.y.(z+1)`：
+
+```powershell
+.\scripts\release.ps1 -Scale patch
+```
+
+小规模改动发布，版本号从 `x.y` 或 `x.y.z` 更新为 `x.(y+1)`：
 
 ```powershell
 .\scripts\release-small.ps1
 ```
 
-大规模改动发布，版本号从 `x.y` 更新为 `(x+1).0`：
+大规模改动发布，版本号从 `x.y` 或 `x.y.z` 更新为 `(x+1).0`：
 
 ```powershell
 .\scripts\release-large.ps1
@@ -75,5 +81,5 @@
 ## 版本规则
 
 - `VERSION` 是当前版本号的唯一来源。
-- 封面页会自动读取 `VERSION` 并显示为 `vX.Y`。
+- 封面页会自动读取 `VERSION` 并显示为 `vX.Y` 或 `vX.Y.Z`。
 - 历史 PDF 放在 GitHub Releases 中，`last version/` 目录不会进入版本管理。
