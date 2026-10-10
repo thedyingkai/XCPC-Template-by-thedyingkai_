@@ -582,6 +582,24 @@
 
 #code("动态规划/区间 DP/Knuth 石子合并.cpp")
 
+== 状压 DP
+
+#include "动态规划/状压 DP/状压 DP.typ"
+
+#code("动态规划/状压 DP/状压 DP.cpp", mode: "full")
+
+== 数位 DP
+
+#include "动态规划/数位 DP/数位 DP.typ"
+
+#code("动态规划/数位 DP/数位 DP.cpp", mode: "full")
+
+== 期望 DP
+
+#include "动态规划/期望 DP/期望 DP.typ"
+
+#code("动态规划/期望 DP/期望 DP.cpp", mode: "full")
+
 == 换根 DP：带权距离和
 
 #include "动态规划/树形 DP/换根距离和.typ"
@@ -843,6 +861,10 @@
 == 树 Trick：结构与贡献
 
 #include "图论/Trick/树 Trick.typ"
+
+== 图 Trick：辅助点与压缩 
+
+#include "图论/Trick/图 Trick.typ"
 
 #pagebreak()
 
