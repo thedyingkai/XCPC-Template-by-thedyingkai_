@@ -13,6 +13,8 @@
 #import "多项式与卷积/index.typ" as chapter-12
 #import "线性递推/index.typ" as chapter-13
 #import "计算几何/index.typ" as chapter-14
+#import "交互题/index.typ" as interactive-chapter
+#import "通信题/index.typ" as communication-chapter
 #import "工具与通用技巧/index.typ" as chapter-15
 
 #let book(code) = [
@@ -31,5 +33,7 @@
 #chapter-12.render(code)
 #chapter-13.render(code)
 #chapter-14.render(code)
+#interactive-chapter.render(code)
+#communication-chapter.render(code)
 #chapter-15.render(code)
 ]
