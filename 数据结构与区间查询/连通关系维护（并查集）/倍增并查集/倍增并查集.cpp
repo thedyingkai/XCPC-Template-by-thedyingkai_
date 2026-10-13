@@ -6,7 +6,6 @@ struct RangeUnionDSU {
     vector<vector<int>> parent, size;
 
     explicit RangeUnionDSU(int n_) : n(n_), components(n_) {
-        assert(n >= 1);
         levels = (int) bit_width((unsigned) n);
         parent.assign(levels, vector<int>(n + 1));
         size.assign(levels, vector<int>(n + 1, 1));
@@ -35,9 +34,6 @@ struct RangeUnionDSU {
 
     // Merge x+i with y+i, for 0 <= i < length (overlap is allowed).
     void uniteRanges(int x, int y, int length) {
-        assert(length >= 0 && 1 <= x && 1 <= y);
-        assert((i64) x + length <= (i64) n + 1);
-        assert((i64) y + length <= (i64) n + 1);
         if(length == 0) return;
         int level = (int) bit_width((unsigned) length) - 1;
         int shift = length - (1 << level);
@@ -46,7 +42,6 @@ struct RangeUnionDSU {
     }
 
     bool same(int x, int y) {
-        assert(1 <= x && x <= n && 1 <= y && y <= n);
         return find(0, x) == find(0, y);
     }
 };

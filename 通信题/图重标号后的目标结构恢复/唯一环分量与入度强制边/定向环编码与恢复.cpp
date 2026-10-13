@@ -4,7 +4,7 @@ namespace communication {
 
 // simple_graph 已含给定简单环；cycle 按环上次序列出所有目标点。
 // 环点排在其他点之前，除闭环边外均从低排名指向高排名。
-std::vector<std::pair<int, int>> encode_directed_cycle(
+std::vector<std::pair<int, int>> encode_cycle(
     int n, const std::vector<std::pair<int, int>> &simple_graph,
     const std::vector<int> &cycle) {
     if (cycle.size() < 3)
@@ -33,7 +33,7 @@ std::vector<std::pair<int, int>> encode_directed_cycle(
 }
 
 // 只承诺恢复上述构造的图；允许任意重新编号，结果可循环旋转。
-std::vector<int> decode_directed_cycle(
+std::vector<int> decode_cycle(
     int n, const std::vector<std::pair<int, int>> &edges) {
     int m = edges.size();
     std::vector<std::vector<int>> in(n), out(n);
@@ -97,7 +97,7 @@ std::vector<int> decode_directed_cycle(
         cycle.push_back(u);
         u = successor[u];
     }
-    if (u != start || int(cycle.size()) != count)
+    if (u != start || cycle.size() != count)
         throw std::invalid_argument("target cycle not determined");
     return cycle;
 }

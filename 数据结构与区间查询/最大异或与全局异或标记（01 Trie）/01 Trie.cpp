@@ -2,42 +2,43 @@
 
 struct Trie {
     struct Node {
-        int ch[2],val;
-        Node() : ch{-1,-1},val(-1) {}
+        int ch[2] = {-1, -1}, val = -1;
     };
     vector<Node> nodes;
-    vector<int> pos;
-    Trie() : pos(30,-1) { nodes.emplace_back(); }
-    void insert(int val){
-        int cur=0;
-        for(int i=29;i>=0;i--){
-            int b=(val>>i)&1;
-            if(nodes[cur].ch[b]==-1){
-                nodes[cur].ch[b]=(int)nodes.size();
+    Trie() : nodes(1) {}
+    void insert(int val) {
+        int cur = 0;
+        for(int i = 30; i >= 0; i--) {
+            int b = val >> i & 1;
+            if(nodes[cur].ch[b] == -1) {
+                nodes[cur].ch[b] = nodes.size();
                 nodes.emplace_back();
             }
-            if(nodes[cur].ch[0]!=-1&&nodes[cur].ch[1]!=-1) pos[i]=cur;
-            cur=nodes[cur].ch[b];
+            cur = nodes[cur].ch[b];
         }
-        nodes[cur].val=val;
+        nodes[cur].val = val;
     }
-    int getMax(int cur,int i,int val){
-        if(cur==-1) return -1;
-        for(int j=i;j>=0;j--){
-            int b=((val>>j)&1)^1;
-            if(nodes[cur].ch[b]==-1) b^=1;
-            cur=nodes[cur].ch[b];
+    int getMax(int cur, int i, int val) const {
+        if(cur == -1 || nodes.size() == 1) return -1;
+        for(int j = i; j >= 0; j--) {
+            int b = (val >> j & 1) ^ 1;
+            if(nodes[cur].ch[b] == -1) b ^= 1;
+            cur = nodes[cur].ch[b];
         }
         return nodes[cur].val;
     }
-    int getMin(int cur,int i,int val){
-        if(cur==-1) return -1;
-        for(int j=i;j>=0;j--){
-            int b=(val>>j)&1;
-            if(nodes[cur].ch[b]==-1) b^=1;
-            cur=nodes[cur].ch[b];
+    int getMin(int cur, int i, int val) const {
+        if(cur == -1 || nodes.size() == 1) return -1;
+        for(int j = i; j >= 0; j--) {
+            int b = val >> j & 1;
+            if(nodes[cur].ch[b] == -1) b ^= 1;
+            cur = nodes[cur].ch[b];
         }
         return nodes[cur].val;
+    }
+    int query(int val) const {
+        int x = getMax(0, 30, val);
+        return x == -1 ? 0 : x ^ val;
     }
 };
 

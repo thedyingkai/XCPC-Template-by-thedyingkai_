@@ -26,8 +26,7 @@ struct RollbackDSU {
     }
     int snapshot() const { return history.size(); }
     void rollback(int snap) {
-        assert(0 <= snap && snap <= (int) history.size());
-        while((int) history.size() > snap) {
+        while(history.size() > snap) {
             auto [a, b, sizeA] = history.back();
             history.pop_back();
             p[b] = b;

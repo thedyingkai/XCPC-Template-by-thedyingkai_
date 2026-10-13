@@ -20,7 +20,7 @@ template <class T> int circleRelation(const Circle<T>& c1, const Circle<T>& c2) 
 // end: circle-base
 
 // start: intersections
-template <class T> vector<Point<d128>> lineCircleIntersection(const Line<T>& l, const Circle<T>& c) {
+template <class T> vector<Point<d128>> lineCircleCross(const Line<T>& l, const Circle<T>& c) {
     Point<d128> a = l.a, d = Point<d128>(l.b) - a, o = c.o;
     d128 d2 = dot(d, d), r = c.r;
     if(cmp(d2) == 0) return cmp(square(a - o) - r * r) == 0 ? vector<Point<d128>>{a} : vector<Point<d128>>{};
@@ -33,7 +33,7 @@ template <class T> vector<Point<d128>> lineCircleIntersection(const Line<T>& l, 
     return {h - v, h + v};
 }
 
-template <class T> vector<Point<d128>> circleIntersection(const Circle<T>& c1, const Circle<T>& c2) {
+template <class T> vector<Point<d128>> circleCross(const Circle<T>& c1, const Circle<T>& c2) {
     int rel = circleRelation(c1, c2);
     if(rel == 0 || rel == 4 || rel == 5) return {};
     Point<d128> o1 = c1.o, o2 = c2.o, d = o2 - o1;
@@ -78,7 +78,7 @@ template <class T> vector<pair<Point<d128>, Point<d128>>> commonTangents(const C
 // end: tangents
 
 // start: intersection-area
-template <class T> d128 circleIntersectionArea(const Circle<T>& c1, const Circle<T>& c2) {
+template <class T> d128 circleArea(const Circle<T>& c1, const Circle<T>& c2) {
     d128 d = distance(c1.o, c2.o), r1 = c1.r, r2 = c2.r;
     if(cmp(d - r1 - r2) >= 0) return 0;
     if(cmp(d - fabsl(r1 - r2)) <= 0) {

@@ -14,7 +14,7 @@ struct FHQTreap {
     void pushup(int u) { tree[u].sz = size(tree[u].ls) + size(tree[u].rs) + 1; }
     int newNode(i64 val) {
         tree.push_back({0, 0, 1, rng(), val});
-        return (int) tree.size() - 1;
+        return tree.size() - 1;
     }
     void splitLess(int u, i64 val, int& x, int& y) {
         if(!u) {

@@ -3,7 +3,7 @@
 struct FFT {
     using CD = complex<double>;
     static void fft(vector<CD>& a, bool invert) {
-        int n = (int) a.size();
+        int n = a.size();
         for(int i = 1, j = 0; i < n; ++i) {
             int bit = n >> 1;
             for(; j & bit; bit >>= 1) j ^= bit;
@@ -30,8 +30,8 @@ struct FFT {
     }
     // 输入输出均为 1 下标；非空输入的结果数组长度为 a.size()+b.size()-2，含下标 0 占位。
     static vector<int> multiply(const vector<int>& a, const vector<int>& b) {
-        int l1 = (int) a.size() - 1;
-        int l2 = (int) b.size() - 1;
+        int l1 = a.size() - 1;
+        int l2 = b.size() - 1;
         if(l1 <= 0 || l2 <= 0) return vector<int>(1, 0);
         int n = (int) bit_ceil((unsigned) (l1 + l2 - 1));
         vector<CD> fa(n), fb(n);
@@ -47,9 +47,9 @@ struct FFT {
     }
 };
 string get(vector<int> ans, int base) {
-    for(int i = 1; i < (int) ans.size(); i++) {
+    for(int i = 1; i < ans.size(); i++) {
         if(ans[i] >= base) {
-            if(i + 1 >= (int) ans.size()) ans.push_back(0);
+            if(i + 1 >= ans.size()) ans.push_back(0);
             ans[i + 1] += ans[i] / base;
             ans[i] %= base;
         }
@@ -66,7 +66,7 @@ int main() {
     vector<int> a = {0, 1, 2, 3};      // a = [1,2,3]
     vector<int> b = {0, 4, 5};         // b = [4,5]
     auto resFFT = FFT::multiply(a, b); // resFFT[1..]
-    for(int i = 1; i < (int) resFFT.size(); ++i) cout << resFFT[i] << " ";
+    for(int i = 1; i < resFFT.size(); ++i) cout << resFFT[i] << " ";
     cout << "\n";
     // 高精乘
     //    string a,b;

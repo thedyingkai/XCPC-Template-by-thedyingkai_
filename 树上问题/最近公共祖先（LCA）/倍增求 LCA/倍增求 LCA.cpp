@@ -13,7 +13,6 @@ struct LCA {
         build(root);
     }
     void build(int root) {
-        assert(1 <= root && root <= n);
         dep.assign(n + 1, 0);
         p.assign(n + 1, vector<int>(lg));
         dep[root] = 1;

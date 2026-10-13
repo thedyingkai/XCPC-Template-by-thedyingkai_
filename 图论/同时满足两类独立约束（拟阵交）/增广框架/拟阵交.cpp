@@ -11,7 +11,7 @@ struct MatroidOracle {
 };
 
 template<class FirstOracle, class SecondOracle>
-vector<int> matroidIntersection(int n, FirstOracle& first, SecondOracle& second) {
+vector<int> matroidIntersect(int n, FirstOracle& first, SecondOracle& second) {
     vector<char> chosen(n, 0);
 
     // 任意公共独立集都能作为增广起点；先取一个极大集可减少增广轮数。
@@ -39,7 +39,7 @@ vector<int> matroidIntersection(int n, FirstOracle& first, SecondOracle& second)
             q.push_back(y);
         }
         int target = -1;
-        for(int head = 0; head < (int) q.size() && target == -1; head++) {
+        for(int head = 0; head < q.size() && target == -1; head++) {
             int v = q[head];
             if(!chosen[v]) {
                 if(second.canAdd(v)) {

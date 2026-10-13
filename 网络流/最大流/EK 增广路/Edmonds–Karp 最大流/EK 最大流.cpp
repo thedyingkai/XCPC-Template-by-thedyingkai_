@@ -17,7 +17,6 @@ struct EK {
         mf.resize(n + 1);
     }
     void add(int a, int b, i64 c) {
-        assert(c >= 0);
         e.push_back({b, c, h[a]});
         h[a] = e.size() - 1;
         e.push_back({a, 0, h[b]});

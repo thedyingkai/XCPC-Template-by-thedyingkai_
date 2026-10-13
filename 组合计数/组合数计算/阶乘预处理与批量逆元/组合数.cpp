@@ -18,7 +18,6 @@ struct Comb {
     }
 
     void init(int n, i64 prime_mod) {
-        assert(n >= 0 && prime_mod > 1 && (i64) n < prime_mod);
         mod = prime_mod;
         fac.assign(n + 1, 1);
         ifac.assign(n + 1, 1);
@@ -48,13 +47,11 @@ struct Comb {
 // start: batch-inverse
 // All a[i] must be nonzero modulo prime_mod.
 vector<i64> batchInverse(const vector<i64>& a, i64 prime_mod) {
-    assert(prime_mod > 1);
-    int n = (int) a.size();
+    int n = a.size();
     vector<i64> pre(n + 1, 1), ans(n);
     for(int i = 0; i < n; i++) {
         i64 x = a[i] % prime_mod;
         if(x < 0) x += prime_mod;
-        assert(x != 0);
         pre[i + 1] = (i128) pre[i] * x % prime_mod;
     }
     i64 suf = Comb::power(pre[n], prime_mod - 2, prime_mod);

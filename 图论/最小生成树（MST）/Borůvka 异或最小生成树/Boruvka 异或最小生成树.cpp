@@ -20,7 +20,7 @@ XorMSTResult xorMST(const vector<u64>& value) {
             result.edges.push_back({original.back(), id});
         else a.push_back(value[id]), original.push_back(id);
     }
-    int n = (int) a.size();
+    int n = a.size();
     if(n <= 1) return result;
     int bits = max(1, (int) bit_width(a.back()));
 
@@ -34,7 +34,7 @@ XorMSTResult xorMST(const vector<u64>& value) {
         for(int bit = bits - 1; bit >= 0; bit--) {
             int digit = (a[i] >> bit) & 1;
             if(trie[u].child[digit] == -1) {
-                int child = (int) trie.size();
+                int child = trie.size();
                 trie.push_back({});
                 trie[u].child[digit] = child;
             }
@@ -71,7 +71,6 @@ XorMSTResult xorMST(const vector<u64>& value) {
                                    && trie[next].high == color[i]))
                     digit ^= 1;
                 u = trie[u].child[digit];
-                assert(u != -1);
             }
             int j = trie[u].vertex;
             auto& [x, y] = best[color[i]];

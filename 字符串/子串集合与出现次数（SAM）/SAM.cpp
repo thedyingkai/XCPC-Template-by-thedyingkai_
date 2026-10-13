@@ -50,7 +50,7 @@ int main() {
 
     string s;
     cin >> s;
-    SAM sam((int) s.size()); // 初始化SAM结构，长度为字符串长度
+    SAM sam(s.size()); // 初始化SAM结构，长度为字符串长度
     vector<int> nodes;       // 保存每次插入字符对应的状态编号
     for(auto c : s) nodes.push_back(sam.extend(c));
     int sz = sam.sz;
@@ -58,7 +58,7 @@ int main() {
     for(auto x : nodes) cnt[x]++; // 每个插入状态出现一次
     vector<int> bucket(s.size() + 1), order(sz);
     for(int i = 0; i < sz; i++) bucket[sam.st[i].len]++;
-    for(int i = 1; i <= (int) s.size(); i++) bucket[i] += bucket[i - 1];
+    for(int i = 1; i <= s.size(); i++) bucket[i] += bucket[i - 1];
     for(int i = sz - 1; i >= 0; i--) order[--bucket[sam.st[i].len]] = i;
     i64 ans = 0;
     for(int i = sz - 1; i > 0; i--) {

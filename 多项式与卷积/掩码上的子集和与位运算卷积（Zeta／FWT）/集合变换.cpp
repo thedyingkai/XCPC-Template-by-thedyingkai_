@@ -12,12 +12,11 @@ struct SetTransform {
     }
 
     static int bitsOf(int n) {
-        assert(n > 0 && (n & (n - 1)) == 0);
         return (int) bit_width((unsigned) n) - 1;
     }
 
     static void subsetZeta(vector<i64>& a, bool inverse = false) {
-        int n = (int) a.size(), bits = bitsOf(n);
+        int n = a.size(), bits = bitsOf(n);
         for(i64& x : a) x = norm(x);
         for(int bit = 0; bit < bits; bit++)
             for(int s = 0; s < n; s++)
@@ -29,7 +28,7 @@ struct SetTransform {
     }
 
     static void supersetZeta(vector<i64>& a, bool inverse = false) {
-        int n = (int) a.size(), bits = bitsOf(n);
+        int n = a.size(), bits = bitsOf(n);
         for(i64& x : a) x = norm(x);
         for(int bit = 0; bit < bits; bit++)
             for(int s = 0; s < n; s++)
@@ -41,7 +40,7 @@ struct SetTransform {
     }
 
     static void xorTransform(vector<i64>& a, bool inverse = false) {
-        int n = (int) a.size();
+        int n = a.size();
         bitsOf(n);
         const i64 inv2 = (MOD + 1) / 2;
         for(i64& x : a) x = norm(x);
@@ -59,28 +58,25 @@ struct SetTransform {
     }
 
     static vector<i64> orConvolution(vector<i64> a, vector<i64> b) {
-        assert(a.size() == b.size());
         subsetZeta(a);
         subsetZeta(b);
-        for(int i = 0; i < (int) a.size(); i++) a[i] = a[i] * b[i] % MOD;
+        for(int i = 0; i < a.size(); i++) a[i] = a[i] * b[i] % MOD;
         subsetZeta(a, true);
         return a;
     }
 
     static vector<i64> andConvolution(vector<i64> a, vector<i64> b) {
-        assert(a.size() == b.size());
         supersetZeta(a);
         supersetZeta(b);
-        for(int i = 0; i < (int) a.size(); i++) a[i] = a[i] * b[i] % MOD;
+        for(int i = 0; i < a.size(); i++) a[i] = a[i] * b[i] % MOD;
         supersetZeta(a, true);
         return a;
     }
 
     static vector<i64> xorConvolution(vector<i64> a, vector<i64> b) {
-        assert(a.size() == b.size());
         xorTransform(a);
         xorTransform(b);
-        for(int i = 0; i < (int) a.size(); i++) a[i] = a[i] * b[i] % MOD;
+        for(int i = 0; i < a.size(); i++) a[i] = a[i] * b[i] % MOD;
         xorTransform(a, true);
         return a;
     }

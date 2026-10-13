@@ -10,28 +10,28 @@ unsigned reverse_byte(unsigned x) {
     return result;
 }
 
-const std::vector<unsigned> &reversal_representatives() {
-    static const auto representatives = [] {
+const std::vector<unsigned> &reversal_reps() {
+    static const auto reps = [] {
         std::vector<unsigned> result;
         for (unsigned x = 0; x < 256; ++x)
             if (x <= reverse_byte(x)) result.push_back(x);
         return result; // 136 个轨道代表。
     }();
-    return representatives;
+    return reps;
 }
 
-unsigned encode_reversal_orbit(int message) {
-    const auto &rep = reversal_representatives();
-    if (message < 0 || message >= int(rep.size()))
+unsigned encode_reversal(int message) {
+    const auto &rep = reversal_reps();
+    if (message < 0 || message >= rep.size())
         throw std::invalid_argument("message outside orbit capacity");
     return rep[message];
 }
 
-int decode_reversal_orbit(unsigned received) {
+int decode_reversal(unsigned received) {
     if (received >= 256)
         throw std::invalid_argument("word must have eight bits");
     unsigned canonical = std::min(received, reverse_byte(received));
-    const auto &rep = reversal_representatives();
+    const auto &rep = reversal_reps();
     return std::lower_bound(rep.begin(), rep.end(), canonical)
          - rep.begin();
 }

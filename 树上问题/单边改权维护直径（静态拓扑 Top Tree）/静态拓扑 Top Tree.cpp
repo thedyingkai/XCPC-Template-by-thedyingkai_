@@ -2,228 +2,209 @@
 
 #include "../../template/start.cpp"
 
-struct StaticTopologyTopTreeDiameter {
-    enum class MergeType { Leaf, Rake, Compress };
+struct TopTree {
+    enum class Type { Leaf, Rake, Compress };
 
     struct Edge {
-        int from = -1;
-        int to = -1;
-        i64 weight = 0;
+        int u = -1;
+        int v = -1;
+        i64 w = 0;
     };
 
-    struct Cluster {
-        i64 length = 0;
-        i64 fromLeft = 0;
-        i64 fromRight = 0;
+    struct Info {
+        i64 len = 0;
+        i64 lmax = 0;
+        i64 rmax = 0;
         i64 diameter = 0;
     };
 
     struct Node {
         int child[2] = {-1, -1};
-        int parent = -1;
+        int fa = -1;
         int boundary[2] = {-1, -1};
-        MergeType type = MergeType::Leaf;
+        Type type = Type::Leaf;
     };
 
-    int vertexCount = 0;
-    int rootVertex = -1;
-    int rootCluster = -1;
+    int rt = -1;
     vector<Edge> edges;
-    vector<Node> nodes;
-    vector<Cluster> value;
+    vector<Node> tr;
+    vector<Info> val;
 
-    StaticTopologyTopTreeDiameter() = default;
+    TopTree() = default;
 
-    StaticTopologyTopTreeDiameter(
+    TopTree(
         int n,
-        const vector<Edge>& treeEdges,
+        const vector<Edge>& es,
         int root = 0
     ) {
-        build(n, treeEdges, root);
+        build(n, es, root);
     }
 
-    static Cluster makeEdge(i64 weight) {
-        assert(weight >= 0);
-        return {weight, weight, weight, weight};
+    static Info makeEdge(i64 w) {
+        return {w, w, w, w};
     }
 
-    static Cluster rake(const Cluster& main, const Cluster& side) {
-        Cluster result;
-        result.length = main.length;
-        result.fromLeft = max(main.fromLeft, side.fromLeft);
-        result.fromRight = max(main.fromRight, main.length + side.fromLeft);
+    static Info rake(const Info& main, const Info& side) {
+        Info result;
+        result.len = main.len;
+        result.lmax = max(main.lmax, side.lmax);
+        result.rmax = max(main.rmax, main.len + side.lmax);
         result.diameter = max({
             main.diameter,
             side.diameter,
-            main.fromLeft + side.fromLeft
+            main.lmax + side.lmax
         });
         return result;
     }
 
-    static Cluster compress(const Cluster& left, const Cluster& right) {
-        Cluster result;
-        result.length = left.length + right.length;
-        result.fromLeft = max(left.fromLeft, left.length + right.fromLeft);
-        result.fromRight = max(right.fromRight, right.length + left.fromRight);
+    static Info compress(const Info& left, const Info& right) {
+        Info result;
+        result.len = left.len + right.len;
+        result.lmax = max(left.lmax, left.len + right.lmax);
+        result.rmax = max(right.rmax, right.len + left.rmax);
         result.diameter = max({
             left.diameter,
             right.diameter,
-            left.fromRight + right.fromLeft
+            left.rmax + right.lmax
         });
         return result;
     }
 
-    void build(int n, const vector<Edge>& treeEdges, int root = 0) {
-        assert(n >= 1);
-        assert(0 <= root && root < n);
-        assert(static_cast<int>(treeEdges.size()) == n - 1);
-        vertexCount = n;
-        rootVertex = root;
-        edges = treeEdges;
+    void build(int n, const vector<Edge>& es, int root = 0) {
+        edges = es;
 
-        vector<vector<pair<int, int>>> graph(n);
+        vector<vector<pair<int, int>>> g(n);
         for(int id = 0; id < n - 1; id++) {
             const auto& edge = edges[id];
-            assert(0 <= edge.from && edge.from < n);
-            assert(0 <= edge.to && edge.to < n);
-            assert(edge.from != edge.to);
-            assert(edge.weight >= 0);
-            graph[edge.from].push_back({edge.to, id});
-            graph[edge.to].push_back({edge.from, id});
+            g[edge.u].push_back({edge.v, id});
+            g[edge.v].push_back({edge.u, id});
         }
 
-        vector<int> parent(n, -2), parentEdge(n, -1), order;
+        vector<int> fa(n, -2), pe(n, -1), order;
         order.reserve(n);
-        parent[root] = -1;
+        fa[root] = -1;
         order.push_back(root);
-        for(int index = 0; index < static_cast<int>(order.size()); index++) {
-            int vertex = order[index];
-            for(auto [next, edgeId] : graph[vertex]) {
-                if(next == parent[vertex]) continue;
-                assert(parent[next] == -2);
-                parent[next] = vertex;
-                parentEdge[next] = edgeId;
-                order.push_back(next);
+        for(int i = 0; i < order.size(); i++) {
+            int u = order[i];
+            for(auto [v, id] : g[u]) {
+                if(v == fa[u]) continue;
+                fa[v] = u;
+                pe[v] = id;
+                order.push_back(v);
             }
         }
-        assert(static_cast<int>(order.size()) == n);
 
-        vector<int> subtreeSize(n, 1), heavyChild(n, -1);
-        for(int index = n - 1; index >= 0; index--) {
-            int vertex = order[index];
-            int largestSize = 0;
-            for(auto [next, edgeId] : graph[vertex]) {
-                (void)edgeId;
-                if(parent[next] != vertex) continue;
-                subtreeSize[vertex] += subtreeSize[next];
-                if(subtreeSize[next] > largestSize) {
-                    largestSize = subtreeSize[next];
-                    heavyChild[vertex] = next;
+        vector<int> sz(n, 1), son(n, -1);
+        for(int i = n - 1; i >= 0; i--) {
+            int u = order[i];
+            int mx = 0;
+            for(auto [v, id] : g[u]) {
+                (void)id;
+                if(fa[v] != u) continue;
+                sz[u] += sz[v];
+                if(sz[v] > mx) {
+                    mx = sz[v];
+                    son[u] = v;
                 }
             }
         }
 
-        nodes.assign(n, Node{});
-        value.assign(n, Cluster{});
-        vector<int> edgeLeaf(n - 1, -1);
-        for(int vertex = 0; vertex < n; vertex++) {
-            nodes[vertex].boundary[0] = parent[vertex];
-            nodes[vertex].boundary[1] = vertex;
-            i64 weight = 0;
-            if(parentEdge[vertex] != -1) {
-                edgeLeaf[parentEdge[vertex]] = vertex;
-                weight = edges[parentEdge[vertex]].weight;
+        tr.assign(n, Node{});
+        val.assign(n, Info{});
+        vector<int> leaf(n - 1, -1);
+        for(int u = 0; u < n; u++) {
+            tr[u].boundary[0] = fa[u];
+            tr[u].boundary[1] = u;
+            i64 w = 0;
+            if(pe[u] != -1) {
+                leaf[pe[u]] = u;
+                w = edges[pe[u]].w;
             }
-            value[vertex] = makeEdge(weight);
+            val[u] = makeEdge(w);
         }
 
-        auto mergeNode = [&](int left, int right, MergeType type) {
-            assert(left != -1 && right != -1);
+        auto mergeNode = [&](int left, int right, Type type) {
             Node node;
             node.child[0] = left;
             node.child[1] = right;
             node.type = type;
-            if(type == MergeType::Rake) {
-                assert(nodes[left].boundary[0] == nodes[right].boundary[0]);
-                node.boundary[0] = nodes[left].boundary[0];
-                node.boundary[1] = nodes[left].boundary[1];
+            if(type == Type::Rake) {
+                node.boundary[0] = tr[left].boundary[0];
+                node.boundary[1] = tr[left].boundary[1];
             } else {
-                assert(type == MergeType::Compress);
-                assert(nodes[left].boundary[1] == nodes[right].boundary[0]);
-                node.boundary[0] = nodes[left].boundary[0];
-                node.boundary[1] = nodes[right].boundary[1];
+                node.boundary[0] = tr[left].boundary[0];
+                node.boundary[1] = tr[right].boundary[1];
             }
-            int merged = static_cast<int>(nodes.size());
-            nodes.push_back(node);
-            value.push_back(Cluster{});
-            nodes[left].parent = merged;
-            nodes[right].parent = merged;
+            int merged = tr.size();
+            tr.push_back(node);
+            val.push_back(Info{});
+            tr[left].fa = merged;
+            tr[right].fa = merged;
             return merged;
         };
 
         auto pullNode = [&](int node) {
-            int left = nodes[node].child[0];
-            int right = nodes[node].child[1];
-            if(nodes[node].type == MergeType::Rake) {
-                value[node] = rake(value[left], value[right]);
+            int left = tr[node].child[0];
+            int right = tr[node].child[1];
+            if(tr[node].type == Type::Rake) {
+                val[node] = rake(val[left], val[right]);
             } else {
-                assert(nodes[node].type == MergeType::Compress);
-                value[node] = compress(value[left], value[right]);
+                val[node] = compress(val[left], val[right]);
             }
         };
 
-        auto buildHeavyPath = [&](auto&& self, int head) -> pair<int, int> {
+        auto buildPath = [&](auto&& self, int head) -> pair<int, int> {
             vector<int> path;
-            for(int vertex = head; vertex != -1; vertex = heavyChild[vertex]) {
-                path.push_back(vertex);
+            for(int u = head; u != -1; u = son[u]) {
+                path.push_back(u);
             }
 
             vector<pair<int, int>> stack;
             stack.push_back({0, path[0]});
 
-            auto mergeLastTwo = [&]() {
-                auto [rightHeight, right] = stack.back();
+            auto mergeLast = [&]() {
+                auto [rh, right] = stack.back();
                 stack.pop_back();
-                auto [leftHeight, left] = stack.back();
+                auto [lh, left] = stack.back();
                 stack.pop_back();
-                int merged = mergeNode(left, right, MergeType::Compress);
+                int merged = mergeNode(left, right, Type::Compress);
                 pullNode(merged);
-                stack.push_back({max(leftHeight, rightHeight) + 1, merged});
+                stack.push_back({max(lh, rh) + 1, merged});
             };
 
-            for(int index = 1; index < static_cast<int>(path.size()); index++) {
-                int previous = path[index - 1];
-                int mainCluster = path[index];
+            for(int i = 1; i < path.size(); i++) {
+                int p = path[i - 1];
+                int main = path[i];
                 priority_queue<
                     pair<int, int>,
                     vector<pair<int, int>>,
                     greater<pair<int, int>>
-                > queue;
-                queue.push({0, mainCluster});
-                for(auto [next, edgeId] : graph[previous]) {
-                    (void)edgeId;
-                    if(parent[next] != previous || next == heavyChild[previous]) continue;
-                    queue.push(self(self, next));
+                > q;
+                q.push({0, main});
+                for(auto [v, id] : g[p]) {
+                    (void)id;
+                    if(fa[v] != p || v == son[p]) continue;
+                    q.push(self(self, v));
                 }
 
-                while(queue.size() >= 2) {
-                    auto [leftHeight, left] = queue.top();
-                    queue.pop();
-                    auto [rightHeight, right] = queue.top();
-                    queue.pop();
-                    if(right == mainCluster) {
-                        swap(leftHeight, rightHeight);
+                while(q.size() >= 2) {
+                    auto [lh, left] = q.top();
+                    q.pop();
+                    auto [rh, right] = q.top();
+                    q.pop();
+                    if(right == main) {
+                        swap(lh, rh);
                         swap(left, right);
                     }
-                    int merged = mergeNode(left, right, MergeType::Rake);
+                    int merged = mergeNode(left, right, Type::Rake);
                     pullNode(merged);
-                    if(left == mainCluster) mainCluster = merged;
-                    queue.push({max(leftHeight, rightHeight) + 1, merged});
+                    if(left == main) main = merged;
+                    q.push({max(lh, rh) + 1, merged});
                 }
 
-                stack.push_back(queue.top());
+                stack.push_back(q.top());
                 while(true) {
-                    int size = static_cast<int>(stack.size());
+                    int size = stack.size();
                     if(
                         size >= 3 &&
                         (stack[size - 3].first == stack[size - 2].first ||
@@ -231,46 +212,41 @@ struct StaticTopologyTopTreeDiameter {
                     ) {
                         auto last = stack.back();
                         stack.pop_back();
-                        mergeLastTwo();
+                        mergeLast();
                         stack.push_back(last);
                     } else if(size >= 2 && stack[size - 2].first <= stack[size - 1].first) {
-                        mergeLastTwo();
+                        mergeLast();
                     } else {
                         break;
                     }
                 }
             }
 
-            while(stack.size() >= 2) mergeLastTwo();
+            while(stack.size() >= 2) mergeLast();
             return stack.back();
         };
 
-        rootCluster = buildHeavyPath(buildHeavyPath, root).second;
-        assert(static_cast<int>(nodes.size()) == 2 * n - 1);
-        for(int edgeId = 0; edgeId < n - 1; edgeId++) assert(edgeLeaf[edgeId] != -1);
-        edgeToLeaf = move(edgeLeaf);
+        rt = buildPath(buildPath, root).second;
+        pos = move(leaf);
     }
 
-    void setEdge(int edgeId, i64 weight) {
-        assert(0 <= edgeId && edgeId < static_cast<int>(edges.size()));
-        assert(weight >= 0);
-        edges[edgeId].weight = weight;
-        int node = edgeToLeaf[edgeId];
-        value[node] = makeEdge(weight);
-        for(node = nodes[node].parent; node != -1; node = nodes[node].parent) {
-            int left = nodes[node].child[0];
-            int right = nodes[node].child[1];
-            if(nodes[node].type == MergeType::Rake) {
-                value[node] = rake(value[left], value[right]);
+    void setEdge(int id, i64 w) {
+        edges[id].w = w;
+        int node = pos[id];
+        val[node] = makeEdge(w);
+        for(node = tr[node].fa; node != -1; node = tr[node].fa) {
+            int left = tr[node].child[0];
+            int right = tr[node].child[1];
+            if(tr[node].type == Type::Rake) {
+                val[node] = rake(val[left], val[right]);
             } else {
-                value[node] = compress(value[left], value[right]);
+                val[node] = compress(val[left], val[right]);
             }
         }
     }
 
-    const Cluster& all() const {
-        assert(rootCluster != -1);
-        return value[rootCluster];
+    const Info& all() const {
+        return val[rt];
     }
 
     i64 diameter() const {
@@ -278,5 +254,5 @@ struct StaticTopologyTopTreeDiameter {
     }
 
 private:
-    vector<int> edgeToLeaf;
+    vector<int> pos;
 };

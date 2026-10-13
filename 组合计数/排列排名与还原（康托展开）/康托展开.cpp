@@ -21,8 +21,7 @@ template <class Ele> struct BitTree {
     }
     void clear() { fill(tree.begin(), tree.end(), 0); }
 };
-struct CantorExpansion {
-    int maxn;
+struct Cantor {
     vector<i64> fact;
     BitTree<i64> bt;
     void init_factorial(int n) {
@@ -30,18 +29,11 @@ struct CantorExpansion {
         fact[0] = 1;
         for(int i = 1; i <= n; i++) fact[i] = fact[i - 1] * i;
     }
-    CantorExpansion(int max_n) : maxn(max_n), bt(max_n) {
-        assert(0 <= max_n && max_n <= 20);
+    Cantor(int max_n) : bt(max_n) {
         init_factorial(max_n);
     }
     i64 encode(const vector<int>& perm) {
         int n = perm.size();
-        assert(n <= maxn);
-        vector<char> used(n + 1);
-        for(int value : perm) {
-            assert(1 <= value && value <= n && !used[value]);
-            used[value] = 1;
-        }
         bt.clear();
         for(int i = 1; i <= n; i++) bt.update(i, 1);
         i64 result = 0;
@@ -53,7 +45,6 @@ struct CantorExpansion {
         return result + 1;
     }
     vector<int> decode(i64 rank, int n) {
-        assert(0 <= n && n <= maxn && 1 <= rank && rank <= fact[n]);
         rank--;
         vector<int> result;
         vector<bool> used(n + 1, false);

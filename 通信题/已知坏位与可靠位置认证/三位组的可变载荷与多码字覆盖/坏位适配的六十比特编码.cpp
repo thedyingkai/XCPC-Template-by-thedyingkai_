@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 namespace communication {
 
-const std::array<std::string, 8> &broken_triplet_table() {
+const std::array<std::string, 8> &triplet_table() {
     static const std::array<std::string, 8> table{
         "", "1", "0", "10", "00", "01", "1", "11"
     };
@@ -15,7 +15,7 @@ std::vector<int> encode_broken60(
     if (message >> 60 ||
         std::count(bad.begin(), bad.end(), true) > 40)
         throw std::invalid_argument("invalid message or bad mask");
-    const auto &table = broken_triplet_table();
+    const auto &table = triplet_table();
     std::vector<int> word(150);
     int position = 0;
     for (int group = 0; group < 50; ++group) {
@@ -27,7 +27,7 @@ std::vector<int> encode_broken60(
             for (int code = 0; code < 8; ++code) {
                 if (code & bad_mask) continue;
                 bool matches = true;
-                for (int j = 0; j < int(table[code].size()); ++j) {
+                for (int j = 0; j < table[code].size(); ++j) {
                     int bit = position + j < 60
                             ? int(message >> (position + j) & 1)
                             : 0; // 最后一组的额外载荷补零。
@@ -57,7 +57,7 @@ std::uint64_t decode_broken60(const std::vector<int> &word) {
                 throw std::invalid_argument("nonbinary received word");
             code = (code << 1) | bit;
         }
-        payload += broken_triplet_table()[code];
+        payload += triplet_table()[code];
     }
     if (payload.size() < 60)
         throw std::invalid_argument("payload shorter than sixty bits");

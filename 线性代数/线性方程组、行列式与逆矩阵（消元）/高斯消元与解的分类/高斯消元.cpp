@@ -34,7 +34,7 @@ int Matrix<T, Mod>::Gauss(vector<vector<T>>* aug, vector<int>* w, T* det) {
             T k = rec[i][c];
             for(int j = c; j < m; j++) rec[i][j] = sub(rec[i][j], mul(k, rec[r][j]));
             if(aug)
-                for(int j = 0; j < (int) (*aug)[i].size(); j++)
+                for(int j = 0; j < (*aug)[i].size(); j++)
                     (*aug)[i][j] = sub((*aug)[i][j], mul(k, (*aug)[r][j]));
         }
         if(w) (*w)[c] = r;

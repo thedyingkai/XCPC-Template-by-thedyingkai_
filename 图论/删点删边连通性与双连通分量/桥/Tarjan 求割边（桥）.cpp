@@ -30,7 +30,7 @@ struct CutEdge {
         dfn[start] = low[start] = ++tot;
         while(!stk.empty()) {
             int u = stk.back();
-            if(next[u] < (int) g[u].size()) {
+            if(next[u] < g[u].size()) {
                 int j = g[u][next[u]++], v = e[j].v;
                 if(j == (parentEdge[u] ^ 1)) continue;
                 if(!dfn[v]) {

@@ -20,7 +20,7 @@ template <class T> bool pointInPolygon(const Point<T>& a, const vector<Point<T>>
 // start: segment-intersection
 // 线段相交判定（返回类型和交点）
 /*0-不相交，1-严格相交，2-重叠，3-在端点处相交*/
-template <class T> tuple<int, Point<d128>, Point<d128>> segmentIntersection(const Line<T>& l1, const Line<T>& l2) {
+template <class T> tuple<int, Point<d128>, Point<d128>> segCross(const Line<T>& l1, const Line<T>& l2) {
     using P = Point<d128>;
     if(l1.a == l1.b && l2.a == l2.b)
         return l1.a == l2.a ? tuple{3, P(l1.a), P(l1.a)} : tuple{0, P(), P()};
@@ -60,7 +60,7 @@ template <class T> tuple<int, Point<d128>, Point<d128>> segmentIntersection(cons
 }
 // 线段到线段最短距离
 template <class T> d128 distanceSS(const Line<T>& l1, const Line<T>& l2) {
-    if(get<0>(segmentIntersection(l1, l2)) != 0) return 0.0;
+    if(get<0>(segCross(l1, l2)) != 0) return 0.0;
     return min({distancePS(l1.a, l2), distancePS(l1.b, l2), distancePS(l2.a, l1), distancePS(l2.b, l1)});
 }
 // end: segment-intersection
@@ -75,7 +75,7 @@ template <class T> bool segmentInPolygon(const Line<T>& l, const std::vector<Poi
     d128 lengthSquared = square(direction);
     vector<d128> cut = {0, 1};
     for(int i = 0; i < n; i++) {
-        auto [type, first, second] = segmentIntersection(l, Line<T>(p[i], p[(i + 1) % n]));
+        auto [type, first, second] = segCross(l, Line<T>(p[i], p[(i + 1) % n]));
         if(type == 0) continue;
         cut.push_back(dot(first - a, direction) / lengthSquared);
         if(type == 2) cut.push_back(dot(second - a, direction) / lengthSquared);
@@ -83,7 +83,7 @@ template <class T> bool segmentInPolygon(const Line<T>& l, const std::vector<Poi
     sort(cut.begin(), cut.end());
     vector<Point<d128>> polygon(n);
     for(int i = 0; i < n; i++) polygon[i] = p[i];
-    for(int i = 1; i < (int) cut.size(); i++) {
+    for(int i = 1; i < cut.size(); i++) {
         if(cmp(cut[i] - cut[i - 1]) == 0) continue;
         d128 middle = (cut[i] + cut[i - 1]) / 2;
         if(cmp(middle) < 0 || cmp(middle - 1) > 0) continue;

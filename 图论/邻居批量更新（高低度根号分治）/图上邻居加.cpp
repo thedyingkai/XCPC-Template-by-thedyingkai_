@@ -3,39 +3,37 @@
 #include "../../template/start.cpp"
 
 struct NeighborAdd {
-    int n, threshold;
-    vector<vector<int>> graph, heavyNeighbor;
-    vector<int> heavyId;
+    int n, B;
+    vector<vector<int>> g, adj;
+    vector<int> id;
     vector<i64> direct, lazy;
 
     NeighborAdd(int n_, const vector<pair<int, int>>& edge)
-        : n(n_), graph(n + 1), heavyId(n + 1, -1), direct(n + 1) {
+        : n(n_), g(n + 1), id(n + 1, -1), direct(n + 1) {
         for(auto [u, v] : edge) {
-            assert(1 <= u && u <= n && 1 <= v && v <= n);
-            graph[u].push_back(v), graph[v].push_back(u);
+            g[u].push_back(v), g[v].push_back(u);
         }
-        threshold = max(1, (int) sqrt(max(1, 2 * (int) edge.size())));
-        int heavyCount = 0;
+        int m = edge.size();
+        B = max(1, (int) sqrt(max(1LL, 2LL * m)));
+        int cnt = 0;
         for(int u = 1; u <= n; u++)
-            if((int) graph[u].size() >= threshold) heavyId[u] = heavyCount++;
-        lazy.assign(heavyCount, 0);
-        heavyNeighbor.assign(n + 1, {});
+            if(g[u].size() >= B) id[u] = cnt++;
+        lazy.assign(cnt, 0);
+        adj.assign(n + 1, {});
         for(int u = 1; u <= n; u++)
-            for(int v : graph[u])
-                if(heavyId[v] != -1) heavyNeighbor[u].push_back(heavyId[v]);
+            for(int v : g[u])
+                if(id[v] != -1) adj[u].push_back(id[v]);
     }
 
     void addNeighbors(int u, i64 value) {
-        assert(1 <= u && u <= n);
-        if(heavyId[u] != -1) lazy[heavyId[u]] += value;
+        if(id[u] != -1) lazy[id[u]] += value;
         else
-            for(int v : graph[u]) direct[v] += value;
+            for(int v : g[u]) direct[v] += value;
     }
 
     i64 query(int u) const {
-        assert(1 <= u && u <= n);
         i64 answer = direct[u];
-        for(int id : heavyNeighbor[u]) answer += lazy[id];
+        for(int v : adj[u]) answer += lazy[v];
         return answer;
     }
 };

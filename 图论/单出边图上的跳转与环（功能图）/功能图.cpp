@@ -7,9 +7,8 @@ struct FunctionalGraph {
     vector<int> to, onCycle, dep, entry, cid, pos, cycleLen;
     vector<vector<int>> rev, up;
     FunctionalGraph(const vector<int>& nxt)
-        : n((int) nxt.size() - 1), cc(0), to(nxt), onCycle(n + 1), dep(n + 1),
+        : n(nxt.size() - 1), cc(0), to(nxt), onCycle(n + 1), dep(n + 1),
           entry(n + 1), cid(n + 1), pos(n + 1), rev(n + 1) {
-        assert(n >= 1);
         build();
     }
     void build() {
@@ -23,7 +22,6 @@ struct FunctionalGraph {
         cycleLen.clear();
         vector<int> deg(n + 1), alive(n + 1, 1);
         for(int u = 1; u <= n; u++) {
-            assert(1 <= to[u] && to[u] <= n);
             deg[to[u]]++;
             rev[to[u]].push_back(u);
         }

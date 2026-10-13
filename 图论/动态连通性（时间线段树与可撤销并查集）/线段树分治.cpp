@@ -1,12 +1,12 @@
 #include "../../数据结构与区间查询/连通关系维护（并查集）/可撤销并查集/可撤销并查集.cpp"
 
-struct DynamicConnectivity {
+struct DynamicConn {
     struct Operation {
         int type, u, v;
     };
     int n;
     vector<Operation> op;
-    DynamicConnectivity(int n_) : n(n_) {}
+    DynamicConn(int n_) : n(n_) {}
     void add(int u, int v) {
         if(u > v) swap(u, v);
         op.push_back({1, u, v});
@@ -37,7 +37,6 @@ struct DynamicConnectivity {
             if(type == 1)
                 active[edge].push_back(i);
             else if(type == 2) {
-                assert(active.count(edge) && !active[edge].empty());
                 int l = active[edge].back();
                 active[edge].pop_back();
                 if(l <= i - 1) addInterval(seg, 1, 0, q - 1, l, i - 1, edge);

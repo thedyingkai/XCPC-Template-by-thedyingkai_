@@ -19,7 +19,7 @@ struct HammingCode {
     static bool parity_position(int p) { return (p & (p - 1)) == 0; }
 
     std::vector<int> encode(const std::vector<int> &data) const {
-        if (int(data.size()) != k)
+        if (data.size() != k)
             throw std::invalid_argument("data length mismatch");
         std::vector<int> word(n + extended);
         int syndrome = 0, j = 0;
@@ -43,10 +43,10 @@ struct HammingCode {
 
     // 普通码承诺 <=1 错；扩展码承诺 <=2 错时 SECDED。
     Result decode(std::vector<int> word) const {
-        if (int(word.size()) != n + extended)
+        if (word.size() != n + extended)
             return {Status::Invalid, {}};
         int syndrome = 0, parity = 0;
-        for (int i = 0; i < int(word.size()); ++i) {
+        for (int i = 0; i < word.size(); ++i) {
             if (word[i] != 0 && word[i] != 1)
                 return {Status::Invalid, {}};
             parity ^= word[i];

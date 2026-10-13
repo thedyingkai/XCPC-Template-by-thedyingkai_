@@ -9,7 +9,6 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
     int n, m;
     vector<vector<T>> rec;
     Matrix(int _n = 0, int _m = 0, T _x = 0) {
-        assert(_n >= 0 && _m >= 0);
         n = _n, m = _m;
         rec.resize(_n, vector<T>(_m, _x));
     }
@@ -47,7 +46,6 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
             return a * b;
     }
     static T modPow(T a, i64 e) {
-        assert(e >= 0);
         if constexpr(_m_) {
             T r = norm(T(1));
             T x = norm(a);
@@ -68,7 +66,6 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
         }
     }
     static T Inv(T a) {
-        assert(!isZero(a));
         if constexpr(_m_)
             return modPow(a, MOD - 2);
         else
@@ -84,7 +81,6 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
     }
     // ---- 矩阵乘法 ----
     friend Matrix operator*(const Matrix& a, const Matrix& b) {
-        assert(a.m == b.n);
         Matrix res(a.n, b.m);
         if constexpr(_m_) {
             Matrix left = a, right = b;
@@ -114,7 +110,6 @@ template <class T, i64 Mod = 1000000007> struct Matrix {
     }
     // ---- 快速幂 ----
     static Matrix qp(Matrix base, i64 k) {
-        assert(base.n == base.m && k >= 0);
         Matrix res(base.n, base.m);
         for(int i = 0; i < res.n; i++) res[i][i] = norm(T(1));
         while(k) {

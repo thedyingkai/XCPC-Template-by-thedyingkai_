@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 namespace communication {
 
-int calibration_prime(int m) {
+int prime(int m) {
     if (m < 2 || m > INT_MAX / 6)
         throw std::invalid_argument("invalid color count");
     auto prime = [](int x) {
@@ -17,8 +17,8 @@ int calibration_prime(int m) {
 }
 
 // 消息为 1..m，颜色为 1..m；每种颜色恰好出现三次。
-std::vector<int> encode_calibrated_shift(int m, int message) {
-    int p = calibration_prime(m);
+std::vector<int> encode_shift(int m, int message) {
+    int p = prime(m);
     if (message < 1 || message > m)
         throw std::invalid_argument("message outside domain");
     std::vector<int> base, result, count(m + 1);
@@ -43,9 +43,9 @@ std::vector<int> encode_calibrated_shift(int m, int message) {
     return result;
 }
 
-int decode_calibrated_shift(int m, const std::vector<int> &bits) {
-    int p = calibration_prime(m);
-    if (int(bits.size()) != 3 * m)
+int decode_shift(int m, const std::vector<int> &bits) {
+    int p = prime(m);
+    if (bits.size() != 3 * m)
         throw std::invalid_argument("received length mismatch");
     for (int bit : bits)
         if (bit != 0 && bit != 1)

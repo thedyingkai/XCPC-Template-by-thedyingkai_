@@ -11,7 +11,7 @@ struct Runs {
         SA suffix;
         vector<int> seg;
 
-        LCE(const string& s) : n((int) s.size()), base(1), suffix(s) {
+        LCE(const string& s) : n(s.size()), base(1), suffix(s) {
             base = (int) bit_ceil((unsigned) max(n, 1));
             seg.assign(2 * base, INT_MAX);
             for(int i = 0; i < n; i++) seg[base + i] = suffix.height[i];
@@ -35,8 +35,8 @@ struct Runs {
         }
     };
 
-    static vector<int> next_smaller_suffix(const vector<int>& rank) {
-        int n = (int) rank.size();
+    static vector<int> nextSuffix(const vector<int>& rank) {
+        int n = rank.size();
         vector<int> next(n, n), st;
         st.reserve(n);
         for(int i = n - 1; i >= 0; i--) {
@@ -48,7 +48,7 @@ struct Runs {
     }
 
     static vector<Run> enumerate(const string& s) {
-        int n = (int) s.size();
+        int n = s.size();
         if(n < 2) return {};
 
         LCE right(s);
@@ -57,11 +57,11 @@ struct Runs {
 
         string opposite = s;
         for(char& c : opposite) c = char(255 - (unsigned char) c);
-        SA opposite_suffix(opposite);
+        SA oppSuffix(opposite);
 
         vector<Run> runs;
         auto collect = [&](const vector<int>& rank) {
-            vector<int> next = next_smaller_suffix(rank);
+            vector<int> next = nextSuffix(rank);
             for(int i = 0; i < n; i++) {
                 int j = next[i];
                 if(j == n) continue;
@@ -75,7 +75,7 @@ struct Runs {
         };
 
         collect(right.suffix.rk);
-        collect(opposite_suffix.rk);
+        collect(oppSuffix.rk);
         sort(runs.begin(), runs.end());
         runs.erase(unique(runs.begin(), runs.end()), runs.end());
         return runs;

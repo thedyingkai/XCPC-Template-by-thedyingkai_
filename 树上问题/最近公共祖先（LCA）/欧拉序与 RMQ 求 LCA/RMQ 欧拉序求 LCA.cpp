@@ -35,7 +35,7 @@ struct RMQ {
             }
         }
         T[0] = T[1] = 0;
-        for(int i = 2; i < (int) T.size(); i++) {
+        for(int i = 2; i < T.size(); i++) {
             T[i] = T[i - 1];
             if((i & (i - 1)) == 0) T[i]++;
         }

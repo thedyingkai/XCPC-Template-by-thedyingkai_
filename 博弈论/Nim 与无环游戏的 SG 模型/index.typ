@@ -16,7 +16,7 @@
 $ g(u)=op("mex"){g(v) mid u->v}, $
 终止值为 0，各子游戏 SG 异或后判零。状态必须无环或有严格下降量。
 
-`subtractionGameSG(maxState,moves)` 预处理减法游戏，自动删非正、重复步长。图游戏先 `DAGSpragueGrundy sg(graph);`，再 `sg.get(u)`，点号 `0..graph.size()-1`；记忆化复用状态，发现递归环抛异常，深链需留意调用栈。
+`subtractionSG(maxState,moves)` 预处理减法游戏，自动删非正、重复步长。图游戏先 `DAGSG sg(graph);`，再 `sg.get(u)`，点号 `0..graph.size()-1`；记忆化复用状态，发现递归环抛异常，深链需留意调用栈。
 
 有偏、允许平局或一般反常规则另行分析。共享转移可复用预处理，观察到的周期须证明后用于远项。
 

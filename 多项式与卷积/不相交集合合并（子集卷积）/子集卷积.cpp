@@ -2,10 +2,9 @@
 
 #include "../掩码上的子集和与位运算卷积（Zeta／FWT）/集合变换.cpp"
 
-struct SubsetConvolution {
+struct SubsetConv {
     static vector<i64> multiply(const vector<i64>& a, const vector<i64>& b) {
-        assert(a.size() == b.size());
-        int n = (int) a.size(), bits = SetTransform::bitsOf(n);
+        int n = a.size(), bits = SetTransform::bitsOf(n);
         vector<vector<i64>> A(bits + 1, vector<i64>(n));
         vector<vector<i64>> B(bits + 1, vector<i64>(n));
         vector<vector<i64>> C(bits + 1, vector<i64>(n));

@@ -4,9 +4,9 @@ namespace communication {
 
 // received 长 n-1，原码字属于已知 VT(n, residue) 校验类。
 // 恰好删除一位；本函数不负责把任意载荷编码入该类。
-std::optional<std::string> decode_vt_deletion(
+std::optional<std::string> decode_vt(
     std::string_view received, int n, int residue) {
-    if (n < 1 || int(received.size()) != n - 1 ||
+    if (n < 1 || received.size() != n - 1 ||
         residue < 0 || residue > n)
         throw std::invalid_argument("invalid VT parameters");
     std::vector<int> suffix(n);

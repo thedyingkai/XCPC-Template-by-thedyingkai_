@@ -9,7 +9,7 @@ template <class T> struct ChairmanTree {
     vector<int> root;
     vector<Node> tree;
     ChairmanTree(const vector<T>& a) {
-        n = (int) a.size() - 1;
+        n = a.size() - 1;
         val.assign(a.begin() + 1, a.end());
         sort(val.begin(), val.end());
         val.erase(unique(val.begin(), val.end()), val.end());
@@ -44,7 +44,6 @@ template <class T> struct ChairmanTree {
         return ans;
     }
     T kth(int l, int r, int k) const {
-        assert(1 <= l && l <= r && r <= n && 1 <= k && k <= r - l + 1);
         int u = root[l - 1], v = root[r], ql = 1, qr = m;
         while(ql < qr) {
             int cnt = tree[tree[v].ls].sum - tree[tree[u].ls].sum;
@@ -57,7 +56,6 @@ template <class T> struct ChairmanTree {
         return val[ql - 1];
     }
     int count(int l, int r, const T& low, const T& high) const {
-        assert(1 <= l && l <= r && r <= n);
         int ql = lower_bound(val.begin(), val.end(), low) - val.begin() + 1;
         int qr = upper_bound(val.begin(), val.end(), high) - val.begin();
         if(ql > qr) return 0;

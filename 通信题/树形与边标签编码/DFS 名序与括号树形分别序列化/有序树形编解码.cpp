@@ -7,7 +7,7 @@ struct OrderedTreeCode {
     std::string brackets; // 1 进入，0 离开，共 2n 位。
 };
 
-OrderedTreeCode encode_ordered_tree(
+OrderedTreeCode encode_tree(
     const std::vector<std::vector<int>> &children, int root) {
     int n = children.size();
     if (root < 0 || root >= n)
@@ -29,18 +29,18 @@ OrderedTreeCode encode_ordered_tree(
              it != children[u].rend(); ++it)
             stack.push_back({*it, true});
     }
-    if (int(code.preorder.size()) != n)
+    if (code.preorder.size() != n)
         throw std::invalid_argument("unreachable vertex");
     return code;
 }
 
-struct DecodedOrderedTree {
+struct DecodedTree {
     int root;
     std::vector<std::vector<int>> children;
 };
 
 // 传输的名称若为 1..n，外层先减一；preorder 是 0..n-1 的排列。
-DecodedOrderedTree decode_ordered_tree(const OrderedTreeCode &code) {
+DecodedTree decode_tree(const OrderedTreeCode &code) {
     int n = code.preorder.size(), next = 0, root = -1;
     if (!n || code.brackets.size() != 2ULL * n)
         throw std::invalid_argument("invalid tree code length");

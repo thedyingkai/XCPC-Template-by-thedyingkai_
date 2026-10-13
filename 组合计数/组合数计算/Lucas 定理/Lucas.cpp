@@ -1,7 +1,6 @@
 #include "../../../template/start.cpp"
 
 i64 qp(i64 a, i64 b, i64 p) {
-    assert(p > 1 && b >= 0);
     i64 res = 1 % p;
     a %= p;
     if(a < 0) a += p;
@@ -16,9 +15,7 @@ struct Lucas {
     vector<int> f, g;
     int mod = 1;
     void init(int p, int max_digit = -1) {
-        assert(p > 1);
         if(max_digit < 0) max_digit = p - 1;
-        assert(0 <= max_digit && max_digit < p);
         mod = p;
         f.assign(max_digit + 1, 1);
         g.assign(max_digit + 1, 1);
@@ -28,8 +25,7 @@ struct Lucas {
     }
     i64 getC(int n, int m, int p) {
         if(m < 0 || n < 0 || m > n) return 0;
-        assert(p == mod && n < p);
-        if(n < (int) f.size()) return (i64) f[n] * g[m] % p * g[n - m] % p;
+        if(n < f.size()) return (i64) f[n] * g[m] % p * g[n - m] % p;
         m = min(m, n - m);
         i64 numerator = 1, denominator = 1;
         for(int i = 1; i <= m; i++) {
@@ -40,7 +36,6 @@ struct Lucas {
     }
     i64 C(i64 n, i64 m, i64 p) {
         if(n < 0 || m < 0 || m > n) return 0;
-        assert(p == mod);
         if(m == 0) return 1;
         return C(n / p, m / p, p) * getC(n % p, m % p, p) % p;
     }

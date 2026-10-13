@@ -6,9 +6,9 @@ namespace communication {
 // 位流为低位先发；尾部补零，接收端必须已知原 digit 数。
 std::vector<int> pack_ternary(const std::vector<int> &digits) {
     std::vector<int> bits;
-    for (int begin = 0; begin < int(digits.size()); begin += 3) {
+    for (int begin = 0; begin < digits.size(); begin += 3) {
         int value = 0, power = 1;
-        for (int j = 0; j < 3 && begin + j < int(digits.size()); ++j) {
+        for (int j = 0; j < 3 && begin + j < digits.size(); ++j) {
             int d = digits[begin + j];
             if (d < 0 || d > 2)
                 throw std::invalid_argument("nonternary digit");
@@ -23,11 +23,11 @@ std::vector<int> pack_ternary(const std::vector<int> &digits) {
 
 std::vector<int> unpack_ternary(
     const std::vector<int> &bits, int digit_count) {
-    if (digit_count < 0 || int(bits.size()) !=
+    if (digit_count < 0 || bits.size() !=
         5LL * ((digit_count + 2LL) / 3))
         throw std::invalid_argument("bit length mismatch");
     std::vector<int> digits;
-    for (int begin = 0; begin < int(bits.size()); begin += 5) {
+    for (int begin = 0; begin < bits.size(); begin += 5) {
         int value = 0;
         for (int j = 0; j < 5; ++j) {
             if (bits[begin + j] != 0 && bits[begin + j] != 1)
@@ -39,7 +39,7 @@ std::vector<int> unpack_ternary(
         for (int j = 0; j < 3; ++j) {
             int d = value % 3;
             value /= 3;
-            if (int(digits.size()) < digit_count) digits.push_back(d);
+            if (digits.size() < digit_count) digits.push_back(d);
             else if (d != 0)
                 throw std::invalid_argument("nonzero padding");
         }

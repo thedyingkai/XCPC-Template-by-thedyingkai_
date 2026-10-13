@@ -62,7 +62,7 @@ struct LinearBasis {
                 if((base[i] >> j) & 1) base[i] ^= base[j];
             if(base[i]) simple.push_back(base[i]);
         }
-        int sz = (int) simple.size();
+        int sz = simple.size();
         if(k >= (1ULL << sz)) return -1;
         i64 res = 0;
         for(int i = 0; i < sz; ++i)

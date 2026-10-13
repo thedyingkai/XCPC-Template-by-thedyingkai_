@@ -2,7 +2,7 @@
 
 #include "../../template/start.cpp"
 
-struct RandomFingerprint {
+struct Fingerprint {
     struct Value {
         u64 first = 0, second = 0;
         bool operator==(const Value&) const = default;
@@ -39,9 +39,9 @@ struct RandomFingerprint {
         return splitmix64(value);
     }
 
-    RandomFingerprint() : RandomFingerprint(randomSeed(), randomSeed()) {}
+    Fingerprint() : Fingerprint(randomSeed(), randomSeed()) {}
 
-    RandomFingerprint(u64 firstSeed_, u64 secondSeed_)
+    Fingerprint(u64 firstSeed_, u64 secondSeed_)
         : firstSeed(firstSeed_), secondSeed(secondSeed_) {}
 
     Value operator()(i64 label) const {

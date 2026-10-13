@@ -16,7 +16,6 @@ i128 gcdGeom128(i128 a, i128 b) {
 struct GeomFraction {
     i128 num, den; // den>0，最简分数。
     GeomFraction(i128 n, i128 d) : num(n), den(d) {
-        assert(d != 0);
         if(den < 0) num = -num, den = -den;
         i128 g = gcdGeom128(num, den);
         num /= g, den /= g;
@@ -25,8 +24,7 @@ struct GeomFraction {
 // 无限直线交点。平行或重合返回 nullopt；输入直线不可退化。
 // 分数分子含三次乘积，不能仅按叉积的二次量估计范围。
 optional<pair<GeomFraction, GeomFraction>>
-exactLineIntersection(const IP& a, const IP& b, const IP& c, const IP& d) {
-    assert(a != b && c != d);
+exactCross(const IP& a, const IP& b, const IP& c, const IP& d) {
     i128 ux = (i128) b.x - a.x, uy = (i128) b.y - a.y;
     i128 vx = (i128) d.x - c.x, vy = (i128) d.y - c.y;
     i128 wx = (i128) c.x - a.x, wy = (i128) c.y - a.y;

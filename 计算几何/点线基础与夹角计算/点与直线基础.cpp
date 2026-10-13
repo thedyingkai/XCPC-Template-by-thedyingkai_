@@ -68,7 +68,6 @@ template <class T> d128 length(const Line<T>& l) { return length(l.a - l.b); }
 // 单位向量
 template <class T> Point<d128> normalize(const Point<T>& p) {
     d128 len = length(p);
-    assert(cmp(len) != 0);
     return Point<d128>(p.x / len, p.y / len);
 }
 // 判断平行
@@ -78,7 +77,6 @@ template <class T> bool parallel(const Line<T>& l1, const Line<T>& l2) {
 template <class T> d128 distance(const Point<T>& a, const Point<T>& b) { return length(a - b); }
 // 点到直线距离
 template <class T> d128 distancePL(const Point<T>& p, const Line<T>& l) {
-    assert(l.a != l.b);
     return fabsl((d128) cross(l.a - l.b, l.a - p)) / length(l);
 }
 // 点到线段距离
@@ -98,7 +96,6 @@ template <class T> bool pointOnLineLeft(const Point<T>& p, const Line<T>& l) {
 }
 // 两直线交点
 template <class T> Point<d128> lineIntersection(const Line<T>& l1, const Line<T>& l2) {
-    assert(!parallel(l1, l2));
     Point<d128> a = l1.a, b = l1.b, c = l2.a, d = l2.b;
     return a + (b - a) * (cross(d - c, a - c) / cross(d - c, a - b));
 }

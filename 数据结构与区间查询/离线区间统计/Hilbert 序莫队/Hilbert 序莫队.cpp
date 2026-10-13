@@ -27,7 +27,6 @@ struct HilbertMo {
         : power((int) bit_width((unsigned) (max(1, n) - 1))) {}
 
     int addQuery(int left, int right) {
-        assert(1 <= left && left <= right);
         int id = queryCount++;
         query.push_back({left, right, id, hilbertOrder(left - 1, right - 1, power)});
         return id;

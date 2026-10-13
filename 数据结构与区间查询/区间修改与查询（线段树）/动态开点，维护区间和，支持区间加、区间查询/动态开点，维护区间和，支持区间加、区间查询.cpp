@@ -6,8 +6,8 @@ template <class T> struct Node {
     T val, tag;
     Node(int L, int R) : l(L), r(R), val(0), tag(0) { ls = rs = nullptr; }
     void pushup() { val = ls->val + rs->val; }
-    bool inRange(int L, int R) { return L <= l && r <= R; }
-    bool outRange(int L, int R) { return r < L || R < l; }
+    bool inRange(int L, int R) const { return L <= l && r <= R; }
+    bool outRange(int L, int R) const { return r < L || R < l; }
     inline void makeTag(T x) {
         val += (r - l + 1) * x;
         tag += x;
@@ -34,15 +34,12 @@ template <class T> struct Node {
             pushup();
         }
     }
-    T query(int L, int R) {
-        if(inRange(L, R))
-            return val;
-        else if(outRange(L, R))
-            return 0;
-        else {
-            pushdown();
-            return ls->query(L, R) + rs->query(L, R);
-        }
+    T query(int L, int R) const {
+        if(inRange(L, R)) return val;
+        if(outRange(L, R)) return 0;
+        T ans = T(min(r, R) - max(l, L) + 1) * tag;
+        if(ls) ans += ls->query(L, R) + rs->query(L, R);
+        return ans;
     }
 };
 int main() {

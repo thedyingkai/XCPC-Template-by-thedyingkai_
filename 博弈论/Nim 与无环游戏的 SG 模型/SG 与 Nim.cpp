@@ -7,7 +7,7 @@ bool firstWinsNim(const vector<u64>& heaps) {
     return value != 0;
 }
 
-bool firstWinsMisereNim(const vector<u64>& heaps) {
+bool misereNim(const vector<u64>& heaps) {
     u64 value = 0;
     int nonzero = 0;
     bool hasLarge = false;
@@ -22,8 +22,7 @@ bool firstWinsMisereNim(const vector<u64>& heaps) {
 // end: nim
 
 // start: subtraction-game
-vector<int> subtractionGameSG(int maxState, vector<int> moves) {
-    assert(maxState >= 0);
+vector<int> subtractionSG(int maxState, vector<int> moves) {
     erase_if(moves, [](int x) { return x <= 0; });
     sort(moves.begin(), moves.end());
     moves.erase(unique(moves.begin(), moves.end()), moves.end());
@@ -32,20 +31,20 @@ vector<int> subtractionGameSG(int maxState, vector<int> moves) {
         for(int take : moves) {
             if(take > state) break;
             int value = sg[state - take];
-            if(value < (int) seen.size()) seen[value] = state;
+            if(value < seen.size()) seen[value] = state;
         }
-        while(sg[state] < (int) seen.size() && seen[sg[state]] == state) sg[state]++;
+        while(sg[state] < seen.size() && seen[sg[state]] == state) sg[state]++;
     }
     return sg;
 }
 // end: subtraction-game
 
 // start: dag-sg
-struct DAGSpragueGrundy {
+struct DAGSG {
     vector<vector<int>> graph;
     vector<int> sg, state;
 
-    explicit DAGSpragueGrundy(vector<vector<int>> g)
+    explicit DAGSG(vector<vector<int>> g)
         : graph(move(g)), sg(graph.size()), state(graph.size()) {}
 
     int get(int u) {

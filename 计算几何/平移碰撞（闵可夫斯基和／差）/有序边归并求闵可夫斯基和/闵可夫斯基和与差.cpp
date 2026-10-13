@@ -46,7 +46,7 @@ vector<IP> minkowskiSum(vector<IP> a, vector<IP> b) {
     ans.pop_back(); // 最后一步回到首点。
     return ans;
 }
-vector<IP> minkowskiDifference(const vector<IP>& a, vector<IP> b) {
+vector<IP> minkowskiDiff(const vector<IP>& a, vector<IP> b) {
     for(auto& p : b) p = -p; // 旋转 180 度，保持逆时针。
     return minkowskiSum(a, b);
 }

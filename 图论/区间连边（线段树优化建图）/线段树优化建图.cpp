@@ -8,14 +8,13 @@ struct RangeEdgeGraph {
     vector<vector<pair<int, i64>>> graph;
 
     explicit RangeEdgeGraph(int n_) : n(n_) {
-        assert(n >= 1);
         down.resize(4 * n);
         up.resize(4 * n);
         graph.resize(n + 1);
         build(1, 1, n);
     }
 
-    int newNode() { graph.emplace_back(); return (int) graph.size() - 1; }
+    int newNode() { graph.emplace_back(); return graph.size() - 1; }
 
     void build(int p, int l, int r) {
         if(l == r) { down[p] = up[p] = l; return; }
@@ -41,30 +40,24 @@ struct RangeEdgeGraph {
     }
 
     void addEdge(int u, int v, i64 w) {
-        assert(1 <= u && u <= n && 1 <= v && v <= n && w >= 0);
         graph[u].push_back({v, w});
     }
 
     void pointToRange(int u, int l, int r, i64 w) {
-        assert(1 <= u && u <= n && 1 <= l && l <= r && r <= n && w >= 0);
         linkRange(1, 1, n, l, r, u, w, true);
     }
 
     void rangeToPoint(int l, int r, int v, i64 w) {
-        assert(1 <= v && v <= n && 1 <= l && l <= r && r <= n && w >= 0);
         linkRange(1, 1, n, l, r, v, w, false);
     }
 
     void rangeToRange(int l1, int r1, int l2, int r2, i64 w) {
-        assert(1 <= l1 && l1 <= r1 && r1 <= n);
-        assert(1 <= l2 && l2 <= r2 && r2 <= n && w >= 0);
         int bridge = newNode();
         linkRange(1, 1, n, l1, r1, bridge, 0, false);
         linkRange(1, 1, n, l2, r2, bridge, w, true);
     }
 
     vector<i128> dijkstra(int source) const {
-        assert(1 <= source && source <= n);
         vector<i128> distance(graph.size(), INF);
         priority_queue<pair<i128, int>, vector<pair<i128, int>>, greater<>> q;
         distance[source] = 0;

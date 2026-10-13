@@ -7,7 +7,7 @@ struct CDQDominance {
         vector<int> tree;
         explicit Fenwick(int n = 0) : tree(n + 1) {}
         void add(int x, int value) {
-            for(; x < (int) tree.size(); x += x & -x) tree[x] += value;
+            for(; x < tree.size(); x += x & -x) tree[x] += value;
         }
         int query(int x) const {
             int result = 0;
@@ -49,7 +49,7 @@ struct CDQDominance {
     }
 
     vector<i64> count(const vector<array<i64, 3>>& input) {
-        int n = (int) input.size();
+        int n = input.size();
         vector<array<i64, 4>> raw(n);
         vector<i64> allZ;
         for(int i = 0; i < n; i++) {
@@ -76,8 +76,8 @@ struct CDQDominance {
             i = j;
         }
         buffer.resize(point.size());
-        bit = Fenwick((int) allZ.size());
-        solve(0, (int) point.size());
+        bit = Fenwick(allZ.size());
+        solve(0, point.size());
         vector<i64> answer(n);
         for(const auto& node : point)
             for(int id : node.ids) answer[id] = node.answer;

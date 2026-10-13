@@ -13,7 +13,7 @@ template <class T, class Op> struct SparseTable {
     explicit SparseTable(const vector<T>& a, Op op_ = Op()) : op(op_) { build(a); }
 
     void build(const vector<T>& a) {
-        n = (int) a.size();
+        n = a.size();
         lg.assign(n + 1, 0);
         for(int i = 2; i <= n; i++) lg[i] = lg[i >> 1] + 1;
         table.assign(n ? lg[n] + 1 : 0, vector<T>(n));
@@ -25,7 +25,6 @@ template <class T, class Op> struct SparseTable {
     }
 
     T query(int l, int r) const {
-        assert(0 <= l && l <= r && r < n);
         int k = lg[r - l + 1];
         return op(table[k][l], table[k][r - (1 << k) + 1]);
     }
@@ -33,18 +32,18 @@ template <class T, class Op> struct SparseTable {
 // end: sparse-table
 
 // start: disjoint-sparse-table
-template <class T, class Op> struct DisjointSparseTable {
+template <class T, class Op> struct DisjointST {
     int n = 0, levels = 0;
     Op op;
     vector<T> value;
     vector<vector<T>> table;
 
-    DisjointSparseTable() = default;
-    explicit DisjointSparseTable(const vector<T>& a, Op op_ = Op()) : op(op_) { build(a); }
+    DisjointST() = default;
+    explicit DisjointST(const vector<T>& a, Op op_ = Op()) : op(op_) { build(a); }
 
     void build(const vector<T>& a) {
         value = a;
-        n = (int) a.size();
+        n = a.size();
         levels = n <= 1 ? 0 : (int) bit_width((unsigned) (n - 1));
         table.assign(levels, vector<T>(n));
         for(int k = 0; k < levels; k++) {
@@ -63,7 +62,6 @@ template <class T, class Op> struct DisjointSparseTable {
     }
 
     T query(int l, int r) const {
-        assert(0 <= l && l <= r && r < n);
         if(l == r) return value[l];
         int k = (int) bit_width((unsigned) (l ^ r)) - 1;
         return op(table[k][l], table[k][r]);

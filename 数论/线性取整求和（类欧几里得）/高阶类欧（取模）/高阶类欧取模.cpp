@@ -4,15 +4,14 @@
 
 struct FloorSumsMod {
     i64 sumFloor;
-    i64 sumIndexFloor;
-    i64 sumFloorSquare;
+    i64 sumIF;
+    i64 sumF2;
 };
 
-struct HighFloorSumsModSolver {
+struct FloorSumMod {
     i64 mod, inv2;
 
-    explicit HighFloorSumsModSolver(i64 oddMod) : mod(oddMod) {
-        assert(mod > 0 && (mod & 1));
+    explicit FloorSumMod(i64 oddMod) : mod(oddMod) {
         inv2 = (i64)(((i128)mod + 1) / 2 % mod);
     }
 
@@ -35,7 +34,6 @@ struct HighFloorSumsModSolver {
     }
 
     static i128 floorDiv(i128 x, i128 y) {
-        assert(y > 0);
         i128 q = x / y, r = x % y;
         if(r < 0) --q;
         return q;
@@ -44,7 +42,6 @@ struct HighFloorSumsModSolver {
     // sum_{i=0}^{n-1} i modulo mod. Reducing n modulo 2*mod
     // lets the exact division by 2 work for every odd modulus.
     i64 sumIndex(i128 n) const {
-        assert(n >= 0);
         i128 x = n % ((i128)2 * mod);
         i128 a = x, b = x - 1;
         if(a % 2 == 0) a /= 2;
@@ -54,8 +51,7 @@ struct HighFloorSumsModSolver {
 
     // sum_{i=0}^{n-1} i^2 modulo mod. Cancel 2 and 3 in
     // n*(n-1)*(2*n-1)/6 before taking residues; mod need not be prime.
-    i64 sumIndexSquare(i128 n) const {
-        assert(n >= 0);
+    i64 sumI2(i128 n) const {
         i128 x = n % ((i128)6 * mod);
         array<i128, 3> factor = {x, x - 1, 2 * x - 1};
         for(i128 divisor : {2, 3}) {
@@ -74,16 +70,16 @@ struct HighFloorSumsModSolver {
     // If q_i = base_i + qa*i + qb, update the three required sums.
     FloorSumsMod addAffine(FloorSumsMod base, i128 n, i128 qa, i128 qb) const {
         i64 a = norm(qa), b = norm(qb), twoA = add(a, a), twoB = add(b, b);
-        i64 count = norm(n), s1 = sumIndex(n), s2 = sumIndexSquare(n);
+        i64 count = norm(n), s1 = sumIndex(n), s2 = sumI2(n);
         FloorSumsMod result;
         result.sumFloor = add(base.sumFloor, add(mul(a, s1), mul(b, count)));
-        result.sumIndexFloor = add(base.sumIndexFloor, add(mul(a, s2), mul(b, s1)));
-        result.sumFloorSquare = base.sumFloorSquare;
-        result.sumFloorSquare = add(result.sumFloorSquare, mul(mul(a, a), s2));
-        result.sumFloorSquare = add(result.sumFloorSquare, mul(mul(twoA, b), s1));
-        result.sumFloorSquare = add(result.sumFloorSquare, mul(mul(b, b), count));
-        result.sumFloorSquare = add(result.sumFloorSquare, mul(twoA, base.sumIndexFloor));
-        result.sumFloorSquare = add(result.sumFloorSquare, mul(twoB, base.sumFloor));
+        result.sumIF = add(base.sumIF, add(mul(a, s2), mul(b, s1)));
+        result.sumF2 = base.sumF2;
+        result.sumF2 = add(result.sumF2, mul(mul(a, a), s2));
+        result.sumF2 = add(result.sumF2, mul(mul(twoA, b), s1));
+        result.sumF2 = add(result.sumF2, mul(mul(b, b), count));
+        result.sumF2 = add(result.sumF2, mul(twoA, base.sumIF));
+        result.sumF2 = add(result.sumF2, mul(twoB, base.sumFloor));
         return result;
     }
 
@@ -101,17 +97,16 @@ struct HighFloorSumsModSolver {
         i64 ym = norm(y), lastm = norm(last);
         FloorSumsMod result;
         result.sumFloor = sub(mul(ym, lastm), t.sumFloor);
-        i64 half = mul(add(t.sumFloor, t.sumFloorSquare), inv2);
-        result.sumIndexFloor = sub(mul(ym, sumIndex(last + 1)), half);
-        result.sumFloorSquare = sub(
-            sub(mul(lastm, mul(ym, ym)), add(t.sumIndexFloor, t.sumIndexFloor)),
+        i64 half = mul(add(t.sumFloor, t.sumF2), inv2);
+        result.sumIF = sub(mul(ym, sumIndex(last + 1)), half);
+        result.sumF2 = sub(
+            sub(mul(lastm, mul(ym, ym)), add(t.sumIF, t.sumIF)),
             t.sumFloor
         );
         return result;
     }
 
     FloorSumsMod solve(i64 n, i64 m, i64 a, i64 b) const {
-        assert(n >= 0 && m > 0);
         i128 qa = floorDiv(a, m), qb = floorDiv(b, m);
         i128 reducedA = (i128)a - qa * m;
         i128 reducedB = (i128)b - qb * m;
@@ -121,6 +116,6 @@ struct HighFloorSumsModSolver {
 
 // For q_i=floor((a*i+b)/m), i=0..n-1, returns sum q_i,
 // sum i*q_i and sum q_i^2 modulo oddMod.
-FloorSumsMod highFloorSumsMod(i64 n, i64 m, i64 a, i64 b, i64 oddMod) {
-    return HighFloorSumsModSolver(oddMod).solve(n, m, a, b);
+FloorSumsMod floorSumsMod(i64 n, i64 m, i64 a, i64 b, i64 oddMod) {
+    return FloorSumMod(oddMod).solve(n, m, a, b);
 }

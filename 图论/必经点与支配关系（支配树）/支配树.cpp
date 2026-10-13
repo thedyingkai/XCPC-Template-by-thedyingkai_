@@ -18,7 +18,7 @@ struct DominatorTree {
         vector<int> stk{s};
         while(!stk.empty()) {
             int u = stk.back();
-            if(it[u] == (int) g[u].size()) {
+            if(it[u] == g[u].size()) {
                 stk.pop_back();
                 continue;
             }
@@ -39,7 +39,7 @@ struct DominatorTree {
             vector<int> path;
             int x = v;
             while(ancestor[ancestor[x]]) path.push_back(x), x = ancestor[x];
-            for(int i = (int) path.size() - 1; i >= 0; i--) {
+            for(int i = path.size(); i-- > 0;) {
                 int u = path[i], a = ancestor[u];
                 if(semi[label[a]] < semi[label[u]]) label[u] = label[a];
                 ancestor[u] = ancestor[a];
@@ -73,7 +73,7 @@ struct DominatorTree {
             if(!exit) {
                 tin[u] = ++clk;
                 tour.push_back({u, 1});
-                for(int i = (int) tree[u].size() - 1; i >= 0; i--) tour.push_back({tree[u][i], 0});
+                for(int i = tree[u].size(); i-- > 0;) tour.push_back({tree[u][i], 0});
             } else
                 tout[u] = clk;
         }

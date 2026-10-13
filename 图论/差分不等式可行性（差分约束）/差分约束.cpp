@@ -2,14 +2,14 @@
 
 #include "../../template/start.cpp"
 
-struct DifferenceConstraints {
+struct DiffConstraints {
     struct Edge {
         int v;
         i128 w;
     };
     int n;
     vector<vector<Edge>> g;
-    DifferenceConstraints(int n_) : n(n_), g(n + 1) {}
+    DiffConstraints(int n_) : n(n_), g(n + 1) {}
     // x[v] - x[u] <= c
     void addLeq(int u, int v, i128 c) { g[u].push_back({v, c}); }
     // x[v] - x[u] >= c

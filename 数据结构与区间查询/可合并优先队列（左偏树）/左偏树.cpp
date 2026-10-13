@@ -10,13 +10,12 @@ struct LeftistHeap {
 
     int newNode(i64 key) {
         tree.push_back({key, 0, 0, 1});
-        return (int) tree.size() - 1;
+        return tree.size() - 1;
     }
 
     // Destructive: x and y must be roots of disjoint heaps.
     int merge(int x, int y) {
         if(!x || !y) return x | y;
-        assert(x != y);
         if(pair(tree[x].key, x) > pair(tree[y].key, y)) swap(x, y);
         tree[x].right = merge(tree[x].right, y);
         if(tree[tree[x].left].rank < tree[tree[x].right].rank)
@@ -26,12 +25,10 @@ struct LeftistHeap {
     }
 
     i64 top(int root) const {
-        assert(root != 0);
         return tree[root].key;
     }
 
     int pop(int root) {
-        assert(root != 0);
         int result = merge(tree[root].left, tree[root].right);
         tree[root].left = tree[root].right = 0;
         tree[root].rank = 1;

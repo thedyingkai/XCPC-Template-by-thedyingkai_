@@ -14,7 +14,6 @@ i64 norm(i64 x) {
 }
 
 i64 power(i64 a, i64 e) {
-    assert(e >= 0);
     i64 r = 1;
     for(a = norm(a); e; e >>= 1, a = a * a % MOD)
         if(e & 1) r = r * a % MOD;
@@ -27,15 +26,15 @@ void trim(Poly& a) {
 
 Poly prefix(const Poly& a, int n) {
     if(n <= 0) return {};
-    Poly r(min(n, (int) a.size()));
-    for(int i = 0; i < (int) r.size(); i++) r[i] = norm(a[i]);
+    int m = a.size();
+    Poly r(min(n, m));
+    for(int i = 0; i < r.size(); i++) r[i] = norm(a[i]);
     r.resize(n);
     return r;
 }
 
 void ntt(Poly& a, bool inverse) {
-    int n = (int) a.size();
-    assert(n > 0 && (n & (n - 1)) == 0 && n <= (1 << 23));
+    int n = a.size();
     for(int i = 1, j = 0; i < n; i++) {
         int bit = n >> 1;
         for(; j & bit; bit >>= 1) j ^= bit;
@@ -63,8 +62,7 @@ void ntt(Poly& a, bool inverse) {
 }
 
 Poly multiply(const Poly& a, const Poly& b, int need = -1) {
-    assert(need >= -1);
-    int sizeA = (int) a.size(), sizeB = (int) b.size();
+    int sizeA = a.size(), sizeB = b.size();
     if(need >= 0) {
         sizeA = min(sizeA, need);
         sizeB = min(sizeB, need);
@@ -79,7 +77,6 @@ Poly multiply(const Poly& a, const Poly& b, int need = -1) {
                 result[i + j] = (result[i + j] + norm(a[i]) * norm(b[j])) % MOD;
         return result;
     }
-    assert(full <= (1 << 23));
     int n = (int) bit_ceil((unsigned) full);
     Poly x(n), y(n);
     for(int i = 0; i < sizeA; i++) x[i] = norm(a[i]);
@@ -95,7 +92,7 @@ Poly multiply(const Poly& a, const Poly& b, int need = -1) {
 Poly derivative(const Poly& a) {
     if(a.size() <= 1) return {};
     Poly result(a.size() - 1);
-    for(int i = 1; i < (int) a.size(); i++) result[i - 1] = norm(a[i]) * i % MOD;
+    for(int i = 1; i < a.size(); i++) result[i - 1] = norm(a[i]) * i % MOD;
     return result;
 }
 
@@ -103,29 +100,29 @@ Poly integral(const Poly& a) {
     Poly inverse(a.size() + 1), result(a.size() + 1);
     if(a.empty()) return result;
     inverse[1] = 1;
-    for(int i = 2; i <= (int) a.size(); i++)
+    for(int i = 2; i <= a.size(); i++)
         inverse[i] = MOD - MOD / i * inverse[MOD % i] % MOD;
-    for(int i = 0; i < (int) a.size(); i++) result[i + 1] = norm(a[i]) * inverse[i + 1] % MOD;
+    for(int i = 0; i < a.size(); i++) result[i + 1] = norm(a[i]) * inverse[i + 1] % MOD;
     return result;
 }
 
 Poly add(const Poly& a, const Poly& b, int n = -1) {
-    int size = n < 0 ? (int) max(a.size(), b.size()) : n;
+    int size = n < 0 ? max(a.size(), b.size()) : n;
     Poly result(size);
     for(int i = 0; i < size; i++) {
-        i64 x = i < (int) a.size() ? a[i] : 0;
-        i64 y = i < (int) b.size() ? b[i] : 0;
+        i64 x = i < a.size() ? a[i] : 0;
+        i64 y = i < b.size() ? b[i] : 0;
         result[i] = norm(x + y);
     }
     return result;
 }
 
 Poly subtract(const Poly& a, const Poly& b, int n = -1) {
-    int size = n < 0 ? (int) max(a.size(), b.size()) : n;
+    int size = n < 0 ? max(a.size(), b.size()) : n;
     Poly result(size);
     for(int i = 0; i < size; i++) {
-        i64 x = i < (int) a.size() ? a[i] : 0;
-        i64 y = i < (int) b.size() ? b[i] : 0;
+        i64 x = i < a.size() ? a[i] : 0;
+        i64 y = i < b.size() ? b[i] : 0;
         result[i] = norm(x - y);
     }
     return result;

@@ -1,7 +1,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[排列排名与还原（康托展开）] <book-cantor>
 
-将 `1..n` 的排列与从 1 开始的字典序排名互转。`CantorExpansion(max_n)` 要求 `0<=max_n<=20`，阶乘与排名存 `i64`。
+将 `1..n` 的排列与从 1 开始的字典序排名互转。`Cantor(max_n)` 要求 `0<=max_n<=20`，阶乘与排名存 `i64`。
 
 `encode` 检查输入为合法排列，用树状数组统计每位前面还有多少个较小未用数；`decode(rank,n)` 要求 `1<=rank<=n!`。编码 $O(n log n)$，当前解码线性选数为 $O(n^2)$，空间 $O(n)$。
 

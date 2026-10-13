@@ -8,7 +8,7 @@
 
 *接口*　候选元素编号 `0..n-1`，两判定器的元素顺序完全一致：`reset(chosen)` 重建当前集合，`canAdd(in)` 判加入，`canExchange(out,in)` 判删一加一。每轮查询均相对固定集合，判定不能永久改状态。
 
-彩虹森林按相同顺序准备 `edges`、`group`，构造 `PartitionMatroidOracle first(group,vector<int>(颜色数,1))`、`GraphicMatroidOracle second(vertices,edges)`，调用 `matroidIntersection(边数,first,second)`；返回所选元素编号。图点号 `1..vertices`，稀疏大编号先离散化。
+彩虹森林按相同顺序准备 `edges`、`group`，构造 `PartMatroid first(group,vector<int>(颜色数,1))`、`GraphMatroid second(vertices,edges)`，调用 `matroidIntersect(边数,first,second)`；返回所选元素编号。图点号 `1..vertices`，稀疏大编号先离散化。
 
 *交换图方向*　`x` 已选、`y` 未选：第一拟阵允许 `I-x+y` 则连 `x->y`，第二拟阵允许则连 `y->x`。第一拟阵可直接加的元素为起点，第二拟阵可直接加的为终点。多源 BFS 取最短增广路，沿路翻转，大小增加一；任意 DFS 路径不保证合法。
 
@@ -16,7 +16,7 @@
 
 - 划分拟阵：每组数量不超过 `capacity[group]`。
 - 图拟阵：所选边构成森林。新边两端不连通可直接加；已连通则交换掉唯一路径上的边。删边朝向子端点后，用“两端恰有一个在其子树”判交换。自环不可选，平行边分别作为候选。
-- 两边都是容量 0/1 的划分拟阵：调用 `unitPartitionMatroidIntersection(first,second)`。设组数合计 `g`，时间 $O((n+g)sqrt(g))$，空间 $O(n+g)$。
+- 两边都是容量 0/1 的划分拟阵：调用 `unitMatroid(first,second)`。设组数合计 `g`，时间 $O((n+g)sqrt(g))$，空间 $O(n+g)$。
 
 通用版本答案大小为 $r$，单次判定 $C$、每轮重建 $R$ 时，时间 $O((r+1)(n^2 C+R))$；框架额外空间 $O(n)$ 加判定器状态。
 

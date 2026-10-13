@@ -12,7 +12,6 @@ struct RectUnion {
     vector<int> v;
     vector<St> b;
     RectUnion(int n_ = 0) {
-        assert(n_ >= 0);
         n = n_;
         a.resize(n * 2);
         v.resize(n * 8);

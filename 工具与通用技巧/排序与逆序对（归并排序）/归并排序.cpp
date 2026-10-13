@@ -9,7 +9,6 @@ struct MergeSorter {
     }
     void sort(int n) { sort(n, less<int>{}); }
     void sort(int n, auto compare) {
-        assert(0 <= n && n < (int) a.size());
         inv_count = 0;
         mergeSort(1, n, compare);
     }

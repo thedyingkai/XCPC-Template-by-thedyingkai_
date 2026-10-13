@@ -38,7 +38,7 @@ struct LCA {
         state[root] = 1;
         while(!stk.empty()) {
             int u = stk.back();
-            if(it[u] < (int) g[u].size()) {
+            if(it[u] < g[u].size()) {
                 int v = g[u][it[u]++];
                 if(state[v]) continue;
                 parent[v] = u;

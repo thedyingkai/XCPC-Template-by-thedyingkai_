@@ -3,7 +3,7 @@
 namespace communication {
 
 // 连通无权二分图；颜色 0,1,2 对应 r,g,b。
-std::vector<int> distance_mod3_colors(
+std::vector<int> mod3_colors(
     const std::vector<std::vector<int>> &graph, int root = 0) {
     int n = graph.size();
     if (root < 0 || root >= n)
@@ -30,7 +30,7 @@ std::vector<int> distance_mod3_colors(
 }
 
 // 当前点尚未到根；返回邻居列表中的 0-based 位置。
-int route_by_neighbor_colors(const std::vector<int> &colors) {
+int route_colors(const std::vector<int> &colors) {
     unsigned mask = 0;
     for (int color : colors) {
         if (color < 0 || color > 2)

@@ -4,7 +4,7 @@ struct Lyndon {
     // 返回 Lyndon 分解的 0 下标半开区间 [l, r)。
     static vector<pair<int, int>> factorize(const string& s) {
         vector<pair<int, int>> factors;
-        int n = (int) s.size();
+        int n = s.size();
         for(int i = 0; i < n;) {
             int j = i + 1, k = i;
             while(j < n && (unsigned char) s[k] <= (unsigned char) s[j]) {
@@ -22,7 +22,7 @@ struct Lyndon {
 
     // 返回字典序最小循环表示的最小起点；空串返回 0。
     static int min_rotation(const string& source) {
-        int n = (int) source.size();
+        int n = source.size();
         if(n == 0) return 0;
         string s = source + source;
         int i = 0, ans = 0;

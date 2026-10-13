@@ -3,14 +3,12 @@
 namespace PollardRho {
 static mt19937_64 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
 i64 mul_mod(i64 a, i64 b, i64 m) {
-    assert(m > 0);
     a %= m, b %= m;
     if(a < 0) a += m;
     if(b < 0) b += m;
     return (i64) ((i128) a * b % m);
 }
 i64 pow_mod(i64 a, i64 e, i64 m) {
-    assert(m > 0 && e >= 0);
     i64 r = 1;
     a %= m;
     if(a < 0) a += m;

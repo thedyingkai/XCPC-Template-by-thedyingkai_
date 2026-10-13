@@ -24,7 +24,7 @@ struct SCC {
         while(!call.empty()) {
             int u = call.back().first;
             int& index = call.back().second;
-            if(index < (int) g[u].size()) {
+            if(index < g[u].size()) {
                 int v = g[u][index++];
                 if(!dfn[v]) {
                     dfn[v] = low[v] = ++tot;

@@ -20,7 +20,7 @@ struct VirtualTree {
         nodes = key;
         vector<int> stk;
         stk.push_back(key[0]);
-        for(int i = 1; i < (int) key.size(); i++) {
+        for(int i = 1; i < key.size(); i++) {
             int u = key[i];
             while(!ancestor(stk.back(), u)) stk.pop_back();
             int p = stk.back();

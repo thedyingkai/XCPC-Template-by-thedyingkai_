@@ -3,7 +3,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[序列最优值与前驱重建（LIS）] <book-lis>
 
-`longestIncreasingSubsequence(a,strict=true)` 返回一条最长子序列的 *原数组 0 下标*；长度为返回数组大小，按这些下标读取元素即可。空输入返回空数组。时间 $O(n log n)$，空间 $O(n)$。
+`lis(a,strict=true)` 返回一条最长子序列的 *原数组 0 下标*；长度为返回数组大小，按这些下标读取元素即可。空输入返回空数组。时间 $O(n log n)$，空间 $O(n)$。
 
 - 严格递增：默认 `true`，用 `lower_bound` 替换第一个 `>=x` 的末尾。
 - 不下降：传 `false`，用 `upper_bound` 替换第一个 `>x` 的末尾。

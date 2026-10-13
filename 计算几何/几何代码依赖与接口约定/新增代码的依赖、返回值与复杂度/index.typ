@@ -11,12 +11,12 @@
   [`normAngle`／`signedAngle`], [有限角度、正周期／非零向量；弧度], [$O(1)$],
   [`maxHalfPlane`], [开或闭半圆最大非零点数；保留同向权重], [$O(n log n)$],
   [`coverageWidth`], [闭区间；返回存在与任意朝向的最小宽度], [$O(n log n)$],
-  [`countOriginTriangles`], [任意两方向不共线；严格内部，i128 计数], [$O(n log n)$],
+  [`originTriangles`], [任意两方向不共线；严格内部，i128 计数], [$O(n log n)$],
   [`convexLocation`], [严格 CCW 凸包；外部 -1、边界 0、内部 1], [$O(log n)$],
   [`signedArea2`], [环序；两倍有向面积，最后决定是否取绝对值], [$O(n)$],
   [`minkowskiSum/Difference`], [严格 CCW 凸包，允许点段；无重复首点], [$O(n+m)$],
-  [`exactLineIntersection`], [非退化无限直线；最简分数或 nullopt], [$O(log M)$],
-  [`midpointConstruction`], [矩形四角初始集；最优操作序列或 nullopt], [$O(log M)$],
+  [`exactCross`], [非退化无限直线；最简分数或 nullopt], [$O(log M)$],
+  [`midpointPlan`], [矩形四角初始集；最优操作序列或 nullopt], [$O(log M)$],
 )
 
 表中 $M$ 表示对应整数运算的数值量级，分数约分与中点分母分析含 gcd 成本。点定位的空集、单点、线段分支为常数时间。几何坐标的加减与最终结果、叉积和累加量、分数分子都要满足各自类型界。

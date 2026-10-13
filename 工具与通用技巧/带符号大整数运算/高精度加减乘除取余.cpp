@@ -31,7 +31,8 @@ struct Big {
             if(s[pos] == '-') sign = -1;
             pos++;
         }
-        for(int i = int(s.size()) - 1; i >= pos; i -= base_digits) {
+        int n = s.size();
+        for(int i = n - 1; i >= pos; i -= base_digits) {
             int x = 0, l = max(pos, i - base_digits + 1);
             for(int j = l; j <= i; j++) x = x * 10 + (s[j] - '0');
             a.push_back(x);
@@ -43,7 +44,8 @@ struct Big {
         if(a.empty()) return "0";
         string s = (sign < 0 ? "-" : "") + to_string(a.back());
         char buf[20];
-        for(int i = int(a.size()) - 2; i >= 0; --i) {
+        int n = a.size();
+        for(int i = n - 2; i >= 0; --i) {
             snprintf(buf, sizeof(buf), "%09d", a[i]);
             s += buf;
         }
@@ -68,7 +70,7 @@ struct Big {
     }
     friend int cmpAbs(const Big& A, const Big& B) {
         if(A.a.size() != B.a.size()) return A.a.size() < B.a.size() ? -1 : 1;
-        for(int i = int(A.a.size()) - 1; i >= 0; --i)
+        for(int i = A.a.size(); i-- > 0;)
             if(A.a[i] != B.a[i]) return A.a[i] < B.a[i] ? -1 : 1;
         return 0;
     }
@@ -155,8 +157,8 @@ struct Big {
         }
         return (int) result;
     }
-    static void numberTheoreticTransform(vector<int>& value, bool inverse, int mod) {
-        int n = (int) value.size();
+    static void ntt(vector<int>& value, bool inverse, int mod) {
+        int n = value.size();
         for(int i = 1, j = 0; i < n; i++) {
             int bit = n >> 1;
             for(; j & bit; bit >>= 1) j ^= bit;
@@ -183,27 +185,27 @@ struct Big {
             }
         }
         if(inverse) {
-            int inverseSize = powerMod(n, mod - 2, mod);
-            for(int& x : value) x = (i64) x * inverseSize % mod;
+            int invN = powerMod(n, mod - 2, mod);
+            for(int& x : value) x = (i64) x * invN % mod;
         }
     }
-    static vector<int> convolutionMod(const vector<int>& left, const vector<int>& right,
+    static vector<int> conv(const vector<int>& left, const vector<int>& right,
                                       int size, int mod) {
         vector<int> a(size), b(size);
         ranges::copy(left, a.begin());
         ranges::copy(right, b.begin());
-        numberTheoreticTransform(a, false, mod);
-        numberTheoreticTransform(b, false, mod);
+        ntt(a, false, mod);
+        ntt(b, false, mod);
         for(int i = 0; i < size; i++) a[i] = (i64) a[i] * b[i] % mod;
-        numberTheoreticTransform(a, true, mod);
+        ntt(a, true, mod);
         return a;
     }
-    static vector<int> decimalChunks(const Big& value) {
+    static vector<int> chunks(const Big& value) {
         string text = value.toString();
         int first = !text.empty() && text[0] == '-';
         vector<int> result;
         result.reserve((text.size() - first + 3) / 4);
-        for(int right = (int) text.size(); right > first; right -= 4) {
+        for(int right = text.size(); right > first; right -= 4) {
             int left = max(first, right - 4), chunk = 0;
             for(int i = left; i < right; i++) chunk = chunk * 10 + text[i] - '0';
             result.push_back(chunk);
@@ -212,7 +214,7 @@ struct Big {
     }
     Big& operator*=(const Big& v) {
         if(isZero() || v.isZero()) return *this = 0;
-        int resultSign = sign * v.sign;
+        int sgn = sign * v.sign;
         if(a.size() * v.a.size() <= 4096) {
             vector<i128> product(a.size() + v.a.size());
             for(size_t i = 0; i < a.size(); ++i)
@@ -229,25 +231,24 @@ struct Big {
                 a.push_back((int) (carry % base));
                 carry /= base;
             }
-            sign = resultSign;
+            sign = sgn;
             trim();
             return *this;
         }
 
         constexpr int MOD1 = 998244353;
         constexpr int MOD2 = 1004535809;
-        vector<int> left = decimalChunks(*this), right = decimalChunks(v);
-        int required = (int) left.size() + (int) right.size() - 1;
-        int transformSize = (int) bit_ceil((unsigned) required);
-        assert((MOD1 - 1) % transformSize == 0 && (MOD2 - 1) % transformSize == 0);
-        vector<int> first = convolutionMod(left, right, transformSize, MOD1);
-        vector<int> second = convolutionMod(left, right, transformSize, MOD2);
-        int inverseMod1 = powerMod(MOD1 % MOD2, MOD2 - 2, MOD2);
+        vector<int> left = chunks(*this), right = chunks(v);
+        int required = left.size() + right.size() - 1;
+        int sz = (int) bit_ceil((unsigned) required);
+        vector<int> first = conv(left, right, sz, MOD1);
+        vector<int> second = conv(left, right, sz, MOD2);
+        int inv1 = powerMod(MOD1 % MOD2, MOD2 - 2, MOD2);
         vector<u64> coefficient(required);
         for(int i = 0; i < required; i++) {
             int difference = second[i] - first[i];
             if(difference < 0) difference += MOD2;
-            i64 multiplier = (i64) difference * inverseMod1 % MOD2;
+            i64 multiplier = (i64) difference * inv1 % MOD2;
             coefficient[i] = first[i] + (u64) MOD1 * multiplier;
         }
         vector<int> digit;
@@ -261,12 +262,13 @@ struct Big {
         while(digit.size() > 1 && digit.back() == 0) digit.pop_back();
         string text = to_string(digit.back());
         char buffer[8];
-        for(int i = (int) digit.size() - 2; i >= 0; i--) {
+        int m = digit.size();
+        for(int i = m - 2; i >= 0; i--) {
             snprintf(buffer, sizeof(buffer), "%04d", digit[i]);
             text += buffer;
         }
         read(text);
-        sign = resultSign;
+        sign = sgn;
         return *this;
     }
     friend Big operator*(Big a, const Big& b) { return a *= b; }
@@ -278,7 +280,7 @@ struct Big {
             divisor = -divisor;
         }
         long long rem = 0;
-        for(int i = int(a.size()) - 1; i >= 0; --i) {
+        for(int i = a.size(); i-- > 0;) {
             long long cur = a[i] + rem * base;
             a[i] = int(cur / divisor);
             rem = cur % divisor;
@@ -304,7 +306,7 @@ struct Big {
         Big B = b1.abs() * norm;
         Big q, r;
         q.a.assign(A.a.size(), 0);
-        for(int i = int(A.a.size()) - 1; i >= 0; --i) {
+        for(int i = A.a.size(); i-- > 0;) {
             r.shiftRight();
             r.a[0] = A.a[i];
             r.trim();

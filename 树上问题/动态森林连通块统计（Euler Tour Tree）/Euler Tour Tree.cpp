@@ -36,7 +36,7 @@ struct EulerTourTree {
         node.value = node.sum = value;
         node.vertexCount = isVertex;
         tree.push_back(node);
-        return (int) tree.size() - 1;
+        return tree.size() - 1;
     }
 
     int size(int u) const { return u ? tree[u].size : 0; }
@@ -131,15 +131,15 @@ struct EulerTourTree {
         if(iterator == edgeNode.end()) return false;
         reroot(u);
         int first = iterator->second.first, second = iterator->second.second;
-        int firstPosition = position(first), secondPosition = position(second);
-        if(firstPosition > secondPosition) {
+        int pos1 = position(first), pos2 = position(second);
+        if(pos1 > pos2) {
             swap(first, second);
-            swap(firstPosition, secondPosition);
+            swap(pos1, pos2);
         }
         int root = rootOf(first);
-        auto [left, fromFirst] = split(root, firstPosition - 1);
+        auto [left, fromFirst] = split(root, pos1 - 1);
         auto [firstNode, afterFirst] = split(fromFirst, 1);
-        auto [middle, fromSecond] = split(afterFirst, secondPosition - firstPosition - 1);
+        auto [middle, fromSecond] = split(afterFirst, pos2 - pos1 - 1);
         auto [secondNode, right] = split(fromSecond, 1);
         merge(right, left);
         if(firstNode) tree[firstNode].parent = 0;

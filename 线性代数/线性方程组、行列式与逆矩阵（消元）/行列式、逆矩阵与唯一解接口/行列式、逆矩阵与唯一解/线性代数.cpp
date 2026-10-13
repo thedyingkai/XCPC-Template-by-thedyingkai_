@@ -32,7 +32,7 @@ Matrix<T, Mod> Matrix<T, Mod>::inv() const {
 template <class T, i64 Mod>
 pair<bool, vector<T>> Matrix<T, Mod>::solveLinear(Matrix<T, Mod> A, vector<T> b) {
     int n = A.n, m = A.m;
-    if((int) b.size() != n) return {0, {}};
+    if(b.size() != n) return {0, {}};
     vector<vector<T>> col(n, vector<T>(1));
     for(int i = 0; i < n; i++) col[i][0] = b[i];
     vector<int> w;

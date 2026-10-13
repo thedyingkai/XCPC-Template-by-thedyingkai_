@@ -5,7 +5,7 @@ namespace interactive {
 // ask(a) = s(x+a)，每次均针对原始 x，0 <= x < 10^18。
 // 至多 73 问；实际询问的 a 也小于 10^18。
 template<class Ask>
-std::uint64_t recover_digit_sum(Ask ask) {
+std::uint64_t digit_sum(Ask ask) {
     int baseline = ask(std::uint64_t(0));
     std::uint64_t answer = 0, power = 1;
     for (int i = 0; i < 18; ++i) {

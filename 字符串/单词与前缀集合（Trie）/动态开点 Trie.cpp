@@ -18,7 +18,6 @@ struct Trie {
         cur->count++;
         for(char c : s) {
             int id = c - 'a';
-            assert(0 <= id && id < SZ);
             if(!cur->next[id]) cur->next[id] = new Node(), nodeCount++;
             cur = cur->next[id], cur->count++;
         }
@@ -27,7 +26,6 @@ struct Trie {
         Node* cur = root;
         for(char c : s) {
             int id = c - 'a';
-            assert(0 <= id && id < SZ);
             if(!cur->next[id]) return 0;
             cur = cur->next[id];
         }

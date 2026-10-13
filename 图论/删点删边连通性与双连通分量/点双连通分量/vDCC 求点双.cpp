@@ -17,7 +17,7 @@ struct VDCC {
             for(int v : g[u]) if(u < v) addEdge(u, v);
     }
     void addEdge(int u, int v) {
-        int id = (int) edges.size();
+        int id = edges.size();
         edges.push_back({u, v});
         adj[u].push_back({v, id}), adj[v].push_back({u, id});
     }
@@ -27,7 +27,7 @@ struct VDCC {
         dfn[start] = low[start] = ++tot;
         while(!stack.empty()) {
             int u = stack.back();
-            if(next[u] < (int) adj[u].size()) {
+            if(next[u] < adj[u].size()) {
                 auto [v, id] = adj[u][next[u]++];
                 if(id == parentEdge[u]) continue;
                 if(!dfn[v]) {

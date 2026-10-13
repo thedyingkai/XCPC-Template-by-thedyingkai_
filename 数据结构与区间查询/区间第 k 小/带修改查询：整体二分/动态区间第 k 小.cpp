@@ -7,7 +7,7 @@ struct OverallKth {
         vector<int> tree;
         explicit Fenwick(int n = 0) : tree(n + 1) {}
         void add(int x, int value) {
-            for(; x < (int) tree.size(); x += x & -x) tree[x] += value;
+            for(; x < tree.size(); x += x & -x) tree[x] += value;
         }
         int query(int x) const {
             int result = 0;
@@ -30,7 +30,7 @@ struct OverallKth {
     vector<Event> event, buffer;
     Fenwick bit;
 
-    explicit OverallKth(const vector<i64>& initial) : n((int) initial.size()), current(n + 1), bit(n) {
+    explicit OverallKth(const vector<i64>& initial) : n(initial.size()), current(n + 1), bit(n) {
         for(int i = 1; i <= n; i++) {
             current[i] = initial[i - 1];
             values.push_back(current[i]);
@@ -39,7 +39,6 @@ struct OverallKth {
     }
 
     void change(int position, i64 value) {
-        assert(1 <= position && position <= n);
         event.push_back({0, position, -1, 0, 0, 0, 0, current[position]});
         event.push_back({0, position, 1, 0, 0, 0, 0, value});
         current[position] = value;
@@ -47,7 +46,6 @@ struct OverallKth {
     }
 
     int addQuery(int left, int right, int kth) {
-        assert(1 <= left && left <= right && right <= n && 1 <= kth && kth <= right - left + 1);
         int id = queryCount++;
         event.push_back({1, 0, 0, left, right, kth, id, 0});
         return id;
@@ -100,7 +98,7 @@ struct OverallKth {
                 e.rank = (int) (lower_bound(values.begin(), values.end(), e.value) - values.begin());
         answer.assign(queryCount, 0);
         buffer.resize(event.size());
-        if(!event.empty()) divide(0, (int) values.size() - 1, 0, (int) event.size());
+        if(!event.empty()) divide(0, values.size() - 1, 0, event.size());
         return answer;
     }
 };

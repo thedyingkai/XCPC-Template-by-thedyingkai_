@@ -10,11 +10,10 @@ struct Min25Sieve {
     vector<i64> primes, value;
     vector<int> smallId, largeId;
     array<vector<i64>, 3> g, primePrefix;
-    vector<i64> primeValuePrefix;
+    vector<i64> prefP;
 
     Min25Sieve(i64 n_, i64 mod_, array<i64, 3> coefficient_, PrimePower primePower_)
         : n(n_), mod(mod_), coefficient(coefficient_), primePower(move(primePower_)) {
-        assert(n >= 1 && mod >= 1);
         build();
     }
 
@@ -63,9 +62,7 @@ struct Min25Sieve {
     }
 
     int getId(i64 x) const {
-        assert(1 <= x && x <= n);
         int id = x <= root ? smallId[(int)x] : largeId[(int)(n / x)];
-        assert(id >= 0);
         return id;
     }
 
@@ -93,7 +90,6 @@ struct Min25Sieve {
         i64 rt = (i64)sqrtl((long double)n);
         while(rt + 1 <= n / (rt + 1)) ++rt;
         while(rt > n / rt) --rt;
-        assert(rt <= INT_MAX);
         root = (int)rt;
         buildPrimes();
 
@@ -102,7 +98,7 @@ struct Min25Sieve {
         for(i64 l = 1, r; l <= n; l = r + 1) {
             i64 x = n / l;
             r = n / x;
-            int id = (int)value.size();
+            int id = value.size();
             value.push_back(x);
             if(x <= root) smallId[(int)x] = id;
             else largeId[(int)(n / x)] = id;
@@ -110,7 +106,7 @@ struct Min25Sieve {
         }
 
         for(auto& v : g) v.resize(value.size());
-        for(int id = 0; id < (int)value.size(); ++id) {
+        for(int id = 0; id < value.size(); ++id) {
             i64 x = value[id];
             g[0][id] = sumPower0(x);
             g[1][id] = sumPower1(x);
@@ -118,22 +114,22 @@ struct Min25Sieve {
         }
 
         for(auto& v : primePrefix) v.assign(primes.size() + 1, 0);
-        primeValuePrefix.assign(primes.size() + 1, 0);
-        for(int i = 0; i < (int)primes.size(); ++i) {
+        prefP.assign(primes.size() + 1, 0);
+        for(int i = 0; i < primes.size(); ++i) {
             i64 p = primes[i], pm = norm(p);
             array<i64, 3> pk = {1 % mod, pm, mul(pm, pm)};
             for(int k = 0; k < 3; ++k)
                 primePrefix[k][i + 1] = add(primePrefix[k][i], pk[k]);
-            primeValuePrefix[i + 1] = add(primeValuePrefix[i], polynomialAt(p));
+            prefP[i + 1] = add(prefP[i], polynomialAt(p));
         }
 
-        for(int i = 0; i < (int)primes.size(); ++i) {
+        for(int i = 0; i < primes.size(); ++i) {
             i64 p = primes[i];
             if(p > n / p) break;
             i64 pm = norm(p);
             array<i64, 3> pk = {1 % mod, pm, mul(pm, pm)};
             i64 p2 = p * p;
-            for(int id = 0; id < (int)value.size() && value[id] >= p2; ++id) {
+            for(int id = 0; id < value.size() && value[id] >= p2; ++id) {
                 int nextId = getId(value[id] / p);
                 for(int k = 0; k < 3; ++k) {
                     i64 removed = mul(pk[k], sub(g[k][nextId], primePrefix[k][i]));
@@ -155,8 +151,8 @@ struct Min25Sieve {
     i64 dfs(i64 x, int firstPrime) const {
         if(x < 2) return 0;
         if(firstPrime > 0 && primes[firstPrime - 1] > x) return 0;
-        i64 ans = sub(primeSum(x), primeValuePrefix[firstPrime]);
-        for(int i = firstPrime; i < (int)primes.size(); ++i) {
+        i64 ans = sub(primeSum(x), prefP[firstPrime]);
+        for(int i = firstPrime; i < primes.size(); ++i) {
             i64 p = primes[i];
             if(p > x / p) break;
             i64 pe = p;

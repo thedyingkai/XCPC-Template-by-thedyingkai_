@@ -13,7 +13,6 @@ struct LCA {
         build(root);
     }
     void build(int root) {
-        assert(1 <= root && root <= n);
         fill(p.begin(), p.end(), 0);
         fill(dep.begin(), dep.end(), 0);
         fill(son.begin(), son.end(), 0);

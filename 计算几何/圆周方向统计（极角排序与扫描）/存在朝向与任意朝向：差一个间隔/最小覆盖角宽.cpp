@@ -7,10 +7,8 @@
 // 非零向量，可同向、可重复；角宽是弧度。1 <= k <= a.size()。
 pair<d128, d128> coverageWidth(const vector<IP>& p, int k) {
     int n = p.size();
-    assert(1 <= k && k <= n);
     vector<d128> a(2 * n);
     for(int i = 0; i < n; i++) {
-        assert(!zeroVector(p[i]));
         a[i] = normAngle(atan2l((d128) p[i].y, (d128) p[i].x));
     }
     sort(a.begin(), a.begin() + n);

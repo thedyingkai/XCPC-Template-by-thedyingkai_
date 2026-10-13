@@ -16,11 +16,11 @@ struct ArbitraryModComb {
             return res;
         }
 
-        i64 factorialWithoutP(i64 n) const {
+        i64 factNoP(i64 n) const {
             if(n == 0) return 1;
             i64 res = power(prefix[mod], n / mod, mod);
             res = (i128) res * prefix[n % mod] % mod;
-            return (i128) res * factorialWithoutP(n / p) % mod;
+            return (i128) res * factNoP(n / p) % mod;
         }
 
         i64 countP(i64 n) const {
@@ -33,9 +33,9 @@ struct ArbitraryModComb {
             if(k < 0 || k > n) return 0;
             i64 e = countP(n) - countP(k) - countP(n - k);
             if(e >= exponent) return 0;
-            i64 a = factorialWithoutP(n);
-            i64 b = factorialWithoutP(k);
-            i64 c = factorialWithoutP(n - k);
+            i64 a = factNoP(n);
+            i64 b = factNoP(k);
+            i64 c = factNoP(n - k);
             i64 den = (i128) b * c % mod;
             i64 inv = inverse(den, mod);
             return (i128) a * inv % mod * power(p, e, mod) % mod;
@@ -66,7 +66,6 @@ struct ArbitraryModComb {
     vector<PrimePower> parts;
 
     void init(i64 arbitrary_mod) {
-        assert(arbitrary_mod >= 1);
         mod = arbitrary_mod;
         parts.clear();
         if(mod <= 1) return;

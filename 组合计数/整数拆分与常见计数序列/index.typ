@@ -3,7 +3,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[整数拆分与常见计数序列] <book-combinatorial-numbers>
 
-`CombinatorialNumbers cn; cn.init(n,mod);` 预处理常见计数，时间、空间 $O(n^2)$，正模数可为合数。答案从 cn 的对应数组读取；仅需整数拆分时 `partitionNumbers(n,mod)` 为 $O(n sqrt n)$ 时间、$O(n)$ 空间。
+`CombNumbers cn; cn.init(n,mod);` 预处理常见计数，时间、空间 $O(n^2)$，正模数可为合数。答案从 cn 的对应数组读取；仅需整数拆分时 `partitionNumbers(n,mod)` 为 $O(n sqrt n)$ 时间、$O(n)$ 空间。
 
 *卡特兰*　`catalan[n]`，`C0=1`，合法括号、二叉树形态：
 $ C_n=sum_(i=0)^(n-1)C_i C_(n-1-i)=binom(2n,n)-binom(2n,n-1). $

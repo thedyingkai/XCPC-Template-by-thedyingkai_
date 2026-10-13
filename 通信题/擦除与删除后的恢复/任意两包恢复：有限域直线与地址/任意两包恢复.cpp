@@ -14,7 +14,7 @@ int line_inverse31(int x) {
 }
 
 // 0-based 消息编号 0..599；发送 30 个互异包，包值 1..930。
-std::vector<int> encode_two_packet_line(int message) {
+std::vector<int> encode_line(int message) {
     if (message < 0 || message >= 600)
         throw std::invalid_argument("message outside domain");
     int a = message / 31, b = message % 31;
@@ -24,7 +24,7 @@ std::vector<int> encode_two_packet_line(int message) {
     return packets;
 }
 
-int decode_two_packet_line(int first, int second) {
+int decode_line(int first, int second) {
     if (first < 1 || first > 930 || second < 1 || second > 930)
         throw std::invalid_argument("invalid packet");
     int x1 = (first - 1) / 31, y1 = (first - 1) % 31;

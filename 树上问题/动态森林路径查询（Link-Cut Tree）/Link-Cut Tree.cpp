@@ -149,7 +149,6 @@ struct LinkCutTree {
     }
 
     Info queryPath(int u, int v) {
-        assert(connected(u, v));
         makeRoot(u);
         access(v);
         return tree[v].info;

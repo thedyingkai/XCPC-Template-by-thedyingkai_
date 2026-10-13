@@ -4,14 +4,14 @@ namespace interactive {
 
 // 固定实例、只读查询；reply[q][i] 是查询 q 对候选 i 的回包。
 // 搜索最坏深度，时间和存储均可能指数增长。
-struct MinimaxClassifier {
+struct Minimax {
     static constexpr int INF = 1000000000;
     struct Decision { int depth, query; };
     std::vector<int> category;
     std::vector<std::vector<int>> reply;
     std::unordered_map<std::uint64_t, Decision> memo;
 
-    MinimaxClassifier(std::vector<int> category,
+    Minimax(std::vector<int> category,
                       std::vector<std::vector<int>> reply)
         : category(std::move(category)), reply(std::move(reply)) {
         if (this->category.empty() || this->category.size() > 64)
@@ -39,7 +39,7 @@ struct MinimaxClassifier {
                 pure = false;
         if (pure) return memo[s] = {0, -1};
         Decision best{INF, -1};
-        for (int q = 0; q < int(reply.size()); ++q) {
+        for (int q = 0; q < reply.size(); ++q) {
             std::map<int, std::uint64_t> buckets;
             for (auto t = s; t; t &= t - 1) {
                 int i = std::countr_zero(t);
@@ -58,12 +58,12 @@ struct MinimaxClassifier {
     }
 
     std::uint64_t advance(std::uint64_t s, int q, int value) const {
-        if (q < 0 || q >= int(reply.size()))
+        if (q < 0 || q >= reply.size())
             throw std::invalid_argument("invalid query");
         std::uint64_t next = 0;
         for (auto t = s; t; t &= t - 1) {
             int i = std::countr_zero(t);
-            if (i >= int(category.size()))
+            if (i >= category.size())
                 throw std::invalid_argument("invalid candidate set");
             if (reply[q][i] == value)
                 next |= std::uint64_t(1) << i;

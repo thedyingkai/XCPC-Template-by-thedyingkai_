@@ -7,11 +7,10 @@ struct KnuthMerge {
     vector<vector<int>> opt;
 
     // a[0..n-1] must be non-negative. Merge adjacent piles on a line.
-    explicit KnuthMerge(const vector<i64>& a) : n((int) a.size()),
+    explicit KnuthMerge(const vector<i64>& a) : n(a.size()),
         dp(n, vector<i128>(n)), opt(n, vector<int>(n)) {
         vector<i128> prefix(n + 1);
         for(int i = 0; i < n; i++) {
-            assert(a[i] >= 0);
             prefix[i + 1] = prefix[i] + a[i];
             opt[i][i] = i;
         }

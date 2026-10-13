@@ -53,8 +53,8 @@ struct Euler {
         vector<int> it(n + 1), used(m), stk = {s}, path;
         while(!stk.empty()) {
             int u = stk.back();
-            while(it[u] < (int) g[u].size() && used[g[u][it[u]]]) it[u]++;
-            if(it[u] == (int) g[u].size()) {
+            while(it[u] < g[u].size() && used[g[u][it[u]]]) it[u]++;
+            if(it[u] == g[u].size()) {
                 path.push_back(u);
                 stk.pop_back();
             } else {
@@ -64,7 +64,7 @@ struct Euler {
                 stk.push_back(v);
             }
         }
-        if((int) path.size() != m + 1) return {};
+        if(path.size() != m + 1) return {};
         reverse(path.begin(), path.end());
         return path;
     }

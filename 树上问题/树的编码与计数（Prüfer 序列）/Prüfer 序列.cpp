@@ -3,7 +3,7 @@
 // start: heap
 // Vertices are 1..n. The input must be a labelled tree and n >= 2.
 vector<int> pruferEncode(int n, const vector<pair<int, int>>& edges) {
-    if(n < 2 || (int) edges.size() != n - 1) return {};
+    if(n < 2 || edges.size() != n - 1) return {};
     vector<vector<int>> graph(n + 1);
     vector<int> degree(n + 1);
     for(auto [u, v] : edges) {
@@ -41,7 +41,7 @@ vector<int> pruferEncode(int n, const vector<pair<int, int>>& edges) {
 
 // A code of length n-2 describes a tree on vertices 1..n.
 vector<pair<int, int>> pruferDecode(const vector<int>& code) {
-    int n = (int) code.size() + 2;
+    int n = code.size() + 2;
     vector<int> degree(n + 1, 1);
     for(int x : code) {
         if(x < 1 || x > n) return {};
@@ -71,8 +71,8 @@ vector<pair<int, int>> pruferDecode(const vector<int>& code) {
 
 // start: linear
 // parent[1..n-1] is a tree rooted at n, parent[n]=0. Runs in O(n).
-vector<int> pruferEncodeLinear(const vector<int>& parent) {
-    int n = (int) parent.size() - 1;
+vector<int> pruferEncodeN(const vector<int>& parent) {
+    int n = parent.size() - 1;
     if(n < 2 || parent[n] != 0) return {};
     vector<int> childCount(n + 1);
     for(int u = 1; u < n; u++) {
@@ -99,8 +99,8 @@ vector<int> pruferEncodeLinear(const vector<int>& parent) {
 }
 
 // Returns parent[1..n] for the tree rooted at n. Runs in O(n).
-vector<int> pruferDecodeLinear(const vector<int>& code) {
-    int n = (int) code.size() + 2;
+vector<int> pruferDecodeN(const vector<int>& code) {
+    int n = code.size() + 2;
     vector<int> remaining(n + 1), parent(n + 1);
     for(int value : code) {
         if(value < 1 || value > n) return {};

@@ -1,7 +1,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[多项式除法与余数] <book-poly-div>
 
-`divideWithRemainder(A,B)` 求 `A=B*Q+R`、`deg(R)<deg(B)`；除式非零。`divide` 只取商，`modulo` 只取余数，结果去掉尾零，零多项式用空数组。
+`divmod(A,B)` 求 `A=B*Q+R`、`deg(R)<deg(B)`；除式非零。`divide` 只取商，`modulo` 只取余数，结果去掉尾零，零多项式用空数组。
 
 设次数 `n=deg(A),m=deg(B)`，`n>=m` 时商长 `n-m+1`。反转后：
 $ Q^*=A^* (B^*)^(-1) mod x^(n-m+1). $

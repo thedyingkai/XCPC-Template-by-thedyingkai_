@@ -20,7 +20,7 @@ struct Manacher {
     }
     string longest() const {
         int best_len = 0, best_st = 0;
-        for(int i = 0; i < (int) p.size(); i++) {
+        for(int i = 0; i < p.size(); i++) {
             int len = p[i];
             if(len == 0) continue;
             int st = (i - len) / 2;
@@ -30,7 +30,6 @@ struct Manacher {
         return source.substr(best_st, best_len);
     }
     bool is_pal(int l, int r) const {
-        assert(0 <= l && l <= r && r <= (int) source.size());
         int len = r - l;
         if(len <= 0) return 0;
         int center_in_t = (len % 2 == 1) ? 2 * (l + len / 2) + 1 : 2 * l + len;

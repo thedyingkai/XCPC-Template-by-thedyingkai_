@@ -1,7 +1,6 @@
 #include "../../template/start.cpp"
 
 i64 lagrangePower(i64 a, i64 e, i64 mod) {
-    assert(mod > 1 && e >= 0);
     i64 res = 1 % mod;
     a %= mod;
     if(a < 0) a += mod;
@@ -14,10 +13,9 @@ i64 lagrangePower(i64 a, i64 e, i64 mod) {
 }
 
 // y[i] = P(i), i = 0..k. Returns P(x) modulo prime_mod in O(k).
-i64 lagrangeConsecutive(const vector<i64>& y, i64 x, i64 prime_mod) {
-    int k = (int) y.size() - 1;
+i64 lagrange(const vector<i64>& y, i64 x, i64 prime_mod) {
+    int k = y.size() - 1;
     if(k < 0) return 0;
-    assert(prime_mod > 1 && (i64) k < prime_mod);
     i64 xm = x % prime_mod;
     if(xm < 0) xm += prime_mod;
     if(xm <= k) {
@@ -57,13 +55,11 @@ i64 lagrangeConsecutive(const vector<i64>& y, i64 x, i64 prime_mod) {
 // y[i] = P(i), i = 0..n-1. Returns P(c),...,P(c+m-1).
 // convolution uses 0-indexed coefficient vectors under prime_mod.
 template <class Convolution>
-vector<i64> lagrangeConsecutiveShift(const vector<i64>& y, i64 c, int m, i64 prime_mod,
+vector<i64> lagrangeShift(const vector<i64>& y, i64 c, int m, i64 prime_mod,
                                      Convolution convolution) {
-    int n = (int) y.size();
-    assert(m >= 0);
+    int n = y.size();
     if(m == 0) return {};
     if(n == 0) return vector<i64>(m, 0);
-    assert(prime_mod > 1 && max(n, m) < prime_mod);
 
     int limit = max(n, m);
     vector<i64> fac(limit, 1), ifac(limit, 1);

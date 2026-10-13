@@ -1,7 +1,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[值域结构合并（权值线段树合并）] <book-segment-merge>
 
-多个非负频次集合共用值域 `[1,M]` 和节点池。`MergeableSegmentTree(M)` 的空根为 0；所有根使用同一份离散化。
+多个非负频次集合共用值域 `[1,M]` 和节点池。`MergeSegTree(M)` 的空根为 0；所有根使用同一份离散化。
 
 - `root=add(root,p,delta)`：增减频次，修改后叶子频次须非负，总频次须装入 `i64`。
 - `query(root,l,r)`：闭值域频次和。

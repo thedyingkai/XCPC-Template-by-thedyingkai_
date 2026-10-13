@@ -7,7 +7,7 @@ struct OfflineDistinct {
         vector<int> tree;
         explicit Fenwick(int n = 0) : tree(n + 1) {}
         void add(int x, int value) {
-            for(; x < (int) tree.size(); x += x & -x) tree[x] += value;
+            for(; x < tree.size(); x += x & -x) tree[x] += value;
         }
         int query(int x) const {
             int result = 0;
@@ -17,11 +17,10 @@ struct OfflineDistinct {
     };
 
     static vector<int> count(const vector<i64>& a, const vector<pair<int, int>>& query) {
-        int n = (int) a.size(), q = (int) query.size();
+        int n = a.size(), q = query.size();
         vector<vector<pair<int, int>>> atRight(n + 1);
         for(int id = 0; id < q; id++) {
             auto [left, right] = query[id];
-            assert(1 <= left && left <= right && right <= n);
             atRight[right].push_back({left, id});
         }
         Fenwick bit(n);

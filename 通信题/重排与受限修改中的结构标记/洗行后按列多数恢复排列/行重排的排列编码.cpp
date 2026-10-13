@@ -3,7 +3,7 @@
 namespace communication {
 
 // p 是 1..n 的排列，n >= 3；信道只打乱行，保持列次序。
-std::vector<std::vector<int>> encode_shuffled_rows(
+std::vector<std::vector<int>> encode_rows(
     const std::vector<int> &p) {
     int n = p.size();
     auto sorted = p;
@@ -21,12 +21,12 @@ std::vector<std::vector<int>> encode_shuffled_rows(
     return rows;
 }
 
-std::vector<int> decode_shuffled_rows(
+std::vector<int> decode_rows(
     const std::vector<std::vector<int>> &rows) {
     int n = rows.size();
     if (n < 3) throw std::invalid_argument("need n >= 3");
     for (const auto &row : rows)
-        if (int(row.size()) != n)
+        if (row.size() != n)
             throw std::invalid_argument("row length mismatch");
     std::vector<int> p(n);
     std::vector<bool> used(n + 1);

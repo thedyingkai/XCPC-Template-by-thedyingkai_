@@ -1,6 +1,6 @@
 #include "../../../template/start.cpp"
 
-struct MinCostMaxFlow {
+struct MCMF {
     struct edge {
         int v, ne;
         i64 c, w;
@@ -8,24 +8,22 @@ struct MinCostMaxFlow {
     int n, S, T;
     vector<edge> e;
     vector<int> h, pre, vis;
-    vector<i64> d, potential;
+    vector<i64> d, pot;
     i64 flow, cost;
-    bool initialized, hasNegative;
-    MinCostMaxFlow(int _n, int s, int t) : n(_n), S(s), T(t) {
-        assert(0 <= S && S <= n && 0 <= T && T <= n && S != T);
+    bool init, neg;
+    MCMF(int _n, int s, int t) : n(_n), S(s), T(t) {
         e.push_back({});
         e.push_back({});
         h.resize(n + 1);
         pre.resize(n + 1);
         d.resize(n + 1);
         vis.resize(n + 1);
-        potential.resize(n + 1);
+        pot.resize(n + 1);
         flow = cost = 0;
-        initialized = hasNegative = false;
+        init = neg = false;
     }
     void add(int a, int b, i64 c, i64 w) {
-        assert(c >= 0);
-        if(c > 0 && w < 0) hasNegative = true;
+        if(c > 0 && w < 0) neg = true;
         e.push_back({b, h[a], c, w});
         h[a] = e.size() - 1;
         e.push_back({a, h[b], 0, -w});
@@ -36,7 +34,7 @@ struct MinCostMaxFlow {
         d.assign(n + 1, INF);
         pre.assign(n + 1, 0);
         d[S] = 0;
-        if(!initialized && hasNegative) {
+        if(!init && neg) {
             vis.assign(n + 1, 0);
             queue<int> q;
             q.push(S), vis[S] = 1;
@@ -53,13 +51,13 @@ struct MinCostMaxFlow {
                 }
             }
             if(d[T] == INF) return false;
-            for(int u = 0; u <= n; u++) if(d[u] != INF) potential[u] = d[u];
-            initialized = true;
+            for(int u = 0; u <= n; u++) if(d[u] != INF) pot[u] = d[u];
+            init = true;
             return true;
         }
-        initialized = true;
-        int heapHeight = bit_width((unsigned) n + 1);
-        if(1LL * (n + 1) * (n + 1) < (i64) e.size() * heapHeight) {
+        init = true;
+        int lg = bit_width((unsigned) n + 1);
+        if(1LL * (n + 1) * (n + 1) < (i64) e.size() * lg) {
             vis.assign(n + 1, 0);
             for(int step = 0; step <= n; step++) {
                 int u = -1;
@@ -70,7 +68,7 @@ struct MinCostMaxFlow {
                 vis[u] = 1;
                 for(int i = h[u]; i; i = e[i].ne) if(e[i].c > 0) {
                     int v = e[i].v;
-                    i64 w = e[i].w + potential[u] - potential[v];
+                    i64 w = e[i].w + pot[u] - pot[v];
                     if(d[v] > d[u] + w) d[v] = d[u] + w, pre[v] = i;
                 }
             }
@@ -83,20 +81,19 @@ struct MinCostMaxFlow {
                 if(du != d[u]) continue;
                 for(int i = h[u]; i; i = e[i].ne) if(e[i].c > 0) {
                     int v = e[i].v;
-                    i64 w = e[i].w + potential[u] - potential[v];
+                    i64 w = e[i].w + pot[u] - pot[v];
                     if(d[v] > du + w) d[v] = du + w, pre[v] = i, q.push({d[v], v});
                 }
             }
         }
         if(d[T] == INF) return false;
-        for(int u = 0; u <= n; u++) if(d[u] != INF) potential[u] += d[u];
+        for(int u = 0; u <= n; u++) if(d[u] != INF) pot[u] += d[u];
         return true;
     }
     void run() {
         while(shortestPath()) {
             i64 f = LLONG_MAX;
             for(int v = T; v != S; v = e[pre[v] ^ 1].v) {
-                assert(pre[v]);
                 f = min(f, e[pre[v]].c);
             }
             for(int v = T; v != S; v = e[pre[v] ^ 1].v) {
@@ -105,7 +102,7 @@ struct MinCostMaxFlow {
                 e[id ^ 1].c += f;
             }
             flow += f;
-            cost += f * (potential[T] - potential[S]);
+            cost = (i128) cost + (i128) f * (pot[T] - pot[S]);
         }
     }
 };

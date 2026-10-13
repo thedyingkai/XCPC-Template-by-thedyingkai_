@@ -15,11 +15,10 @@ struct Dinic {
         e.push_back({});
     }
     void add(int u, int v, i64 c) {
-        assert(c >= 0);
         e.push_back({v, h[u], c});
-        h[u] = (int) e.size() - 1;
+        h[u] = e.size() - 1;
         e.push_back({u, h[v], 0});
-        h[v] = (int) e.size() - 1;
+        h[v] = e.size() - 1;
     }
     bool bfs() {
         fill(d.begin(), d.end(), 0);

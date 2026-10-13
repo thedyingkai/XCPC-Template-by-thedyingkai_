@@ -9,7 +9,7 @@ struct ProductTree {
     vector<Poly> product;
 
     explicit ProductTree(const vector<i64>& points)
-        : n((int) points.size()), x(points), product(max(1, 4 * (int) points.size())) {
+        : n(points.size()), x(points), product(max(1, 4 * n)) {
         for(i64& value : x) value = norm(value);
         if(n) build(1, 0, n);
     }
@@ -51,12 +51,10 @@ struct ProductTree {
     }
 
     Poly interpolate(const vector<i64>& y) const {
-        assert((int) y.size() == n);
         if(n == 0) return {};
         vector<i64> denominator = evaluate(derivative(product[1]));
         vector<i64> weight(n);
         for(int i = 0; i < n; i++) {
-            assert(denominator[i] != 0);
             weight[i] = norm(y[i]) * power(denominator[i], MOD - 2) % MOD;
         }
         Poly answer = interpolateDfs(1, 0, n, weight);

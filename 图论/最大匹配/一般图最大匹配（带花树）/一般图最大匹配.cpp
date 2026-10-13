@@ -38,7 +38,7 @@ struct GeneralMatching {
         base.resize(n + 1);
         iota(base.begin(), base.end(), 0);
         q.clear(), q.push_back(root), used[root] = 1;
-        for(int head = 0; head < (int) q.size(); head++) {
+        for(int head = 0; head < q.size(); head++) {
             int v = q[head];
             for(int u : g[v]) {
                 if(base[v] == base[u] || mate[v] == u) continue;

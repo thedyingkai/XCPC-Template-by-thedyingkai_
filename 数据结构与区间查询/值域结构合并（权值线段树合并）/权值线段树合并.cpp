@@ -1,21 +1,19 @@
 #pragma once
 #include "../../template/start.cpp"
 
-struct MergeableSegmentTree {
+struct MergeSegTree {
     struct Node { int left = 0, right = 0; i64 sum = 0; };
     int size;
     vector<Node> tree{Node{}};
 
-    explicit MergeableSegmentTree(int size_) : size(size_) { assert(size >= 1); }
+    explicit MergeSegTree(int size_) : size(size_) {}
 
     int add(int u, int l, int r, int position, i64 delta) {
         if(!u) {
             tree.push_back({});
-            u = (int) tree.size() - 1;
+            u = tree.size() - 1;
         }
         if(l == r) {
-            assert((i128) tree[u].sum + delta >= 0);
-            assert((i128) tree[u].sum + delta <= LLONG_MAX);
             tree[u].sum += delta;
             return u;
         }
@@ -34,21 +32,17 @@ struct MergeableSegmentTree {
 
     void pull(int u) {
         i128 value = (i128) tree[tree[u].left].sum + tree[tree[u].right].sum;
-        assert(value <= LLONG_MAX);
         tree[u].sum = (i64) value;
     }
 
     int add(int root, int position, i64 delta) {
-        assert(1 <= position && position <= size);
         return add(root, 1, size, position, delta);
     }
 
     // Destructive: invalidate BOTH old handles and retain only the result.
     int merge(int x, int y, int l, int r) {
         if(!x || !y) return x | y;
-        assert(x != y);
         if(l == r) {
-            assert((i128) tree[x].sum + tree[y].sum <= LLONG_MAX);
             tree[x].sum += tree[y].sum;
             return x;
         }
@@ -70,7 +64,6 @@ struct MergeableSegmentTree {
     }
 
     i64 query(int root, int l, int r) const {
-        assert(1 <= l && l <= r && r <= size);
         return query(root, 1, size, l, r);
     }
 

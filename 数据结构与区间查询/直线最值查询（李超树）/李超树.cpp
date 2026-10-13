@@ -12,10 +12,10 @@ struct LiChao {
     int root;
     vector<Line> lines;
     vector<Node> tree;
-    LiChao(i64 l, i64 r) : L(l), R(r), root(0), tree(1) { assert(L <= R); }
+    LiChao(i64 l, i64 r) : L(l), R(r), root(0), tree(1) {}
     int newNode() {
         tree.push_back({0, 0, -1});
-        return (int) tree.size() - 1;
+        return tree.size() - 1;
     }
     int insert(int u, i64 l, i64 r, int id) {
         if(!u) {
@@ -44,7 +44,7 @@ struct LiChao {
     }
     void addLine(i64 k, i64 b) {
         lines.push_back({k, b});
-        root = insert(root, L, R, (int) lines.size() - 1);
+        root = insert(root, L, R, lines.size() - 1);
     }
     i128 query(int u, i64 l, i64 r, i64 x) const {
         if(!u) return -((i128) 1 << 126);
@@ -57,7 +57,6 @@ struct LiChao {
             return max(ans, query(tree[u].rs, mid + 1, r, x));
     }
     i128 query(i64 x) const {
-        assert(L <= x && x <= R);
         return query(root, L, R, x);
     }
 };

@@ -16,7 +16,7 @@ struct CutDot {
         parent.resize(n + 1), parentEdge.assign(n + 1, -1), next.resize(n + 1), child.resize(n + 1);
     }
     void addEdge(int u, int v) {
-        int id = (int) edges.size();
+        int id = edges.size();
         edges.push_back({u, v});
         g[u].push_back({v, id}), g[v].push_back({u, id});
     }
@@ -26,7 +26,7 @@ struct CutDot {
         dfn[start] = low[start] = ++tot;
         while(!stack.empty()) {
             int u = stack.back();
-            if(next[u] < (int) g[u].size()) {
+            if(next[u] < g[u].size()) {
                 auto [v, id] = g[u][next[u]++];
                 if(id == parentEdge[u]) continue;
                 if(!dfn[v]) {

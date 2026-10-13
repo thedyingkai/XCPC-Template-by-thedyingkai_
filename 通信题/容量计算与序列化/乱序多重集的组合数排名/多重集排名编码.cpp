@@ -19,7 +19,7 @@ cpp_int rank_multiset(std::vector<int> symbols, int q) {
     if (q < 1) throw std::invalid_argument("invalid alphabet");
     std::sort(symbols.begin(), symbols.end());
     cpp_int rank = 0;
-    for (int i = 0; i < int(symbols.size()); ++i) {
+    for (int i = 0; i < symbols.size(); ++i) {
         if (symbols[i] < 0 || symbols[i] >= q)
             throw std::invalid_argument("symbol outside alphabet");
         rank += multiset_choose(symbols[i] + i, i + 1);
@@ -48,7 +48,7 @@ std::vector<int> unrank_multiset(cpp_int rank, int length, int q) {
 }
 
 // 连续编号所有长度 0..max_length 的多重集。
-std::vector<int> encode_variable_multiset(
+std::vector<int> encode_multiset(
     cpp_int rank, int q, int max_length) {
     if (q < 1 || max_length < 0 || rank < 0)
         throw std::invalid_argument("invalid parameters");
@@ -60,7 +60,7 @@ std::vector<int> encode_variable_multiset(
     throw std::invalid_argument("rank outside variable capacity");
 }
 
-cpp_int decode_variable_multiset(std::vector<int> symbols, int q) {
+cpp_int decode_multiset(std::vector<int> symbols, int q) {
     int len = symbols.size();
     cpp_int offset = len ? multiset_choose(q + len - 1, len - 1)
                          : cpp_int(0);

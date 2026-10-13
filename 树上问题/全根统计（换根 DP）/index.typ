@@ -4,7 +4,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[全根统计（换根 DP）] <book-reroot>
 
-`rerootDistanceSum(graph,mass)` 求所有点的带权距离和：
+`rerootDist(graph,mass)` 求所有点的带权距离和：
 $ "ans"[u]=sum_v "mass"[v] dot "dist"(u,v). $
 顶点为 `1..n`、`n>=1`，`graph` 和 `mass` 均留 0 号位。输入为连通无向树，每条边存两次；`mass[v]=1` 得普通距离和。时间、空间 $O(n)$，遍历不使用深递归。
 

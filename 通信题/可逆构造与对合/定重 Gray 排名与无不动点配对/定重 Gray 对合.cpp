@@ -16,7 +16,7 @@ cpp_int gray_choose(int n, int k) {
 
 // G(n,k) = 0G(n-1,k) + 1 reverse(G(n-1,k-1))。
 // reversed 表示列表方向，不是位序反转。
-cpp_int rank_weight_gray(std::string_view word) {
+cpp_int rank_gray(std::string_view word) {
     int n = word.size();
     if (word.find_first_not_of("01") != std::string_view::npos)
         throw std::invalid_argument("nonbinary word");
@@ -41,7 +41,7 @@ cpp_int rank_weight_gray(std::string_view word) {
     return rank;
 }
 
-std::string unrank_weight_gray(int n, int k, cpp_int rank) {
+std::string unrank_gray(int n, int k, cpp_int rank) {
     if (n < 0 || k < 0 || k > n)
         throw std::invalid_argument("invalid weight parameters");
     cpp_int total = gray_choose(n, k);
@@ -72,14 +72,14 @@ std::string unrank_weight_gray(int n, int k, cpp_int rank) {
 }
 
 // 列表大小为偶数时，相邻偶奇排名成对：一次移动一个 1 到一个 0。
-std::string fixed_weight_involution(std::string_view word) {
+std::string weight_pair(std::string_view word) {
     int n = word.size(), k = std::count(word.begin(), word.end(), '1');
     cpp_int total = gray_choose(n, k);
     if ((total & 1) != 0)
         throw std::invalid_argument("odd state count cannot be paired");
-    cpp_int rank = rank_weight_gray(word);
+    cpp_int rank = rank_gray(word);
     rank ^= 1;
-    return unrank_weight_gray(n, k, rank);
+    return unrank_gray(n, k, rank);
 }
 
 } // namespace communication

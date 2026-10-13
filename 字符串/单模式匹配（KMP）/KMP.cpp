@@ -33,6 +33,6 @@ int main() {
     KMP kmp(s2);
     auto positions = kmp.match(s1);
     for(auto p : positions) cout << p << "\n";
-    for(int i = 1; i < (int) kmp.nxt.size(); i++) cout << kmp.nxt[i] << " ";
+    for(int i = 1; i < kmp.nxt.size(); i++) cout << kmp.nxt[i] << " ";
     return 0;
 }

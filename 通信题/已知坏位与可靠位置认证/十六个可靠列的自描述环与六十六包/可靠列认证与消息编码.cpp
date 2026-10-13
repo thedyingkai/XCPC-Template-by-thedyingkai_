@@ -5,7 +5,7 @@ namespace communication {
 using MessagePacket = std::array<int, 31>;
 
 // bad 为固定的 15 个坏列；输出 66 包，外层调用 send_packet。
-std::vector<MessagePacket> encode_reliable_columns(
+std::vector<MessagePacket> encode_columns(
     const std::vector<int> &message, const std::array<bool, 31> &bad) {
     if (message.size() > 1024 ||
         std::count(bad.begin(), bad.end(), true) != 15)
@@ -32,7 +32,7 @@ std::vector<MessagePacket> encode_reliable_columns(
 }
 
 // received 为实际到达的包；坏列各包内容任意，位置跨包固定。
-std::vector<int> decode_reliable_columns(
+std::vector<int> decode_columns(
     const std::vector<MessagePacket> &received) {
     if (received.size() != 66)
         throw std::invalid_argument("expected 66 packets");
@@ -60,7 +60,7 @@ std::vector<int> decode_reliable_columns(
             path.push_back(u);
             u = successor[u];
         }
-        if (u != -1 && int(path.size()) - position[u] == 16)
+        if (u != -1 && path.size() - position[u] == 16)
             good.assign(path.begin() + position[u], path.end());
     }
     if (good.empty())

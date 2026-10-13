@@ -33,12 +33,12 @@ struct HopcroftKarp {
         while(!leftPath.empty()) {
             int u = leftPath.back();
             bool advanced = false;
-            while(cur[u] < (int) g[u].size()) {
+            while(cur[u] < g[u].size()) {
                 int v = g[u][cur[u]++];
                 if(!mr[v]) {
                     if(dis[u] + 1 != shortest) continue;
                     rightPath.push_back(v);
-                    for(int i = (int) leftPath.size() - 1; i >= 0; i--)
+                    for(int i = leftPath.size(); i-- > 0;)
                         ml[leftPath[i]] = rightPath[i], mr[rightPath[i]] = leftPath[i];
                     return true;
                 }

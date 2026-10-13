@@ -17,7 +17,6 @@ struct Dij {
     vector<int> vis, parent;
     Dij(int N) : n(N), G(N + 1), dist(N + 1, INF), vis(N + 1), parent(N + 1, -1) {}
     void add(int u, int v, i64 w) {
-        assert(0 <= w && w < INF);
         G[u].push_back({v, w});
     }
     vector<i64> dij(int src) {

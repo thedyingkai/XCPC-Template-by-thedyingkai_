@@ -6,7 +6,7 @@
 // 返回两倍有向面积；逆时针为正，顺时针为负。
 i128 signedArea2(const vector<IP>& p) {
     i128 ans = 0;
-    for(int i = 0; i < (int) p.size(); i++) ans += cross(p[i], p[(i + 1) % p.size()]);
+    for(int i = 0; i < p.size(); i++) ans += cross(p[i], p[(i + 1) % p.size()]);
     return ans;
 }
 // end: polygon-area

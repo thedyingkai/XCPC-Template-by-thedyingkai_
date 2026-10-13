@@ -10,14 +10,11 @@ i64 exgcd(i64 a, i64 b, i64& x, i64& y) {
     return d;
 }
 i64 excrt(vector<i64>& m, vector<i64>& r, int n) {
-    assert(n >= 1 && (int) m.size() > n && (int) r.size() > n);
-    assert(m[1] > 0);
     i64 m1 = m[1], m2, r1 = r[1], r2, p, q;
     r1 %= m1;
     if(r1 < 0) r1 += m1;
     for(int i = 2; i <= n; i++) {
         m2 = m[i], r2 = r[i];
-        assert(m2 > 0);
         i64 d = exgcd(m1, m2, p, q);
         i128 delta = (i128) r2 - r1;
         if(delta % d) return -1;

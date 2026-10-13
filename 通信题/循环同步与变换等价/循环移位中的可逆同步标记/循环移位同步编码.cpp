@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 namespace communication {
 
-std::string encode_cyclic_marker(std::string binary) {
+std::string encode_marker(std::string binary) {
     if (binary.empty() || binary.find_first_not_of("01") !=
                           std::string::npos)
         throw std::invalid_argument("need nonempty binary word");
@@ -12,7 +12,7 @@ std::string encode_cyclic_marker(std::string binary) {
     return binary;
 }
 
-std::string decode_cyclic_marker(std::string_view received) {
+std::string decode_marker(std::string_view received) {
     int n = received.size();
     if (!n || received.find_first_not_of("012") !=
               std::string_view::npos)

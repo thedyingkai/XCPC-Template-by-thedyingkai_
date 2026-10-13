@@ -3,7 +3,6 @@
 namespace Stress {
 bool close(long double a, long double b, long double absoluteEps = 1e-12L,
            long double relativeEps = 1e-12L) {
-    assert(absoluteEps >= 0 && relativeEps >= 0);
     if(a == b) return true;
     if(!isfinite(a) || !isfinite(b)) return false;
     long double difference = fabsl(a - b);

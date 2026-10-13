@@ -15,13 +15,13 @@ struct UnicyclicGraph {
     vector<i64> dist, pref;
     UnicyclicGraph(int n_) : n(n_), g(n + 1) {}
     int addEdge(int u, int v, i64 w = 1) {
-        int id = (int) e.size();
+        int id = e.size();
         e.push_back({u, v, w});
         g[u].push_back({v, id}), g[v].push_back({u, id});
         return id;
     }
     bool build() {
-        if((int) e.size() != n || n == 0) return false;
+        if(e.size() != n || n == 0) return false;
         cycle.clear(), cycleEdge.clear(), pref.clear();
         vector<int> seen(n + 1), deg(n + 1), removed(n + 1);
         queue<int> q;
@@ -34,7 +34,7 @@ struct UnicyclicGraph {
         }
         if(reached != n) return false;
         for(int u = 1; u <= n; u++) {
-            deg[u] = (int) g[u].size();
+            deg[u] = g[u].size();
             if(deg[u] <= 1) q.push(u);
         }
         while(!q.empty()) {
@@ -53,7 +53,7 @@ struct UnicyclicGraph {
         int u = start, lastEdge = -1;
         do {
             if(cyclePos[u] != -1) return false;
-            cyclePos[u] = (int) cycle.size();
+            cyclePos[u] = cycle.size();
             cycle.push_back(u);
             int id = -1, v = 0;
             for(auto [to, eid] : g[u]) {
@@ -65,10 +65,10 @@ struct UnicyclicGraph {
             if(id == -1) return false;
             cycleEdge.push_back(id);
             lastEdge = id, u = v;
-        } while(u != start && (int) cycle.size() <= n);
-        if(u != start || (int) cycle.size() != cycleCount) return false;
+        } while(u != start && cycle.size() <= n);
+        if(u != start || cycle.size() != cycleCount) return false;
         pref.assign(cycle.size() + 1, 0);
-        for(int i = 0; i < (int) cycle.size(); i++) pref[i + 1] = pref[i] + e[cycleEdge[i]].w;
+        for(int i = 0; i < cycle.size(); i++) pref[i + 1] = pref[i] + e[cycleEdge[i]].w;
         root.assign(n + 1, 0), parent.assign(n + 1, 0), parentEdge.assign(n + 1, -1);
         dep.assign(n + 1, 0), dist.assign(n + 1, 0);
         for(int x : cycle) root[x] = x, q.push(x);
@@ -85,14 +85,13 @@ struct UnicyclicGraph {
         for(int x = 1; x <= n; x++) if(!root[x]) return false;
         return true;
     }
-    i64 clockwiseDistance(int u, int v) const {
+    i64 clockwiseDist(int u, int v) const {
         int x = cyclePos[u], y = cyclePos[v];
-        assert(x != -1 && y != -1);
         if(x <= y) return pref[y] - pref[x];
         return pref.back() - pref[x] + pref[y];
     }
-    i64 shorterCycleDistance(int u, int v) const {
-        i64 a = clockwiseDistance(u, v);
+    i64 cycleDist(int u, int v) const {
+        i64 a = clockwiseDist(u, v);
         return min(a, pref.back() - a);
     }
 };

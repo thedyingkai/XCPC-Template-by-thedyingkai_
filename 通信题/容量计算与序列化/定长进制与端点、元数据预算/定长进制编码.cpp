@@ -39,7 +39,7 @@ std::uint64_t decode_base(std::string_view s,
     check_alphabet(alphabet);
     std::array<int, 256> digit;
     digit.fill(-1);
-    for (int i = 0; i < int(alphabet.size()); ++i)
+    for (int i = 0; i < alphabet.size(); ++i)
         digit[(unsigned char)alphabet[i]] = i;
     std::uint64_t x = 0, q = alphabet.size();
     for (unsigned char c : s) {

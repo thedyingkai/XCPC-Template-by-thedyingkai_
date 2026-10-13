@@ -3,7 +3,7 @@
 #include "../形式幂级数求逆/多项式求逆.cpp"
 
 namespace poly998 {
-i64 modularSquareRoot(i64 a) {
+i64 modSqrt(i64 a) {
     a = norm(a);
     if(a == 0) return 0;
     if(power(a, (MOD - 1) / 2) != 1) return -1;
@@ -31,19 +31,20 @@ i64 modularSquareRoot(i64 a) {
 optional<Poly> squareRoot(const Poly& f, int n) {
     if(n == 0) return Poly{};
     int first = 0;
-    while(first < n && (first >= (int) f.size() || norm(f[first]) == 0)) first++;
+    while(first < n && (first >= f.size() || norm(f[first]) == 0)) first++;
     if(first == n) return Poly(n);
     if(first & 1) return nullopt;
     int shift = first / 2, need = n - first;
     Poly reduced(need);
-    for(int i = 0; i < need && first + i < (int) f.size(); i++)
+    for(int i = 0; i < need && first + i < f.size(); i++)
         reduced[i] = norm(f[first + i]);
-    i64 root = modularSquareRoot(reduced[0]);
+    i64 root = modSqrt(reduced[0]);
     if(root == -1) return nullopt;
     Poly g(1, root);
     const i64 inv2 = (MOD + 1) / 2;
-    while((int) g.size() < need) {
-        int m = min(need, (int) g.size() * 2);
+    while(g.size() < need) {
+        int m = g.size();
+        m = min(need, m * 2);
         Poly quotient = multiply(prefix(reduced, m), inverse(g, m), m);
         g.resize(m);
         for(int i = 0; i < m; i++) g[i] = (g[i] + quotient[i]) * inv2 % MOD;

@@ -24,8 +24,7 @@ struct StrictSecondMST {
     vector<int> treeEdges; // Indices in the input edge vector.
 
     StrictSecondMST(int n, const vector<Edge>& edges) {
-        assert(n >= 1);
-        int m = (int) edges.size(), levels = (int) bit_width((unsigned) n);
+        int m = edges.size(), levels = (int) bit_width((unsigned) n);
         vector<int> parent(n + 1), size(n + 1, 1), ids(m);
         iota(parent.begin(), parent.end(), 0);
         iota(ids.begin(), ids.end(), 0);
@@ -33,8 +32,6 @@ struct StrictSecondMST {
             while(x != parent[x]) x = parent[x] = parent[parent[x]];
             return x;
         };
-        for(auto [u, v, w] : edges)
-            assert(1 <= u && u <= n && 1 <= v && v <= n);
         sort(ids.begin(), ids.end(), [&](int x, int y) {
             return pair(edges[x].w, x) < pair(edges[y].w, y);
         });
@@ -53,7 +50,7 @@ struct StrictSecondMST {
             graph[u].push_back({v, w});
             graph[v].push_back({u, w});
         }
-        if((int) treeEdges.size() != n - 1) return;
+        if(treeEdges.size() != n - 1) return;
         connected = true;
         vector<vector<int>> up(levels, vector<int>(n + 1));
         vector<vector<MaxTwo>> mx(levels, vector<MaxTwo>(n + 1));

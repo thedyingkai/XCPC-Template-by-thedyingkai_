@@ -24,7 +24,7 @@ vector<i64> partitionNumbers(int n, i64 mod) {
 // end: partition-numbers
 
 // start: common-numbers
-struct CombinatorialNumbers {
+struct CombNumbers {
     i64 mod = 1;
     vector<i64> catalan, derangement, bell, partition;
     vector<vector<i64>> stirlingFirst, stirlingSecond, eulerian;

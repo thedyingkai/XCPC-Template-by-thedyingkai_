@@ -19,7 +19,7 @@ int coin_syndrome(const std::vector<int> &heads) {
 // 必须翻恰一枚时也合法：翻 0 号不会改变综合。
 int coin_to_flip(const std::vector<int> &heads, int target) {
     int syndrome = coin_syndrome(heads);
-    if (target < 0 || target >= int(heads.size()))
+    if (target < 0 || target >= heads.size())
         throw std::invalid_argument("target outside domain");
     return syndrome ^ target;
 }

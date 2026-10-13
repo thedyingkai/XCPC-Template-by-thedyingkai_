@@ -1,7 +1,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[不相交集合合并（子集卷积）] <book-subset-convolution>
 
-`SubsetConvolution::multiply(a,b)` 求
+`SubsetConv::multiply(a,b)` 求
 $ c[S]=sum_(A subset.eq S)a[A]b[S xor A]. $
 即 `A,B` 不相交且并为 `S` 的有序划分。输入非空、等长，长度为 `2^k`；模数 `998244353`，负输入会归一化。
 

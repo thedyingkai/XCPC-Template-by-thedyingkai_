@@ -10,7 +10,6 @@ struct DujiaoSieve {
     unordered_map<i64, i128> memoPhi;
 
     void init(int n) {
-        assert(n >= 1);
         limit = n;
         primes.clear();
         mu.assign(n + 1, 0);
@@ -46,7 +45,6 @@ struct DujiaoSieve {
     }
 
     i64 sumMu(i64 n) {
-        assert(n >= 0 && limit >= 1);
         if(n <= limit) return prefixMu[(int)n];
         if(auto it = memoMu.find(n); it != memoMu.end()) return it->second;
         i128 ans = 1;
@@ -60,7 +58,6 @@ struct DujiaoSieve {
     }
 
     i128 sumPhi(i64 n) {
-        assert(n >= 0 && limit >= 1);
         if(n <= limit) return prefixPhi[(int)n];
         if(auto it = memoPhi.find(n); it != memoPhi.end()) return it->second;
         i128 ans = (i128)n * ((i128)n + 1) / 2;

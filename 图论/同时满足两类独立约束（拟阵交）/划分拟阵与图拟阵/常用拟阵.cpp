@@ -3,17 +3,13 @@
 #include "../增广框架/拟阵交.cpp"
 
 // start: partition-matroid
-struct PartitionMatroidOracle final : MatroidOracle {
+struct PartMatroid final : MatroidOracle {
     int n;
     vector<int> group, capacity, count;
     vector<char> chosen;
-    PartitionMatroidOracle(vector<int> group_, vector<int> capacity_)
-        : n((int) group_.size()), group(move(group_)), capacity(move(capacity_)) {
-        for(int value : capacity) assert(value >= 0);
-        for(int x : group) assert(0 <= x && x < (int) capacity.size());
-    }
+    PartMatroid(vector<int> group_, vector<int> capacity_)
+        : n(group_.size()), group(move(group_)), capacity(move(capacity_)) {}
     void reset(const vector<char>& in) override {
-        assert((int) in.size() == n);
         chosen = in;
         count.assign(capacity.size(), 0);
         for(int i = 0; i < n; i++) if(chosen[i]) count[group[i]]++;
@@ -30,12 +26,7 @@ struct PartitionMatroidOracle final : MatroidOracle {
 // end: partition-matroid
 
 // start: unit-partition-matroid-intersection
-vector<int> unitPartitionMatroidIntersection(const PartitionMatroidOracle& first,
-                                             const PartitionMatroidOracle& second) {
-    assert(first.n == second.n);
-    for(int value : first.capacity) assert(0 <= value && value <= 1);
-    for(int value : second.capacity) assert(0 <= value && value <= 1);
-
+vector<int> unitMatroid(const PartMatroid& first, const PartMatroid& second) {
     int n = first.n;
     vector<vector<int>> byFirst(first.capacity.size());
     for(int id = 0; id < n; id++) {
@@ -50,7 +41,7 @@ vector<int> unitPartitionMatroidIntersection(const PartitionMatroidOracle& first
     auto bfs = [&]() {
         queue<int> q;
         fill(dis.begin(), dis.end(), -1);
-        for(int u = 0; u < (int) first.capacity.size(); u++) {
+        for(int u = 0; u < first.capacity.size(); u++) {
             if(first.capacity[u] && mateFirst[u] == -1) dis[u] = 0, q.push(u);
         }
         fill(cur.begin(), cur.end(), 0);
@@ -79,14 +70,14 @@ vector<int> unitPartitionMatroidIntersection(const PartitionMatroidOracle& first
         while(!firstPath.empty()) {
             int u = firstPath.back();
             bool advanced = false;
-            while(cur[u] < (int) byFirst[u].size()) {
+            while(cur[u] < byFirst[u].size()) {
                 int id = byFirst[u][cur[u]++];
                 if(mateFirst[u] == id) continue;
                 int v = second.group[id];
                 if(mateSecond[v] == -1) {
                     if(dis[u] + 1 != shortest) continue;
                     elementPath.push_back(id);
-                    for(int i = (int) firstPath.size() - 1; i >= 0; i--) {
+                    for(int i = firstPath.size(); i-- > 0;) {
                         int add = elementPath[i];
                         mateFirst[firstPath[i]] = add;
                         mateSecond[second.group[add]] = add;
@@ -109,7 +100,7 @@ vector<int> unitPartitionMatroidIntersection(const PartitionMatroidOracle& first
     };
 
     while(bfs()) {
-        for(int u = 0; u < (int) first.capacity.size(); u++) {
+        for(int u = 0; u < first.capacity.size(); u++) {
             if(first.capacity[u] && mateFirst[u] == -1) augment(u);
         }
     }
@@ -121,7 +112,7 @@ vector<int> unitPartitionMatroidIntersection(const PartitionMatroidOracle& first
 // end: unit-partition-matroid-intersection
 
 // start: graphic-matroid
-struct GraphicMatroidOracle final : MatroidOracle {
+struct GraphMatroid final : MatroidOracle {
     struct Edge {
         int u, v;
     };
@@ -131,8 +122,8 @@ struct GraphicMatroidOracle final : MatroidOracle {
     vector<vector<pair<int, int>>> g;
     vector<int> component, tin, tout, edgeChild, seen;
     vector<array<int, 3>> dfsStack;
-    GraphicMatroidOracle(int vertices_, vector<Edge> edges_)
-        : vertices(vertices_), m((int) edges_.size()), clk(0), edges(move(edges_)),
+    GraphMatroid(int vertices_, vector<Edge> edges_)
+        : vertices(vertices_), m(edges_.size()), clk(0), edges(move(edges_)),
           g(vertices + 1) {
         dfsStack.reserve(2 * vertices + 1);
     }

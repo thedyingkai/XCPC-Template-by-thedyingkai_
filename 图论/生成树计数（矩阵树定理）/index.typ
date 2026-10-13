@@ -9,8 +9,8 @@
  columns: (auto, 1fr),
  table.header([入口], [方向与拉普拉斯增量]),
  [`countUndirected(root)`], [无向边两对角各 `+w`，两交叉项各 `-w`；删除点任选],
- [`countInArborescence(root)`], [所有点走向根；边 `u->v` 令 `L[u][u]+=w,L[u][v]-=w`],
- [`countOutArborescence(root)`], [根能到所有点；边 `u->v` 令 `L[v][v]+=w,L[v][u]-=w`],
+ [`countInTree(root)`], [所有点走向根；边 `u->v` 令 `L[u][u]+=w,L[u][v]-=w`],
+ [`countOutTree(root)`], [根能到所有点；边 `u->v` 令 `L[v][v]+=w,L[v][u]-=w`],
 )
 
 建好矩阵后删除根对应行、列，求余子式行列式。换行变号，某列无非零主元则模意义下答案为 0；方案数模质数为 0 不代表不存在，存在性另判连通或对应可达性。合数模、精确整数须替换消元。

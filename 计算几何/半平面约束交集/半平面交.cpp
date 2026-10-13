@@ -9,7 +9,6 @@ template <class T> vector<Point<d128>> hp(const vector<Line<T>>& input) {
     vector<L> lines;
     lines.reserve(input.size());
     for(const auto& l : input) {
-        assert(l.a != l.b);
         lines.emplace_back((P) l.a, (P) l.b);
     }
     sort(lines.begin(), lines.end(), [&](const L& l1, const L& l2) {
@@ -46,7 +45,7 @@ template <class T> vector<Point<d128>> hp(const vector<Line<T>>& input) {
     if(parallel(ls.back(), ls.front())) return {};
     ps.push_back(lineIntersection(ls.back(), ls.front()));
     d128 area = 0;
-    for(int i = 1; i + 1 < (int) ps.size(); i++) area += cross(ps[i] - ps[0], ps[i + 1] - ps[0]);
+    for(int i = 1; i + 1 < ps.size(); i++) area += cross(ps[i] - ps[0], ps[i + 1] - ps[0]);
     if(cmp(area) <= 0) return {};
     return vector(ps.begin(), ps.end());
 }

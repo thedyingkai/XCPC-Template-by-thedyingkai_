@@ -23,7 +23,7 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
         vector<i64> C(1, 1), B(1, 1);
         int L = 0, shift = 1;
         i64 last = 1;
-        for(int n = 0; n < (int) s.size(); n++) {
+        for(int n = 0; n < s.size(); n++) {
             i64 delta = s[n];
             for(int i = 1; i <= L; i++) delta = (delta + (i128) C[i] * s[n - i]) % MOD;
             if(delta == 0) {
@@ -32,8 +32,8 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
             }
             vector<i64> old = C;
             i64 coef = (i128) delta * qpow(last, MOD - 2) % MOD;
-            if((int) C.size() < (int) B.size() + shift) C.resize(B.size() + shift);
-            for(int i = 0; i < (int) B.size(); i++)
+            if(C.size() < B.size() + shift) C.resize(B.size() + shift);
+            for(int i = 0; i < B.size(); i++)
                 C[i + shift] = norm(C[i + shift] - (i128) coef * B[i] % MOD);
             if(2 * L <= n) {
                 L = n + 1 - L;
@@ -52,8 +52,7 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
 
     static vector<i64> combine(const vector<i64>& a, const vector<i64>& b,
                                const vector<i64>& recurrence) {
-        int k = (int) recurrence.size();
-        assert(k > 0 && (int) a.size() >= k && (int) b.size() >= k);
+        int k = recurrence.size();
         vector<i64> left(k), right(k), coefficient(k);
         for(int i = 0; i < k; i++)
             left[i] = norm(a[i]), right[i] = norm(b[i]), coefficient[i] = norm(recurrence[i]);
@@ -69,11 +68,9 @@ template <i64 MOD = 998244353> struct LinearRecurrence {
     }
 
     static i64 nth(const vector<i64>& initial, const vector<i64>& recurrence, i64 n) {
-        assert(n >= 0);
         if(n < (i64) initial.size()) return norm(initial[n]);
-        int k = (int) recurrence.size();
+        int k = recurrence.size();
         if(k == 0) return 0;
-        assert((int) initial.size() >= k);
         vector<i64> answer(k), base(k);
         answer[0] = 1;
         if(k == 1)

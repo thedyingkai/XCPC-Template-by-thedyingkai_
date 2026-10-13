@@ -2,7 +2,7 @@
 
 #include "../../template/start.cpp"
 
-struct KruskalReconstructionTree {
+struct KruskalTree {
     struct Edge {
         int u, v;
         i64 w;
@@ -12,9 +12,8 @@ struct KruskalReconstructionTree {
     vector<int> dsu, dep, component, leaves;
     vector<i64> val;
     vector<vector<int>> child, up;
-    KruskalReconstructionTree(int n_, vector<Edge> edges, bool ascending_ = true)
+    KruskalTree(int n_, vector<Edge> edges, bool ascending_ = true)
         : n(n_), tot(n_), ascending(ascending_) {
-        assert(n >= 1);
         build(move(edges));
     }
     int find(int x) {
@@ -62,7 +61,7 @@ struct KruskalReconstructionTree {
                 }
             }
         }
-        for(int i = (int) order.size() - 1; i >= 0; i--) {
+        for(int i = order.size(); i-- > 0;) {
             int u = order[i];
             if(u <= n) leaves[u] = 1;
             else for(int v : child[u]) leaves[u] += leaves[v];

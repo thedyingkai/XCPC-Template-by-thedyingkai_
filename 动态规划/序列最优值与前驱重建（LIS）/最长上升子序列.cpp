@@ -4,15 +4,15 @@
 // Return zero-based indices of one longest subsequence.
 // strict=false requests a longest non-decreasing subsequence.
 template<class T>
-vector<int> longestIncreasingSubsequence(const vector<T>& a, bool strict = true) {
+vector<int> lis(const vector<T>& a, bool strict = true) {
     vector<T> tail;
     vector<int> position, previous(a.size(), -1);
-    for(int i = 0; i < (int) a.size(); i++) {
+    for(int i = 0; i < a.size(); i++) {
         int p = (int) ((strict ? lower_bound(tail.begin(), tail.end(), a[i])
                               : upper_bound(tail.begin(), tail.end(), a[i]))
                        - tail.begin());
         if(p) previous[i] = position[p - 1];
-        if(p == (int) tail.size()) {
+        if(p == tail.size()) {
             tail.push_back(a[i]);
             position.push_back(i);
         } else {

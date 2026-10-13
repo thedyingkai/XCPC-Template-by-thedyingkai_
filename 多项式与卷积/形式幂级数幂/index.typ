@@ -1,7 +1,7 @@
 #let render(code) = [
 #heading(level: 2, outlined: true)[形式幂级数幂] <book-poly-power>
 
-`polynomialPower(f,k,n)` 求 $f^k mod x^n$，`k` 为非负 `i64` 或十进制字符串，返回固定 `n` 项。`k=0` 返回常数 1，含零多项式的零次幂；正指数下零多项式返回全零。
+`polyPow(f,k,n)` 求 $f^k mod x^n$，`k` 为非负 `i64` 或十进制字符串，返回固定 `n` 项。`k=0` 返回常数 1，含零多项式的零次幂；正指数下零多项式返回全零。
 
 *处理首项*　写 `f=x^t*c*h`、`h[0]=1`：
 $ f^k=x^(t k)c^k exp(k ln h). $
