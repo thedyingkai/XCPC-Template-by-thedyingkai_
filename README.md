@@ -58,17 +58,9 @@
 
 交互代码使用 `interactive` 命名空间，通过回调接入询问格式；通信代码使用 `communication` 命名空间，发送与接收函数仅使用各端允许获得的信息。每份代码与对应正文同目录，编号、位序、根与尾部填充规则在代码旁说明。多重集排名和定重 Gray 排名使用 Boost Multiprecision 的 `cpp_int`，需要相应头文件；其余新增组件只依赖 C++ 标准库。
 
-## 本地渲染
-
-渲染当前 `VERSION` 对应的 PDF：
-
-```powershell
-.\scripts\render.ps1
-```
-
-生成的 PDF 会放在 `dist/` 目录下，该目录不会被提交到仓库。
-
 ## 发布版本
+
+**发布 PDF 只由 GitHub Actions 生成并上传。** 不在本地渲染发布 PDF，不手动上传本地产物；交付时只提供 GitHub Release 或其附件下载链接。
 
 修订版本发布，版本号从 `x.y` 更新为 `x.y.1`，或从 `x.y.z` 更新为 `x.y.(z+1)`：
 
@@ -88,7 +80,7 @@
 .\scripts\release-large.ps1
 ```
 
-发布脚本会更新 `VERSION`、本地渲染 PDF、提交版本变更、创建 Git tag 并推送到 GitHub。推送 tag 后，GitHub Actions 会自动重新渲染 PDF，并把产物上传到对应的 GitHub Release。
+发布脚本只更新 `VERSION`、提交版本变更、创建 Git tag 并推送到 GitHub。推送 tag 后，由 `.github/workflows/release.yml` 在 GitHub Actions 中渲染标准版与紧凑版 PDF，并上传到对应的 GitHub Release。
 
 ## 版本规则
 

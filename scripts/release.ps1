@@ -12,7 +12,6 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $versionPath = Join-Path $repoRoot "VERSION"
-$renderScript = Join-Path $PSScriptRoot "render.ps1"
 
 Push-Location $repoRoot
 try {
@@ -55,8 +54,6 @@ try {
     }
 
     Set-Content -Path $versionPath -Value $newVersion -Encoding UTF8 -NoNewline
-
-    & $renderScript -Version $newVersion | Out-Host
 
     if (-not $NoCommit) {
         git add VERSION
